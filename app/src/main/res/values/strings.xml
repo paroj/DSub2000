@@ -696,5 +696,7 @@
 	<string name="background_task.network_insecure_error">The connection to the server is insecure. Insecure connections have not been enabled in the settings.</string>
 	<string name="settings.tap_cover_for_playlist">Album art opens playlist</string>
 	<string name="settings.tap_cover_for_playlist_summary">Open the current playlist when clicking on the album art</string>
+	<string name="settings.combine_thumbs_up_down">Combine rating buttons</string>
+	<string name="settings.combine_thumbs_up_down_summary">Merge the thumbs up and thumbs down buttons into one single button that opens a rating dialog</string>
 
 </resources>

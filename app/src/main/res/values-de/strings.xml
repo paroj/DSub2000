@@ -654,5 +654,7 @@
 	<string name="background_task.network_insecure_error">Die Verbindung zum Server ist unsicher. Unsichere Verbindungen sind in den Einstellungen nicht erlaubt worden.</string>
 	<string name="settings.tap_cover_for_playlist">Albumcover öffnet Wiedergabeliste</string>
 	<string name="settings.tap_cover_for_playlist_summary">Zeige die aktuelle Wiedergabeliste wenn auf das Albumcover getippt wird</string>
+	<string name="settings.combine_thumbs_up_down">Bewertungsknöpfe zusammenfassen</string>
+	<string name="settings.combine_thumbs_up_down_summary">Vereint die \"Daumen hoch\" und \"Daumen runter\" Knöpfe zu einem Knopf, welcher einen Bewertungsdialog öffnet</string>
 
 </resources>

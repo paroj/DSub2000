@@ -41,6 +41,7 @@
 		<item name="add_person">@drawable/ic_menu_add_person</item>
 		<item name="rating_bad">@drawable/ic_action_rating_bad</item>
 		<item name="rating_good">@drawable/ic_action_rating_good</item>
+		<item name="rating_combined">@drawable/ic_action_rating_combined</item>
 		<item name="radio">@drawable/actionbar_radio</item>
 		<item name="star_outline">@drawable/ic_toggle_star_outline_light</item>
 		<item name="download">@drawable/actionbar_download</item>
@@ -115,6 +116,7 @@
 		<item name="add_person">@drawable/ic_menu_add_person</item>
 		<item name="rating_bad">@drawable/ic_action_rating_bad</item>
 		<item name="rating_good">@drawable/ic_action_rating_good</item>
+		<item name="rating_combined">@drawable/ic_action_rating_combined</item>
 		<item name="radio">@drawable/actionbar_radio</item>
 		<item name="star_outline">@drawable/ic_toggle_star_outline_dark</item>
 		<item name="download">@drawable/actionbar_download</item>
