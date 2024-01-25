@@ -412,8 +412,12 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		albumArtImageView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (overlayHeight == -1 || lastY < (view.getBottom() - overlayHeight)) {
-					toggleFullscreenAlbumArt();
+				if(Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_TAP_COVER_FOR_PLAYLIST, true)) {
+					if (overlayHeight == -1 || lastY < (view.getBottom() - overlayHeight)) {
+						toggleFullscreenAlbumArt();
+						setControlsVisible(true);
+					}
+				} else {
 					setControlsVisible(true);
 				}
 			}

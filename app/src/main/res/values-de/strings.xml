@@ -652,5 +652,7 @@
 	<string name="settings.server_allowinsecure">Erlaube unsichere Verbindungen</string>
 	<string name="settings.server_allowinsecure_summary">Erlaube HTTP-Verbindungen und ignoriere Warnungen und Fehler bei HTTPS-Verbindungen (nicht empfohlen!)</string>
 	<string name="background_task.network_insecure_error">Die Verbindung zum Server ist unsicher. Unsichere Verbindungen sind in den Einstellungen nicht erlaubt worden.</string>
+	<string name="settings.tap_cover_for_playlist">Albumcover öffnet Wiedergabeliste</string>
+	<string name="settings.tap_cover_for_playlist_summary">Zeige die aktuelle Wiedergabeliste wenn auf das Albumcover getippt wird</string>
 
 </resources>

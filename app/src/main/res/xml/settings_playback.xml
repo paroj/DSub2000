@@ -72,6 +72,12 @@
             android:defaultValue="30"
             android:dialogLayout="@layout/seekbar_preference"
             myns:max="60"/>
+
+        <CheckBoxPreference
+            android:title="@string/settings.tap_cover_for_playlist"
+            android:summary="@string/settings.tap_cover_for_playlist_summary"
+            android:key="tapCoverForPlaylist"
+            android:defaultValue="true"/>
 	</PreferenceCategory>
 
 	<PreferenceCategory
