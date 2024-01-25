@@ -73,6 +73,11 @@
 									android:id="@+id/download_rating_good"
 									style="@style/DownloadActionImageButton"
 									android:src="@drawable/ic_action_rating_good"/>
+
+								<ImageButton
+									android:id="@+id/download_rating_combined"
+									style="@style/DownloadActionImageButton"
+									android:src="@drawable/ic_action_rating_combined"/>
 						</LinearLayout>
 					</FrameLayout>
 				</FrameLayout>

@@ -72,6 +72,7 @@ import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Service;
 import android.content.ComponentCallbacks2;
 import android.content.ComponentName;
@@ -2842,6 +2843,24 @@ public class DownloadService extends Service {
 			}
 		});
 	}
+
+	public void selectRating(Activity activityContext) {
+		final DownloadFile currentPlaying = this.currentPlaying;
+		if (currentPlaying == null) {
+			return;
+		}
+		MusicDirectory.Entry entry = currentPlaying.getSong();
+
+		UpdateHelper.setRating(activityContext, entry, new UpdateHelper.OnRatingChange() {
+			@Override
+			public void ratingChange(int rating) {
+				if (currentPlaying == DownloadService.this.currentPlaying) {
+					onMetadataUpdate(METADATA_UPDATED_RATING);
+				}
+			}
+		});
+	}
+
 	public void acquireWakelock() {
 		acquireWakelock(30000);
 	}

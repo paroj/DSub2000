@@ -78,6 +78,13 @@
             android:summary="@string/settings.tap_cover_for_playlist_summary"
             android:key="tapCoverForPlaylist"
             android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:title="@string/settings.combine_thumbs_up_down"
+            android:summary="@string/settings.combine_thumbs_up_down_summary"
+            android:key="combineThumbsUpDown"
+            android:defaultValue="false"/>
+
 	</PreferenceCategory>
 
 	<PreferenceCategory

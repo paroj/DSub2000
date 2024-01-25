@@ -119,6 +119,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	private ImageButton bookmarkButton;
 	private ImageButton rateBadButton;
 	private ImageButton rateGoodButton;
+	private ImageButton rateCombinedButton;
 	private ImageButton playbackSpeedButton;
 
 	private ScheduledExecutorService executorService;
@@ -187,6 +188,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		bookmarkButton = (ImageButton) rootView.findViewById(R.id.download_bookmark);
 		rateBadButton = (ImageButton) rootView.findViewById(R.id.download_rating_bad);
 		rateGoodButton = (ImageButton) rootView.findViewById(R.id.download_rating_good);
+		rateCombinedButton = (ImageButton) rootView.findViewById(R.id.download_rating_combined);
 		playbackSpeedButton = (ImageButton) rootView.findViewById(R.id.download_playback_speed);
 		toggleListButton =rootView.findViewById(R.id.download_toggle_list);
 
@@ -222,6 +224,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		bookmarkButton.setOnTouchListener(touchListener);
 		rateBadButton.setOnTouchListener(touchListener);
 		rateGoodButton.setOnTouchListener(touchListener);
+		rateCombinedButton.setOnTouchListener(touchListener);
 		playbackSpeedButton.setOnTouchListener(touchListener);
 		emptyTextView.setOnTouchListener(touchListener);
 		albumArtImageView.setOnTouchListener(new View.OnTouchListener() {
@@ -389,6 +392,17 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 					return;
 				}
 				downloadService.toggleRating(5);
+				setControlsVisible(true);
+			}
+		});
+		rateCombinedButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				DownloadService downloadService = getDownloadService();
+				if(downloadService == null) {
+					return;
+				}
+				downloadService.selectRating(context);
 				setControlsVisible(true);
 			}
 		});
@@ -875,14 +889,22 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			bookmarkButton.setVisibility(View.GONE);
 			rateBadButton.setVisibility(View.GONE);
 			rateGoodButton.setVisibility(View.GONE);
+			rateCombinedButton.setVisibility(View.GONE);
 		} else {
 			if(ServerInfo.canBookmark(context)) {
 				bookmarkButton.setVisibility(View.VISIBLE);
 			} else {
 				bookmarkButton.setVisibility(View.GONE);
 			}
-			rateBadButton.setVisibility(View.VISIBLE);
-			rateGoodButton.setVisibility(View.VISIBLE);
+			if(Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_COMBINE_THUMBS_UP_DOWN, false)) {
+				rateBadButton.setVisibility(View.GONE);
+				rateGoodButton.setVisibility(View.GONE);
+				rateCombinedButton.setVisibility(View.VISIBLE);
+			} else {
+				rateBadButton.setVisibility(View.VISIBLE);
+				rateGoodButton.setVisibility(View.VISIBLE);
+				rateCombinedButton.setVisibility(View.GONE);
+			}
 		}
 	}
 
