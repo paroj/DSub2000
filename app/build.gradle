@@ -20,6 +20,7 @@ android {
 		resValue 'string', 'provider.starred', applicationId + ".starred.provider"
 		resValue 'string', 'provider.recently_added', applicationId + ".mostrecent.provider"
 		signingConfig signingConfigs.debug
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 	}
 	buildTypes {
 		release {
@@ -79,4 +80,6 @@ dependencies {
 	implementation 'org.eclipse.jetty:jetty-servlet:8.1.16.v20140903'
 	implementation 'org.eclipse.jetty:jetty-client:8.1.16.v20140903'
 	implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
+	androidTestImplementation "androidx.test:runner:1.5.2"
+	androidTestImplementation "androidx.test:rules:1.5.0"
 }

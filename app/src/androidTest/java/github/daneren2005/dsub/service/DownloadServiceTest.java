@@ -12,23 +12,29 @@ import github.daneren2005.dsub.domain.MusicDirectory;
 import github.daneren2005.dsub.domain.PlayerState;
 
 import java.util.LinkedList;
-import android.test.ActivityInstrumentationTestCase2;
 import android.util.Log;
 
-public class DownloadServiceTest extends
-		ActivityInstrumentationTestCase2<SubsonicFragmentActivity> {
+import androidx.test.rule.ActivityTestRule;
+
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+
+public class DownloadServiceTest {
+
+	@Rule
+	public ActivityTestRule<SubsonicFragmentActivity> activityRule = new ActivityTestRule<>(SubsonicFragmentActivity.class, true, true);
 
 	private SubsonicFragmentActivity activity;
 	private DownloadService downloadService;
 
-	public DownloadServiceTest() {
-		super(SubsonicFragmentActivity.class);
-	}
-
-	@Override
+	@Before
 	protected void setUp() throws Exception {
-		super.setUp();
-		activity = getActivity();
+		activity = activityRule.getActivity();
 		downloadService = activity.getDownloadService();
 		downloadService.clear();
 	}
@@ -36,6 +42,7 @@ public class DownloadServiceTest extends
 	/**
 	 * Test the get player duration without playlist.
 	 */
+	@Test
 	public void testGetPlayerDurationWithoutPlayList() {
 		int duration = downloadService.getPlayerDuration();
 		assertEquals(0, duration);
@@ -44,16 +51,18 @@ public class DownloadServiceTest extends
 	/**
 	 * Test the get player position without playlist.
 	 */
+	@Test
 	public void testGetPlayerPositionWithoutPlayList() {
 		int position = downloadService.getPlayerPosition();
 		assertEquals(0, position);
 	}
-
+	@Test
 	public void testGetRecentDownloadsWithoutPlaylist() {
 		int output_length = downloadService.getRecentDownloads().size();
 		assertEquals(0, output_length);
 	}
 
+	@Test
 	public void testGetRecentDownloadsWithPlaylist() {
 		downloadService.getDownloads().clear();
 		downloadService.download(this.createMusicSongs(2), false, false, false,
@@ -63,6 +72,7 @@ public class DownloadServiceTest extends
 		assertEquals(1, output_length);
 	}
 
+	@Test
 	public void testGetCurrentPlayingIndexWithoutPlayList() {
 		int currentPlayingIndex = activity.getDownloadService()
 				.getCurrentPlayingIndex();
@@ -72,6 +82,7 @@ public class DownloadServiceTest extends
 	/**
 	 * Test next action without playlist.
 	 */
+	@Test
 	public void testNextWithoutPlayList() {
 		int oldCurrentPlayingIndex = downloadService.getCurrentPlayingIndex();
 		downloadService.next();
@@ -82,6 +93,7 @@ public class DownloadServiceTest extends
 	/**
 	 * Test previous action without playlist.
 	 */
+	@Test
 	public void testPreviousWithoutPlayList() {
 		int oldCurrentPlayingIndex = downloadService.getCurrentPlayingIndex();
 		downloadService.previous();
@@ -92,6 +104,7 @@ public class DownloadServiceTest extends
 	/**
 	 * Test next action with playlist.
 	 */
+	@Test
 	public void testNextWithPlayList() throws InterruptedException {
 		// Download two songs
 		downloadService.getDownloads().clear();
@@ -116,6 +129,7 @@ public class DownloadServiceTest extends
 	/**
 	 * Test previous action with playlist.
 	 */
+	@Test
 	public void testPreviousWithPlayList() throws InterruptedException {
 		// Download two songs
 		downloadService.getDownloads().clear();
@@ -144,6 +158,7 @@ public class DownloadServiceTest extends
 	/**
 	 * Test seek feature.
 	 */
+	@Test
 	public void testSeekTo() {
 		// seek with negative
 		downloadService.seekTo(Integer.MIN_VALUE);
@@ -158,6 +173,7 @@ public class DownloadServiceTest extends
 	/**
 	 * Test toggle play pause.
 	 */
+	@Test
 	public void testTogglePlayPause() {
 		PlayerState oldPlayState = downloadService.getPlayerState();
 		downloadService.togglePlayPause();
@@ -182,6 +198,7 @@ public class DownloadServiceTest extends
 	/**
 	 * Test toggle play pause without playlist.
 	 */
+	@Test
 	public void testTogglePlayPauseWithoutPlayList() {
 		PlayerState oldPlayState = downloadService.getPlayerState();
 		downloadService.togglePlayPause();
@@ -196,6 +213,7 @@ public class DownloadServiceTest extends
 	 * 
 	 * @throws InterruptedException
 	 */
+	@Test
 	public void testTogglePlayPauseWithPlayList() throws InterruptedException {
 		// Download two songs
 		downloadService.getDownloads().clear();
@@ -220,6 +238,7 @@ public class DownloadServiceTest extends
 	 * 
 	 * @throws InterruptedException
 	 */
+	@Test
 	public void testAutoplay() throws InterruptedException {
 		// Download one songs
 		downloadService.getDownloads().clear();
@@ -237,6 +256,7 @@ public class DownloadServiceTest extends
 	/**
 	 * Test if the download list is empty.
 	 */
+	@Test
 	public void testGetDownloadsEmptyList() {
 		List<DownloadFile> list = downloadService.getDownloads();
 		assertEquals(0, list.size());
@@ -245,6 +265,7 @@ public class DownloadServiceTest extends
 	/**
 	 * Test if the download service add the given song to its queue.
 	 */
+	@Test
 	public void testAddMusicToDownload() {
 		assertNotNull(downloadService);
 

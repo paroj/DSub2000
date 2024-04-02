@@ -1,11 +1,8 @@
 package github.daneren2005.dsub.adapter;
 
+import org.junit.Test;
 
-import android.content.Context;
-import android.test.AndroidTestCase;
-import android.test.mock.MockContext;
-import android.util.Log;
-import android.view.View;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,17 +11,8 @@ import java.util.List;
 import github.daneren2005.dsub.domain.MusicDirectory.Entry;
 
 
-public class EntryGridAdapterTest extends AndroidTestCase {
+public class EntryGridAdapterTest {
 	private EntryGridAdapter mAdapter;
-
-
-	public EntryGridAdapterTest() {
-		super();
-	}
-
-	protected void setUp() throws Exception {
-		super.setUp();
-	}
 
 	public void testRemoveAt() {
 		Entry a = new Entry("a");

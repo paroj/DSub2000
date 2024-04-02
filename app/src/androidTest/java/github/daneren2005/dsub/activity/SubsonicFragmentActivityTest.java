@@ -1,26 +1,28 @@
 package github.daneren2005.dsub.activity;
 
 import github.daneren2005.dsub.R;
-import android.test.ActivityInstrumentationTestCase2;
+import androidx.test.rule.ActivityTestRule;
 
-public class SubsonicFragmentActivityTest extends
-		ActivityInstrumentationTestCase2<SubsonicFragmentActivity> {
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
+import static org.junit.Assert.assertNotNull;
+
+public class SubsonicFragmentActivityTest {
 	private SubsonicFragmentActivity activity;
+	@Rule
+	public ActivityTestRule<SubsonicFragmentActivity> activityRule = new ActivityTestRule<>(SubsonicFragmentActivity.class, true, true);
 
-	public SubsonicFragmentActivityTest() {
-		super(SubsonicFragmentActivity.class);
-	}
-
-	@Override
+	@Before
 	protected void setUp() throws Exception {
-		super.setUp();
-	    activity = getActivity();
+	    activity = activityRule.getActivity();
 	}
 
 	/**
 	 * Test the main layout.
 	 */
+	@Test
 	public void testLayout() {
 		assertNotNull(activity.findViewById(R.id.content_frame));
 	}
@@ -28,6 +30,7 @@ public class SubsonicFragmentActivityTest extends
 	/**
 	 * Test the bottom bar.
 	 */
+	@Test
 	public void testBottomBar() {
 		assertNotNull(activity.findViewById(R.id.bottom_bar));
 	}
