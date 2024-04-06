@@ -22,6 +22,7 @@
 		android:id="@+id/item_checkbox"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:text="@string/main.albums_per_folder"
 		android:layout_gravity="end|center_vertical"
 		android:textColor="?android:textColorPrimary"/>
 </LinearLayout>

@@ -27,7 +27,7 @@
 		android:layout_marginBottom="4px"
 		android:background="@drawable/ic_number_border"
 		android:focusable="false"
-		android:gravity="right|center_vertical"
+		android:gravity="center|center_vertical"
 		android:text="99"
 		android:textAppearance="?android:attr/textAppearanceSmallPopupMenu"
 		android:textColor="?android:textColorPrimary"
