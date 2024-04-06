@@ -36,6 +36,7 @@ import github.daneren2005.dsub.domain.MusicDirectory;
 import github.daneren2005.dsub.util.Constants;
 import github.daneren2005.dsub.util.SilentBackgroundTask;
 import github.daneren2005.dsub.util.FileUtil;
+import github.daneren2005.dsub.util.SongDBHandler;
 import github.daneren2005.dsub.util.Util;
 import github.daneren2005.dsub.util.CacheCleaner;
 import github.daneren2005.serverproxy.BufferFile;
@@ -171,6 +172,8 @@ public class DownloadFile implements BufferFile {
 		}
     }
     private void preDownload() {
+		SongDBHandler.getHandler(context).addSong(this);  // Add every locally available
+		// song to db so we can use their serverId for offline scrobbling
     	FileUtil.createDirectoryForParent(saveFile);
         failedDownload = false;
 		if(!partialFile.exists()) {

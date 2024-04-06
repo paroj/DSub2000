@@ -558,7 +558,7 @@ public class OfflineMusicService implements MusicService {
 		SharedPreferences.Editor offlineEditor = offline.edit();
 		
 		if(id.indexOf(cacheLocn) != -1) {
-			Pair<Integer, String> cachedSongId = SongDBHandler.getHandler(context).getIdFromPath(id);
+			Pair<Integer, String> cachedSongId = SongDBHandler.getHandler(context).getIdFromPath(id.replace(".complete", ""));
 			if(cachedSongId != null) {
 				offlineEditor.putString(Constants.OFFLINE_SCROBBLE_ID + scrobbles, cachedSongId.getSecond());
 				offlineEditor.remove(Constants.OFFLINE_SCROBBLE_SEARCH + scrobbles);
