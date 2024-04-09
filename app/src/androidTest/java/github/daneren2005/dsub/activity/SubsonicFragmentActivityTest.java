@@ -15,7 +15,7 @@ public class SubsonicFragmentActivityTest {
 	public ActivityTestRule<SubsonicFragmentActivity> activityRule = new ActivityTestRule<>(SubsonicFragmentActivity.class, true, true);
 
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 	    activity = activityRule.getActivity();
 	}
 
