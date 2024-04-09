@@ -12,8 +12,12 @@ import github.daneren2005.dsub.domain.MusicDirectory;
 import github.daneren2005.dsub.domain.PlayerState;
 
 import java.util.LinkedList;
+
+import android.app.Instrumentation;
+import android.content.Context;
 import android.util.Log;
 
+import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.Before;
@@ -33,7 +37,7 @@ public class DownloadServiceTest {
 	private DownloadService downloadService;
 
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		activity = activityRule.getActivity();
 		downloadService = activity.getDownloadService();
 		downloadService.clear();
@@ -239,7 +243,7 @@ public class DownloadServiceTest {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void testAutoplay() throws InterruptedException {
+	public void testAutoplay() throws InterruptedException, Exception {
 		// Download one songs
 		downloadService.getDownloads().clear();
 		downloadService.download(this.createMusicSongs(1), false, true, false,
@@ -290,42 +294,42 @@ public class DownloadServiceTest {
 	}
 
 	/**
-	 * Generate a list containing some music directory entries.
+	 * Generate a list containing some music directory entries. Produced from current subsonic
+	 * server. Is uses *alphabeticalByName* album list. Given server stays with the
+	 * same music content, this method should produce the same results for every call with
+	 * unique *size* argument. It is important for this method to return really existing on server
+	 * songs, as other tests rely on it.
 	 * 
 	 * @return list containing some music directory entries.
 	 */
 	private List<MusicDirectory.Entry> createMusicSongs(int size) {
-		MusicDirectory.Entry musicEntry = new MusicDirectory.Entry();
-		musicEntry.setAlbum("Itchy Hitchhiker");
-		musicEntry.setBitRate(198);
-		musicEntry.setAlbumId("49");
-		musicEntry.setDuration(247);
-		musicEntry.setSize(Long.valueOf(6162717));
-		musicEntry.setArtistId("23");
-		musicEntry.setArtist("The Dada Weatherman");
-		musicEntry.setCloseness(0);
-		musicEntry.setContentType("audio/mpeg");
-		musicEntry.setCoverArt("433");
-		musicEntry.setDirectory(false);
-		musicEntry.setGenre("Easy Listening/New Age");
-		musicEntry.setGrandParent("306");
-		musicEntry.setId("466");
-		musicEntry.setParent("433");
-		musicEntry
-				.setPath("The Dada Weatherman/Itchy Hitchhiker/08 - The Dada Weatherman - Harmonies.mp3");
-		musicEntry.setStarred(true);
-		musicEntry.setSuffix("mp3");
-		musicEntry.setTitle("Harmonies");
-		musicEntry.setType(0);
-		musicEntry.setVideo(false);
+		try {
+			Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+			MusicService service = MusicServiceFactory.getMusicService(context);
+			String albumId = service
+					.getAlbumList("alphabeticalByName", 1, 0, false, context, null)
+					.getChildren().get(0).getId();
 
-		List<MusicDirectory.Entry> musicEntries = new LinkedList<MusicDirectory.Entry>();
+			MusicDirectory.Entry musicEntry = service
+					.getAlbum(albumId, "", false, context, null)
+					.getSongs()
+					.get(0);
 
-		for (int i = 0; i < size; i++) {
-			musicEntries.add(musicEntry);
+
+			List<MusicDirectory.Entry> musicEntries = new LinkedList<>();
+
+			for (int i = 0; i < size; i++) {
+				musicEntries.add(musicEntry);
+			}
+
+			return musicEntries;
+
+		} catch (Exception ex) {
+			throw new AssertionError("Failed to fetch songs");
+			// Throwing exactly AssertError because it will not require to add *throws Exception*
+			// to every test case where this method gets used
 		}
 
-		return musicEntries;
 
 	}
 
