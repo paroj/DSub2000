@@ -1,0 +1,24 @@
+name: CI Build
+on: 
+  push:
+    branches: [edge]
+    tags: ["*"]
+  pull_request:
+    branches: [edge]
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - uses: android-actions/setup-android@v3
+    - uses: actions/checkout@v4
+    - name: Build
+      run: sh gradlew --no-daemon assembleRelease
+    - uses: actions/upload-artifact@v4
+      with:
+        name: DSub2000 APK
+        path: app/build/outputs/apk/floss/release/*-release.apk
+        compression-level: 0
