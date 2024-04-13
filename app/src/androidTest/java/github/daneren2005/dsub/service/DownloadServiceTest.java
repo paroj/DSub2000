@@ -311,7 +311,7 @@ public class DownloadServiceTest {
 					.getChildren().get(0).getId();
 
 			MusicDirectory.Entry musicEntry = service
-					.getAlbum(albumId, "", false, context, null)
+					.getMusicDirectory(albumId, "", false, context, null)
 					.getSongs()
 					.get(0);
 
@@ -325,7 +325,7 @@ public class DownloadServiceTest {
 			return musicEntries;
 
 		} catch (Exception ex) {
-			throw new AssertionError("Failed to fetch songs");
+			throw new AssertionError(ex);
 			// Throwing exactly AssertError because it will not require to add *throws Exception*
 			// to every test case where this method gets used
 		}
