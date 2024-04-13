@@ -250,7 +250,7 @@ public class DownloadServiceTest {
 				false, 0, 0);
 
 		Log.w("testPreviousWithPlayList", "Start waiting downloads");
-		Thread.sleep(5000);
+		Thread.sleep(10000);
 		Log.w("testPreviousWithPlayList", "Stop waiting downloads");
 
 		PlayerState playerState = downloadService.getPlayerState();
