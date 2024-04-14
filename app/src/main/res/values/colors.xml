@@ -18,6 +18,6 @@
 	<color name="holoPrimaryDark">#00897b</color>
 	<color name="holoAccent">#64ffda</color>
 
-	<color name="darkElement">#CCFFFFFF</color>
+	<color name="darkElement">#F8F8F8</color>
 
 </resources>
