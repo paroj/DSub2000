@@ -44,7 +44,7 @@
         <uses-library android:name="android.test.runner" />
 
 		<activity android:name="github.daneren2005.dsub.activity.SubsonicFragmentActivity"
-				  android:configChanges="orientation|keyboardHidden"
+				  android:configChanges="keyboardHidden"
 				  android:launchMode="singleTask">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
