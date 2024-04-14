@@ -1443,11 +1443,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		if(song != null && song.isStarred()) {
 			starButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_toggle_star));
 		} else {
-			if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-				starButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.star_outline));
-			} else {
-				starButton.setImageResource(R.drawable.ic_toggle_star_outline_dark);
-			}
+			starButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.star));
 		}
 
 		int badRating, goodRating, bookmark;
