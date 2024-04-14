@@ -1303,7 +1303,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			if(directory.isStarred()) {
 				starButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_toggle_star));
 			} else {
-				starButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.star_outline));
+				starButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.star));
 			}
 			starButton.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -1312,10 +1312,9 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 						@Override
 						public void starChange(boolean starred) {
 							if (directory.isStarred()) {
-								starButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.star_outline));
 								starButton.setImageDrawable(DrawableTint.getTintedDrawable(context, R.drawable.ic_toggle_star));
 							} else {
-								starButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.star_outline));
+								starButton.setImageResource(DrawableTint.getDrawableRes(context, R.attr.star));
 							}
 						}
 
