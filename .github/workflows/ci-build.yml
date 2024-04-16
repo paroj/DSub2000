@@ -13,10 +13,13 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-    - uses: android-actions/setup-android@v3
     - uses: actions/checkout@v4
     - name: Build
       run: sh gradlew --no-daemon assembleRelease
+
+    - name: Sign the apk with debug key
+      run: /usr/local/lib/android/sdk/build-tools/34.0.0/apksigner sign --ks debug.keystore --ks-pass pass:android --ks-key-alias androiddebugkey app/build/outputs/apk/floss/release/*-release.apk
+
     - uses: actions/upload-artifact@v4
       with:
         name: DSub2000 APK
