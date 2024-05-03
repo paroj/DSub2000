@@ -64,7 +64,7 @@
 			android:title="@string/settings.disable_exit_prompt"
 			android:summary="@string/settings.disable_exit_prompt_summary"
 			android:key="disableExitPrompt"
-			android:defaultValue="false"/>
+			android:defaultValue="true"/>
 
 		<CheckBoxPreference
 			android:title="@string/settings.override_system_language"
