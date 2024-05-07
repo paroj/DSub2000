@@ -101,7 +101,7 @@
 			</intent-filter>
 		</service>
 
-		<service android:name="org.fourthline.cling.android.AndroidUpnpServiceImpl"/>
+		<service android:name="org.jupnp.android.AndroidUpnpServiceImpl"/>
 		<service android:name="github.daneren2005.dsub.service.sync.AuthenticatorService">
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator"/>

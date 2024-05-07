@@ -19,39 +19,39 @@ import android.content.SharedPreferences;
 import android.os.Looper;
 import android.util.Log;
 
-import org.fourthline.cling.controlpoint.ActionCallback;
-import org.fourthline.cling.controlpoint.ControlPoint;
-import org.fourthline.cling.controlpoint.SubscriptionCallback;
-import org.fourthline.cling.model.action.ActionInvocation;
-import org.fourthline.cling.model.gena.CancelReason;
-import org.fourthline.cling.model.gena.GENASubscription;
-import org.fourthline.cling.model.message.UpnpResponse;
-import org.fourthline.cling.model.meta.Action;
-import org.fourthline.cling.model.meta.Service;
-import org.fourthline.cling.model.meta.StateVariable;
-import org.fourthline.cling.model.state.StateVariableValue;
-import org.fourthline.cling.model.types.ServiceType;
-import org.fourthline.cling.model.types.UnsignedIntegerFourBytes;
-import org.fourthline.cling.support.avtransport.callback.GetPositionInfo;
-import org.fourthline.cling.support.avtransport.callback.Pause;
-import org.fourthline.cling.support.avtransport.callback.Play;
-import org.fourthline.cling.support.avtransport.callback.Seek;
-import org.fourthline.cling.support.avtransport.callback.SetAVTransportURI;
-import org.fourthline.cling.support.avtransport.callback.Stop;
-import org.fourthline.cling.support.avtransport.lastchange.AVTransportLastChangeParser;
-import org.fourthline.cling.support.avtransport.lastchange.AVTransportVariable;
-import org.fourthline.cling.support.contentdirectory.DIDLParser;
-import org.fourthline.cling.support.lastchange.LastChange;
-import org.fourthline.cling.support.model.DIDLContent;
-import org.fourthline.cling.support.model.DIDLObject;
-import org.fourthline.cling.support.model.PositionInfo;
-import org.fourthline.cling.support.model.Res;
-import org.fourthline.cling.support.model.SeekMode;
-import org.fourthline.cling.support.model.item.Item;
-import org.fourthline.cling.support.model.item.MusicTrack;
-import org.fourthline.cling.support.model.item.VideoItem;
-import org.fourthline.cling.support.renderingcontrol.callback.SetVolume;
-import org.seamless.util.MimeType;
+import org.jupnp.controlpoint.ActionCallback;
+import org.jupnp.controlpoint.ControlPoint;
+import org.jupnp.controlpoint.SubscriptionCallback;
+import org.jupnp.model.action.ActionInvocation;
+import org.jupnp.model.gena.CancelReason;
+import org.jupnp.model.gena.GENASubscription;
+import org.jupnp.model.message.UpnpResponse;
+import org.jupnp.model.meta.Action;
+import org.jupnp.model.meta.Service;
+import org.jupnp.model.meta.StateVariable;
+import org.jupnp.model.state.StateVariableValue;
+import org.jupnp.model.types.ServiceType;
+import org.jupnp.model.types.UnsignedIntegerFourBytes;
+import org.jupnp.support.avtransport.callback.GetPositionInfo;
+import org.jupnp.support.avtransport.callback.Pause;
+import org.jupnp.support.avtransport.callback.Play;
+import org.jupnp.support.avtransport.callback.Seek;
+import org.jupnp.support.avtransport.callback.SetAVTransportURI;
+import org.jupnp.support.avtransport.callback.Stop;
+import org.jupnp.support.avtransport.lastchange.AVTransportLastChangeParser;
+import org.jupnp.support.avtransport.lastchange.AVTransportVariable;
+import org.jupnp.support.contentdirectory.DIDLParser;
+import org.jupnp.support.lastchange.LastChange;
+import org.jupnp.support.model.DIDLContent;
+import org.jupnp.support.model.DIDLObject;
+import org.jupnp.support.model.PositionInfo;
+import org.jupnp.support.model.Res;
+import org.jupnp.support.model.SeekMode;
+import org.jupnp.support.model.item.Item;
+import org.jupnp.support.model.item.MusicTrack;
+import org.jupnp.support.model.item.VideoItem;
+import org.jupnp.support.renderingcontrol.callback.SetVolume;
+import org.jupnp.util.MimeType;
 
 import java.io.File;
 import java.net.URI;
@@ -266,7 +266,7 @@ public class DLNAController extends RemoteController {
 		try {
 			controlPoint.execute(new Stop(getTransportService()) {
 				@Override
-				public void failure(ActionInvocation invocation, org.fourthline.cling.model.message.UpnpResponse operation, String defaultMessage) {
+				public void failure(ActionInvocation invocation, UpnpResponse operation, String defaultMessage) {
 					Log.w(TAG, "Stop failed: " + defaultMessage);
 				}
 			});
@@ -374,7 +374,7 @@ public class DLNAController extends RemoteController {
 				}
 
 				@Override
-				public void failure(ActionInvocation invocation, org.fourthline.cling.model.message.UpnpResponse operation, String defaultMessage) {
+				public void failure(ActionInvocation invocation, UpnpResponse operation, String defaultMessage) {
 					Log.w(TAG, "Stop failed before startSong: " + defaultMessage);
 					startSongRemote(currentPlaying, autoStart, position);
 				}
@@ -597,7 +597,7 @@ public class DLNAController extends RemoteController {
 
 			@Override
 			public void failure(ActionInvocation actionInvocation, UpnpResponse upnpResponse, String s) {
-				Log.w(TAG, "Failed to get an update");
+				Log.w(TAG, "Failed to get an update: " + s);
 
 				downloadService.postDelayed(new Runnable() {
 					@Override

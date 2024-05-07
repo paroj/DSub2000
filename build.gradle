@@ -10,6 +10,8 @@ buildscript {
 		google()
 	}
 	dependencies {
+		classpath 'com.android.tools:r8:8.3.37' // this is a workaround for building problems
+		// if in the future the project builds fine without it, try to remove it
 		classpath 'com.android.tools.build:gradle:7.4.2'
 
 		// NOTE: Do not place your application dependencies here; they belong
@@ -20,10 +22,6 @@ buildscript {
 allprojects {
 	repositories {
 		jcenter()
-		maven {
-			url 'http://4thline.org/m2'
-			allowInsecureProtocol = true
-		}
 		google()
 	}
 }

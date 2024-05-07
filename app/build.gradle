@@ -67,21 +67,25 @@ dependencies {
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
 	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 	implementation 'androidx.appcompat:appcompat:1.0.0'
-	implementation 'androidx.mediarouter:mediarouter:1.0.0'
+	implementation 'androidx.mediarouter:mediarouter:1.1.0'
 	implementation 'androidx.recyclerview:recyclerview:1.0.0'
 	implementation 'com.google.android.material:material:1.0.0'
 	googleImplementation 'com.google.android.gms:play-services-cast:8.1.0'
 	implementation 'com.sothree.slidinguppanel:library:3.0.0'
 	implementation 'de.hdodenhof:circleimageview:1.2.1'
 	implementation 'com.shehabic.droppy:Droppy:0.5.1@aar'
-	implementation 'org.fourthline.cling:cling-core:2.1.1'
-	implementation 'org.fourthline.cling:cling-support:2.1.1'
-	implementation 'org.eclipse.jetty:jetty-server:8.1.16.v20140903'
-	implementation 'org.eclipse.jetty:jetty-servlet:8.1.16.v20140903'
-	implementation 'org.eclipse.jetty:jetty-client:8.1.16.v20140903'
+	implementation 'org.eclipse.jetty:jetty-servlet:9.4.14.v20181114'
+	implementation 'org.eclipse.jetty:jetty-client:9.4.14.v20181114'
 	implementation 'javax.servlet:javax.servlet-api:3.1.0'
 	implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
+	implementation 'org.jupnp:org.jupnp:3.0.2'
+	implementation 'org.jupnp:org.jupnp.support:3.0.2'
+	implementation 'org.jupnp:org.jupnp.android:3.0.2'
 	androidTestImplementation "androidx.test:runner:1.5.2"
 	androidTestImplementation "androidx.test:rules:1.5.0"
 	androidTestImplementation group: 'org.jetbrains.kotlin', name: 'kotlin-stdlib', version: '1.7.10'
+	implementation 'com.esotericsoftware:kryo:5.6.0'
+	implementation 'androidx.fragment:fragment:1.3.3'
+	debugImplementation 'org.slf4j:slf4j-api:2.0.11'  // For jupnp logging in debug builds
+	debugImplementation 'uk.uuid.slf4j:slf4j-android:2.0.7-0'
 }
