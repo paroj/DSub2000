@@ -76,6 +76,9 @@ public class FileUtil {
 	private static HashMap<String, MusicDirectory.Entry> entryLookup;
 
 	static {
+		kryo.setRegistrationRequired(false);  // Every class will be registered at use time, with
+		// hope their order of serialization will be consistent, before migration kryo 2.21 -> 5.6.0
+		// this was default
 		kryo.register(MusicDirectory.Entry.class);
 		kryo.register(Indexes.class);
 		kryo.register(Artist.class);
@@ -808,7 +811,7 @@ public class FileUtil {
 			}
 			return true;
 		} catch (Throwable x) {
-			Log.w(TAG, "Failed to serialize object to " + fileName);
+			Log.w(TAG, "Failed to serialize object to " + fileName, x);
 			return false;
 		} finally {
 			Util.close(out);
@@ -845,10 +848,10 @@ public class FileUtil {
 			}
 		} catch(FileNotFoundException e) {
 			// Different error message
-			Log.w(TAG, "No serialization for object from " + fileName);
+			Log.w(TAG, "No serialization for object from " + fileName, e);
 			return null;
 		} catch (Throwable x) {
-			Log.w(TAG, "Failed to deserialize object from " + fileName);
+			Log.w(TAG, "Failed to deserialize object from " + fileName, x);
 			return null;
 		} finally {
 			Util.close(in);

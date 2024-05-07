@@ -34,19 +34,19 @@ import androidx.mediarouter.media.MediaRouteProviderDescriptor;
 import android.util.Log;
 
 import org.eclipse.jetty.util.log.Logger;
-import org.fourthline.cling.android.AndroidUpnpService;
-import org.fourthline.cling.android.AndroidUpnpServiceImpl;
-import org.fourthline.cling.model.action.ActionInvocation;
-import org.fourthline.cling.model.message.UpnpResponse;
-import org.fourthline.cling.model.meta.Device;
-import org.fourthline.cling.model.meta.LocalDevice;
-import org.fourthline.cling.model.meta.RemoteDevice;
-import org.fourthline.cling.model.meta.StateVariable;
-import org.fourthline.cling.model.meta.StateVariableAllowedValueRange;
-import org.fourthline.cling.model.types.ServiceType;
-import org.fourthline.cling.registry.Registry;
-import org.fourthline.cling.registry.RegistryListener;
-import org.fourthline.cling.support.renderingcontrol.callback.GetVolume;
+import org.jupnp.android.AndroidUpnpService;
+import org.jupnp.android.AndroidUpnpServiceImpl;
+import org.jupnp.model.action.ActionInvocation;
+import org.jupnp.model.message.UpnpResponse;
+import org.jupnp.model.meta.Device;
+import org.jupnp.model.meta.LocalDevice;
+import org.jupnp.model.meta.RemoteDevice;
+import org.jupnp.model.meta.StateVariable;
+import org.jupnp.model.meta.StateVariableAllowedValueRange;
+import org.jupnp.model.types.ServiceType;
+import org.jupnp.registry.Registry;
+import org.jupnp.registry.RegistryListener;
+import org.jupnp.support.renderingcontrol.callback.GetVolume;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,6 +85,9 @@ public class DLNARouteProvider extends MediaRouteProvider {
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				dlnaService = (AndroidUpnpService) service;
+				// cling to jupnp migration workaround:
+				// https://github.com/jupnp/jupnp/issues/153#issuecomment-1917832580
+				dlnaService.get().startup();
 				dlnaService.getRegistry().addListener(registryListener = new RegistryListener() {
 					@Override
 					public void remoteDeviceDiscoveryStarted(Registry registry, RemoteDevice remoteDevice) {
@@ -213,7 +216,7 @@ public class DLNARouteProvider extends MediaRouteProvider {
 	}
 
 	private void deviceAdded(final Device device) {
-		final org.fourthline.cling.model.meta.Service renderingControl = device.findService(new ServiceType("schemas-upnp-org", "RenderingControl"));
+		final org.jupnp.model.meta.Service renderingControl = device.findService(new ServiceType("schemas-upnp-org", "RenderingControl"));
 		if(renderingControl == null) {
 			return;
 		}
@@ -398,6 +401,11 @@ public class DLNARouteProvider extends MediaRouteProvider {
 
 		public void debug(String msg, Object... args) {
 			// Log.d(TAG, msg);
+		}
+
+		@Override
+		public void debug(String s, long l) {
+
 		}
 
 		public Logger getLogger(String name) {
