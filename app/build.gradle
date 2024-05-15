@@ -4,7 +4,7 @@ android {
 	compileSdkVersion 30
 
 	defaultConfig {
-		applicationId "github.daneren2005.dsub"
+		applicationId "github.paroj.dsub2000"
 		minSdkVersion 24
 		targetSdkVersion 30
 		versionCode 208
@@ -54,7 +54,7 @@ android {
 		}
 	}
 
-	namespace 'github.daneren2005.dsub'
+	namespace 'github.paroj.dsub2000'
 	lint {
 		checkReleaseBuilds false
 	}

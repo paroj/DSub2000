@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="common.appname">DSub</string>
+    <string name="common.appname">DSub2000</string>
     <string name="common.ok">OK</string>
     <string name="common.save">Guardar</string>
     <string name="common.cancel">Cancelar</string>
@@ -44,13 +44,13 @@
 	<string name="button_bar.offline">Offline</string>
 
     <string name="main.welcome_title">Bem-vindo!</string>
-    <string name="main.welcome_text">Bem-vindo ao DSub! Atualmente a aplicação está configurada para usar o servidor de demonstração do Subsonic. Depois de configurar o seu servidor pessoal (disponível em <b>subsonic.org</b>), consulte as <b>Definições</b> e altere as configurações para que possa conectar-se.</string>
-	<string name="main.about_title">Sobre o DSub</string>
+    <string name="main.welcome_text">Bem-vindo ao DSub2000! Atualmente a aplicação está configurada para usar o servidor de demonstração do Subsonic. Depois de configurar o seu servidor pessoal (disponível em <b>subsonic.org</b>), consulte as <b>Definições</b> e altere as configurações para que possa conectar-se.</string>
+	<string name="main.about_title">Sobre o DSub2000</string>
 	<string name="main.faq_title">FAQ</string>
 	<string name="main.faq_text">
 	<![CDATA[
 		<font color="red">Cache vs Cache permanente</font>:
-		<br/>Quando o DSub transfere as músicas, as mesmas poderão vir a ser eliminadas para dar espaço a novas transferências.  Por outro lado, as músicas que ficam permanentemente na cache nunca serão eliminadas automaticamente.
+		<br/>Quando o DSub2000 transfere as músicas, as mesmas poderão vir a ser eliminadas para dar espaço a novas transferências.  Por outro lado, as músicas que ficam permanentemente na cache nunca serão eliminadas automaticamente.
 		<p/><font color="red">Falhas com o Chromecast</font>:
 		<br/>Experimente a opção Definições -> Transmissão -> Usar dispositivo como proxy.  É uma solução alternativa devido ao Chromecast não aceitar certificados auto-assinados.
 		<p/><font color="red">Primeiro nível na biblioteca são grupos de artistas</font>:
@@ -289,7 +289,7 @@
     <string name="settings.cache_size">Tamanho da cache</string>
     <string name="settings.cache_location">Localização da cache</string>
     <string name="settings.cache_location_error">Localização da cache inválida. A usar predefinição.</string>
-    <string name="settings.cache_location_reset">Não foi possível escrever na localização da cache que definiu. Se atualizou recentemente o SO do seu dispositivo para o KitKat 4.4, então o modo como as aplicações escrevem no cartão SD mudou e só podem escrever numa localização específica. A localização que o DSub usa já foi alterada para a localização correta.  Para eliminar os antigos dados da aplicação, terá que montar o cartão SD no computador e eliminar a pasta manualmente</string>
+    <string name="settings.cache_location_reset">Não foi possível escrever na localização da cache que definiu. Se atualizou recentemente o SO do seu dispositivo para o KitKat 4.4, então o modo como as aplicações escrevem no cartão SD mudou e só podem escrever numa localização específica. A localização que o DSub2000 usa já foi alterada para a localização correta.  Para eliminar os antigos dados da aplicação, terá que montar o cartão SD no computador e eliminar a pasta manualmente</string>
 	<string name="settings.cache_location_internal">Interna</string>
 	<string name="settings.cache_location_external">Externa</string>
 	<string name="settings.cache_clear">Limpar cache</string>
@@ -451,7 +451,7 @@
 	<string name="settings.disable_exit_prompt">Desativar diálogo de saída</string>
 	<string name="settings.disable_exit_prompt_summary">Fechar a aplicação imediatamente após pressionar o botão de voltar no ecrã inicial</string>
 	<string name="settings.override_system_language">Sobrepor linguagem do sistema</string>
-	<string name="settings.override_system_language_summary">Mostrar a aplicação em inglês mesmo se o DSub tiver uma tradução disponível para a linguagem do sistema.  Poderá ser necessário limpar a aplicação da memória para as alterações terem efeito</string>
+	<string name="settings.override_system_language_summary">Mostrar a aplicação em inglês mesmo se o DSub2000 tiver uma tradução disponível para a linguagem do sistema.  Poderá ser necessário limpar a aplicação da memória para as alterações terem efeito</string>
 	<string name="settings.drawer_items_title">Separadores laterais</string>
 	<string name="settings.song_press_action">Ação ao pressionar uma música</string>
 	<string name="settings.song_press_play_single">Reproduzir apenas essa música</string>
@@ -476,7 +476,7 @@
 	<string name="settings.rename_duplicates">Renomear faixas duplicadas</string>
 	<string name="settings.rename_duplicates_summary">Renomear as faixas duplicadas para o nome do ficheiro original para que as possa distinguir</string>
 	<string name="settings.start_on_headphones">Iniciar com os auscultadores</string>
-	<string name="settings.start_on_headphones_summary">Iniciar quando os auscultadores são ligados.  Isto requer o uso de um serviço que inicia com o arranque, para verificar o evento de ligação dos auscultadores mesmo quando o DSub não está a ser executado</string>
+	<string name="settings.start_on_headphones_summary">Iniciar quando os auscultadores são ligados.  Isto requer o uso de um serviço que inicia com o arranque, para verificar o evento de ligação dos auscultadores mesmo quando o DSub2000 não está a ser executado</string>
 	<string name="settings.color_action_bar">Colorir barra de ações</string>
 	<string name="settings.color_action_bar.summary">Colorir ou não a barra de ações e a barra de estado</string>
 	<string name="settings.shuffle_by_album">Aleatorizar por álbum</string>
@@ -562,7 +562,7 @@
 
     <string name="service.connecting">A contactar o servidor, por favor aguarde.</string>
 
-    <string name="parser.upgrade_client">Versões incompatíveis. Por favor atualize o DSub.</string>
+    <string name="parser.upgrade_client">Versões incompatíveis. Por favor atualize o DSub2000.</string>
     <string name="parser.upgrade_server">Versões incompatíveis. Por favor atualize o servidor Subsonic.</string>
     <string name="parser.not_authenticated">Nome de utilizador ou palavra-passe errados.</string>
     <string name="parser.not_authorized">Não autorizado. Verifique as permissões no servidor Subsonic.</string>
@@ -581,10 +581,10 @@
 	<string name="equalizer.db_size">%d dB</string>
 	<string name="equalizer.bass_size">%d mille</string>
 
-	<string name="widget.4x1">DSub (4x1)</string>
-	<string name="widget.4x2">DSub (4x2)</string>
-	<string name="widget.4x3">DSub (4x3)</string>
-	<string name="widget.4x4">DSub (4x4)</string>
+	<string name="widget.4x1">DSub2000 (4x1)</string>
+	<string name="widget.4x2">DSub2000 (4x2)</string>
+	<string name="widget.4x3">DSub2000 (4x3)</string>
+	<string name="widget.4x4">DSub2000 (4x4)</string>
     <string name="widget.initial_text">Toque para selecionar a música</string>
     <string name="widget.sdcard_busy">Cartão SD não disponível</string>
     <string name="widget.sdcard_missing">Cartão SD em falta</string>
@@ -605,7 +605,7 @@
 
 	<string name="tasker.start_playing">Iniciar reprodução</string>
 	<string name="tasker.start_playing_shuffled">Iniciar reprodução em modo aleatório</string>
-	<string name="tasker.start_playing_title">Tasker -> Iniciar DSub</string>
+	<string name="tasker.start_playing_title">Tasker -> Iniciar DSub2000</string>
 	<string name="tasker.edit_shuffle_mode">Iniciar em modo aleatório: </string>
 	<string name="tasker.edit_shuffle_start_year">Reprodução aleatória desde o ano:</string>
 	<string name="tasker.edit_shuffle_end_year">Reprodução aleatória até ao ano:</string>
@@ -661,7 +661,7 @@
 	<string name="details.stream_url">URL da transmissão</string>
 	<string name="details.home_page">Página web</string>
 
-	<string name="permission.external_storage.failed">O DSub não funciona se não puder escrever no armazenamento</string>
+	<string name="permission.external_storage.failed">O DSub2000 não funciona se não puder escrever no armazenamento</string>
 
     <plurals name="select_album_n_songs">
         <item quantity="zero">Sem músicas</item>

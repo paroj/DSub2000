@@ -71,7 +71,7 @@
     <string name="changelog_title">最新消息</string>
     <string name="changelog_version_format">版本%s</string>
     <string name="chat.send_a_message">发送消息</string>
-    <string name="common.appname" >DSub</string>
+    <string name="common.appname" >DSub2000</string>
     <string name="common.cancel">取消</string>
     <string name="common.close">关闭</string>
     <string name="common.comment">评论</string>
@@ -205,7 +205,7 @@
     <string name="equalizer.voice_booster">扩音器</string>
     <string name="error.label">错误</string>
     <string name="lyrics.nomatch">找不到歌词</string>
-    <string name="main.about_title">关于DSub</string>
+    <string name="main.about_title">关于DSub2000</string>
     <string name="main.albums_alphabetical">全部</string>
     <string name="main.albums_frequent">最多播放</string>
     <string name="main.albums_genres">流派</string>
@@ -222,7 +222,7 @@
     <string name="main.faq_text">
     <![CDATA[
         <font color="red">缓存与永久缓存</font>:
-        <br/>当DSub下载歌曲时，可以将其自动删除，为新的下载腾出空间。另一方面，永久缓存的音乐永远不会被自动删除。
+        <br/>当DSub2000下载歌曲时，可以将其自动删除，为新的下载腾出空间。另一方面，永久缓存的音乐永远不会被自动删除。
         <p/><font color="red">ChromeCast失败</font>:
         <br/>尝试设置选项设置->播放->使用设备代理。这是Chromecast不接受自签名证书的一个解决方案。
         <p/><font color="red">资源库中的第一级是艺术家组</font>:
@@ -238,7 +238,7 @@
     <string name="main.songs_top_played">最高播放</string>
     <string name="main.title">标题</string>
     <string name="main.videos">视频</string>
-    <string name="main.welcome_text">欢迎使用DSub！当前连接演示服务器。您可建立个人服务器 ( <b>subsonic.org</b> )，并在设置中配置连接。</string>
+    <string name="main.welcome_text">欢迎使用DSub2000！当前连接演示服务器。您可建立个人服务器 ( <b>subsonic.org</b> )，并在设置中配置连接。</string>
     <string name="main.welcome_title">欢迎使用！</string>
     <string name="menu.about">关于</string>
     <string name="menu.add_playlist">添加到播放列表</string>
@@ -286,9 +286,9 @@
     <string name="parser.not_authorized">未授权，检查Subsonic服务器中的用户权限。</string>
     <string name="parser.scan_count">已扫描%d个条目</string>
     <string name="parser.server_error">服务器错误：%s</string>
-    <string name="parser.upgrade_client">不兼容的版本。请升级DSub。</string>
+    <string name="parser.upgrade_client">不兼容的版本。请升级DSub2000。</string>
     <string name="parser.upgrade_server">不兼容的版本。请升级Subsonic服务器。</string>
-    <string name="permission.external_storage.failed">DSub不能在没有写入内部存储权限的情况下工作</string>
+    <string name="permission.external_storage.failed">DSub2000不能在没有写入内部存储权限的情况下工作</string>
     <string name="permission.location.failed">需要使用位置权限来获取WIFI名</string>
     <string name="playlist.add_to">添加到播放列表</string>
     <string name="playlist.create_new">新建</string>
@@ -359,7 +359,7 @@
     <string name="settings.cache_location_error">缓存位置无效，使用默认值。</string>
     <string name="settings.cache_location_external">外部</string>
     <string name="settings.cache_location_internal">内部</string>
-    <string name="settings.cache_location_reset">已设置的缓存位置不再可写。如果您最近将手机操作系统升级到kitkat4.4，那么应用程序写入SD卡的方式已经改变，因此它们只能写入特定位置。DSub使用的位置已自动更改为正确的位置。要删除所有旧应用程序数据，您需要在计算机上挂载SD卡并手动删除旧文件夹</string>
+    <string name="settings.cache_location_reset">已设置的缓存位置不再可写。如果您最近将手机操作系统升级到kitkat4.4，那么应用程序写入SD卡的方式已经改变，因此它们只能写入特定位置。DSub2000使用的位置已自动更改为正确的位置。要删除所有旧应用程序数据，您需要在计算机上挂载SD卡并手动删除旧文件夹</string>
     <string name="settings.cache_screen_title">缓存/网络</string>
     <string name="settings.cache_size">缓存大小</string>
     <string name="settings.cache_title">缓存</string>
@@ -586,17 +586,17 @@
     <string name="tasker.edit_shuffle_start_year">随机开始年代：</string>
     <string name="tasker.start_playing">开始播放</string>
     <string name="tasker.start_playing_shuffled">在随机模式开始播放</string>
-    <string name="tasker.start_playing_title">任务->启动DSub</string>
+    <string name="tasker.start_playing_title">任务->启动DSub2000</string>
     <string name="updated_playlist">已将%1$s首歌曲添加到“%2$s”</string>
     <string name="updated_playlist_error">更新“%s”失败，请稍后再试。</string>
     <string name="util.bytes_format.byte">0 B</string>
     <string name="util.bytes_format.gigabyte">0.00 GB</string>
     <string name="util.bytes_format.kilobyte">0 KB</string>
     <string name="util.bytes_format.megabyte">0.00 MB</string>
-    <string name="widget.4x1">DSub (4x1)</string>
-    <string name="widget.4x2">DSub (4x2)</string>
-    <string name="widget.4x3">DSub (4x3)</string>
-    <string name="widget.4x4">DSub (4x4)</string>
+    <string name="widget.4x1">DSub2000 (4x1)</string>
+    <string name="widget.4x2">DSub2000 (4x2)</string>
+    <string name="widget.4x3">DSub2000 (4x3)</string>
+    <string name="widget.4x4">DSub2000 (4x4)</string>
     <string name="widget.initial_text">触按可选择音乐</string>
     <string name="widget.sdcard_busy">SD卡不可用</string>
     <string name="widget.sdcard_missing">没有SD卡</string>

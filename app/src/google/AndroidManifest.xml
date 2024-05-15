@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application android:label="@string/common.appname"
-         android:backupAgent="github.daneren2005.dsub.util.SettingsBackupAgent"
+         android:backupAgent="github.paroj.dsub2000.util.SettingsBackupAgent"
          android:icon="@drawable/launch"
-         android:theme="@style/Theme.DSub.Light"
+         android:theme="@style/Theme.DSub2000.Light"
          android:largeHeap="true">
 
         <meta-data

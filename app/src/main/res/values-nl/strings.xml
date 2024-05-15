@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="common.appname">DSub</string>
+    <string name="common.appname">DSub2000</string>
     <string name="common.ok">OK</string>
     <string name="common.save">Opslaan</string>
     <string name="common.cancel">Annuleer</string>
@@ -42,13 +42,13 @@
 	<string name="button_bar.offline">Offline</string>
 
     <string name="main.welcome_title">Welkom!</string>
-    <string name="main.welcome_text">Welkom bij DSub! De app is momenteel alleen geconfigureerd om de demo server te gebruiken. Nadat je eigen server geïnstalleerd hebt  (beschikbaar bij <b>subsonic.org</b>), ga dan naar <b>Instellingen</b> en verander de configuratie zodat je ermee kunt verbinden.</string>
-	<string name="main.about_title">Over DSub</string>
+    <string name="main.welcome_text">Welkom bij DSub2000! De app is momenteel alleen geconfigureerd om de demo server te gebruiken. Nadat je eigen server geïnstalleerd hebt  (beschikbaar bij <b>subsonic.org</b>), ga dan naar <b>Instellingen</b> en verander de configuratie zodat je ermee kunt verbinden.</string>
+	<string name="main.about_title">Over DSub2000</string>
 	<string name="main.faq_title">FAQ</string>
 	<string name="main.faq_text">
 	<![CDATA[
 		<font color="red">Cache versus Permanente Cache</font>:
-		<br/>Wanneer nummers zijn gedownload door DSub (cache), kunnen ze verwijderd worden om ruimte te maken voor nieuwe downloads. Permanente cache, daarentegen, wordt nooit automatisch verwijderd. 
+		<br/>Wanneer nummers zijn gedownload door DSub2000 (cache), kunnen ze verwijderd worden om ruimte te maken voor nieuwe downloads. Permanente cache, daarentegen, wordt nooit automatisch verwijderd. 
 		<p/><font color="red">ChromeCast faalt</font>:
 		<br/>Probeer de optie Instellingen -> Afspelen -> Gebruik apparaat proxy. Hiermee wordt het probleem van niet geaccepteerde \'self signed\' certificaten omzeild.
 		<p/><font color="red">Het eerste niveau in de bibliotheek zijn eigenlijk groepen artiesten.</font>:
@@ -274,7 +274,7 @@
     <string name="settings.cache_size">Cache grootte</string>
     <string name="settings.cache_location">Cache locatie</string>
     <string name="settings.cache_location_error">Onjuiste cache locatie. Standaard wordt gebruikt.</string>
-    <string name="settings.cache_location_reset">De locatie van de cache die u hebt ingesteld is niet meer beschrijfbaar. Als onlangs uw Android telefoon geüpgraded is naar KitKat 4.4 en hoger, dan is de manier waarop apps naar de SD-kaart schrijven veranderd zodat er alleen naar een specifieke locatie geschreven kan worden. De locatie die DSub gebruikt is al automatisch veranderd naar de juiste locatie. Om de oude app-data te verwijderen, moet de SD-kaart gekoppeld worden aan een computer om de oude folder handmatig te verwijderen.</string>
+    <string name="settings.cache_location_reset">De locatie van de cache die u hebt ingesteld is niet meer beschrijfbaar. Als onlangs uw Android telefoon geüpgraded is naar KitKat 4.4 en hoger, dan is de manier waarop apps naar de SD-kaart schrijven veranderd zodat er alleen naar een specifieke locatie geschreven kan worden. De locatie die DSub2000 gebruikt is al automatisch veranderd naar de juiste locatie. Om de oude app-data te verwijderen, moet de SD-kaart gekoppeld worden aan een computer om de oude folder handmatig te verwijderen.</string>
 	<string name="settings.cache_clear">Cache legen</string>
 	<string name="settings.cache_clear_complete">Klaar met cache legen</string>
     <string name="settings.testing_connection">Verbinding testen...</string>
@@ -520,7 +520,7 @@
 
     <string name="service.connecting">Serververbinding wordt opgezet, moment geduld a.u.b.</string>
 
-    <string name="parser.upgrade_client">Onverenigbare versies. DSub upgraden a.u.b.</string>
+    <string name="parser.upgrade_client">Onverenigbare versies. DSub2000 upgraden a.u.b.</string>
     <string name="parser.upgrade_server">Onverenigbare versies. Subsonic server upgraden a.u.b.</string>
     <string name="parser.not_authenticated">Verkeerde gebruikersnaam of wachtwoord.</string>
     <string name="parser.not_authorized">Niet geautoriseerd. Controleer de gebruikerspermissies op Subsonic server.</string>
@@ -539,10 +539,10 @@
 	<string name="equalizer.db_size">%d dB</string>
 	<string name="equalizer.bass_size">%d mille</string>
 
-	<string name="widget.4x1">DSub (4x1)</string>
-	<string name="widget.4x2">DSub (4x2)</string>
-	<string name="widget.4x3">DSub (4x3)</string>
-	<string name="widget.4x4">DSub (4x4)</string>
+	<string name="widget.4x1">DSub2000 (4x1)</string>
+	<string name="widget.4x2">DSub2000 (4x2)</string>
+	<string name="widget.4x3">DSub2000 (4x3)</string>
+	<string name="widget.4x4">DSub2000 (4x4)</string>
     <string name="widget.initial_text">Aanraken om muziek te selecteren</string>
     <string name="widget.sdcard_busy">SD-kaart onbeschikbaar</string>
     <string name="widget.sdcard_missing">Geen SD-kaart</string>
@@ -563,7 +563,7 @@
 
 	<string name="tasker.start_playing">Begin met spelen</string>
 	<string name="tasker.start_playing_shuffled">Begin met spelen in shuffle-modus</string>
-	<string name="tasker.start_playing_title">Tasker -> Start DSub</string>
+	<string name="tasker.start_playing_title">Tasker -> Start DSub2000</string>
 	<string name="tasker.edit_shuffle_mode">Start in shuffle-modus: </string>
 	<string name="tasker.edit_shuffle_start_year">Shuffle start jaar:</string>
 	<string name="tasker.edit_shuffle_end_year">Shuffle einde jaar:</string>

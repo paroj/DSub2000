@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="common.appname">DSub</string>
+    <string name="common.appname">DSub2000</string>
     <string name="common.ok">OK</string>
     <string name="common.save">Save</string>
     <string name="common.cancel">Cancel</string>
@@ -44,14 +44,14 @@
 	<string name="button_bar.offline">Offline</string>
 
     <string name="main.welcome_title">Welcome!</string>
-    <string name="main.welcome_text">Welcome to DSub! The app is currently configured to use the Subsonic demo server. After you\'ve
+    <string name="main.welcome_text">Welcome to DSub2000! The app is currently configured to use the Subsonic demo server. After you\'ve
         set up your personal server (available from <b>subsonic.org</b>), please go to <b>Settings</b> and change the configuration to connect to it.</string>
-	<string name="main.about_title">About DSub</string>
+	<string name="main.about_title">About DSub2000</string>
 	<string name="main.faq_title">FAQ</string>
 	<string name="main.faq_text">
 	<![CDATA[
 		<font color="red">Cache vs Permanent Cache</font>:
-		<br/>When songs are downloaded by DSub, they can be deleted to make room for new downloads.  Permanently cached music on the other hand will never be automatically deleted.
+		<br/>When songs are downloaded by DSub2000, they can be deleted to make room for new downloads.  Permanently cached music on the other hand will never be automatically deleted.
 		<p/><font color="red">ChromeCast fails</font>:
 		<br/>Try setting the option Settings -> Playback -> Use device proxy.  It is a work around for Chromecast not accepting self-signed certificates.
 		<p/><font color="red">First level in Library are actually groups of artists</font>:
@@ -293,7 +293,7 @@
     <string name="settings.cache_size">Cache size</string>
     <string name="settings.cache_location">Cache location</string>
     <string name="settings.cache_location_error">Invalid cache location. Using default.</string>
-    <string name="settings.cache_location_reset">The cache location you have set is no longer writable. If you recently upgraded your phone OS to KitKat 4.4, then the way apps write to the SD Card has changed so that they can only write to a specific location.  The location that DSub uses has already been automatically changed to the correct location.  In order to delete all of the old app data, you will need to mount the SD Card on your computer and delete the old folder manually</string>
+    <string name="settings.cache_location_reset">The cache location you have set is no longer writable. If you recently upgraded your phone OS to KitKat 4.4, then the way apps write to the SD Card has changed so that they can only write to a specific location.  The location that DSub2000 uses has already been automatically changed to the correct location.  In order to delete all of the old app data, you will need to mount the SD Card on your computer and delete the old folder manually</string>
 	<string name="settings.cache_location_internal">Internal</string>
 	<string name="settings.cache_location_external">External</string>
 	<string name="settings.cache_clear">Clear Cache</string>
@@ -459,7 +459,7 @@
 	<string name="settings.disable_exit_prompt">Disable Exit Prompt</string>
 	<string name="settings.disable_exit_prompt_summary">Exit the app immediately upon pressing back from the home screen</string>
 	<string name="settings.override_system_language">Override System Language</string>
-	<string name="settings.override_system_language_summary">Display app in english even if the system language is something DSub has a translation for.  May need to clear the app from memory for changes to take affect.</string>
+	<string name="settings.override_system_language_summary">Display app in english even if the system language is something DSub2000 has a translation for.  May need to clear the app from memory for changes to take affect.</string>
 	<string name="settings.drawer_items_title">Drawer Tabs</string>
 	<string name="settings.song_press_action">Song Press Action</string>
 	<string name="settings.song_press_play_single">Play only that song</string>
@@ -484,7 +484,7 @@
 	<string name="settings.rename_duplicates">Rename duplicate tracks</string>
 	<string name="settings.rename_duplicates_summary">Rename duplicate tracks to the original filename so you can tell them apart.</string>
 	<string name="settings.start_on_headphones">Start on headphones</string>
-	<string name="settings.start_on_headphones_summary">Start when headphones are plugged in.  This requires the use of a service which starts on boot up to check for the headphone plug event even when DSub is not running.</string>
+	<string name="settings.start_on_headphones_summary">Start when headphones are plugged in.  This requires the use of a service which starts on boot up to check for the headphone plug event even when DSub2000 is not running.</string>
 	<string name="settings.color_action_bar">Color Action Bar</string>
 	<string name="settings.color_action_bar.summary">Color the action bar and status bar or leave them alone</string>
 	<string name="settings.shuffle_by_album">Shuffle By Album</string>
@@ -572,7 +572,7 @@
 
     <string name="service.connecting">Contacting server, please wait.</string>
 
-    <string name="parser.upgrade_client">Incompatible versions. Please upgrade DSub.</string>
+    <string name="parser.upgrade_client">Incompatible versions. Please upgrade DSub2000.</string>
     <string name="parser.upgrade_server">Incompatible versions. Please upgrade Subsonic server.</string>
     <string name="parser.not_authenticated">Wrong username or password.</string>
     <string name="parser.not_authorized">Not authorized. Check user permissions in Subsonic server.</string>
@@ -591,10 +591,10 @@
 	<string name="equalizer.db_size">%d dB</string>
 	<string name="equalizer.bass_size">%d mille</string>
 
-	<string name="widget.4x1">DSub (4x1)</string>
-	<string name="widget.4x2">DSub (4x2)</string>
-	<string name="widget.4x3">DSub (4x3)</string>
-	<string name="widget.4x4">DSub (4x4)</string>
+	<string name="widget.4x1">DSub2000 (4x1)</string>
+	<string name="widget.4x2">DSub2000 (4x2)</string>
+	<string name="widget.4x3">DSub2000 (4x3)</string>
+	<string name="widget.4x4">DSub2000 (4x4)</string>
     <string name="widget.initial_text">Touch to select music</string>
     <string name="widget.sdcard_busy">SD card unavailable</string>
     <string name="widget.sdcard_missing">No SD card</string>
@@ -615,7 +615,7 @@
 
 	<string name="tasker.start_playing">Start playing</string>
 	<string name="tasker.start_playing_shuffled">Start playing in Shuffle Mode</string>
-	<string name="tasker.start_playing_title">Tasker -> Start DSub</string>
+	<string name="tasker.start_playing_title">Tasker -> Start DSub2000</string>
 	<string name="tasker.edit_shuffle_mode">Start in shuffle mode: </string>
 	<string name="tasker.edit_shuffle_start_year">Shuffle start year:</string>
 	<string name="tasker.edit_shuffle_end_year">Shuffle end year:</string>
@@ -671,7 +671,7 @@
 	<string name="details.stream_url">Stream URL</string>
 	<string name="details.home_page">Home Page</string>
 
-	<string name="permission.external_storage.failed">DSub cannot function without the ability to write to storage</string>
+	<string name="permission.external_storage.failed">DSub2000 cannot function without the ability to write to storage</string>
 	<string name="permission.location.failed">This apps uses location data to get the WIFI SSID to match against your local network settings. To get rid of this message, change the local network SSID to blank.</string>
 
     <plurals name="select_album_n_songs">
