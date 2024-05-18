@@ -304,7 +304,7 @@
 		<change>Bug fixes for Ampache users</change>
 	</release>
 	<release version="4.9.5" versioncode="149" releasedate="3/25/2015">
-		<change>Handoff: move to another DSub client and pickup where you left off (Subsonic 5.2+)</change>
+		<change>Handoff: move to another DSub2000 client and pickup where you left off (Subsonic 5.2+)</change>
 		<change>DLNA: gapless playback on supported renders</change>
 		<change>Option to warning on back press</change>
 		<change>Better handle date for Subsonic 5.1+</change>
@@ -503,6 +503,6 @@
 		<change>Fix for delay between headset disconnect and pause</change>
 		<change>Fix background bluetooth disconnects causing playback to stop</change>
 		<change>Fix app trying to upsample songs in mp3 -> mp3 transcode</change>
-		<change>Fix for DSub preempting bluetooth events</change>
+		<change>Fix for DSub2000 preempting bluetooth events</change>
 	</release>
 </changelog>

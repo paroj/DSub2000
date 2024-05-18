@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="common.appname">DSub</string>
+    <string name="common.appname">DSub2000</string>
     <string name="common.ok">OK</string>
     <string name="common.save">Speichern</string>
     <string name="common.cancel">Abbrechen</string>
@@ -38,16 +38,16 @@
 	<string name="button_bar.downloading">Downloads</string>
 
     <string name="main.welcome_title">Willkommen!</string>
-    <string name="main.welcome_text">Willkommen zu DSub! Die App ist aktuell für den Subsonic-Demo-Server konfiguriert. Nachdem Sie Ihren eigenen Server
+    <string name="main.welcome_text">Willkommen zu DSub2000! Die App ist aktuell für den Subsonic-Demo-Server konfiguriert. Nachdem Sie Ihren eigenen Server
         aufgesetzt haben (verfügbar unter <b>subsonic.org</b>) könne Sie diesen unter <b>Einstellungen</b> konfigurieren.</string>
-	<string name="main.about_title">Über DSub</string>
+	<string name="main.about_title">Über DSub2000</string>
 	<string name="main.faq_title">FAQ</string>
         <string name="main.faq_text">
         <![CDATA[
                 <font color="red">Cache vs Permanenter Cache</font>:
-                <br/>Von DSub heruntergelade Titel im Cache können automatisch gelöscht werden, um Platz für neue Titel zu schaffen. Titel im permanenten Cache werden dagegen nie automatisch gelöscht.
+                <br/>Von DSub2000 heruntergelade Titel im Cache können automatisch gelöscht werden, um Platz für neue Titel zu schaffen. Titel im permanenten Cache werden dagegen nie automatisch gelöscht.
                 <p/><font color="red">ChromeCast funktioniert nicht</font>:
-		<br/>Versuchen Sie die Option Einstellungen -> Wiedergabe -> Nutze DSub als Proxy.  Dies ist eine provisorische Lösung, weil Chromecast keine selbstsignierten Zertifikate akzeptiert.
+		<br/>Versuchen Sie die Option Einstellungen -> Wiedergabe -> Nutze DSub2000 als Proxy.  Dies ist eine provisorische Lösung, weil Chromecast keine selbstsignierten Zertifikate akzeptiert.
 		<p/><font color="red">Erste Ebene in der Bibliothek sind Künstlergruppen</font>:
 		<br/>Im Optionsmenü deselektiere "Erste Ebene sind Künstler".  Dann wird die erste Verzeichnisebene wie Künstlergruppen anstelle von Künstler behandelt.
         ]]>
@@ -248,7 +248,7 @@
 
     <string name="error.label">Fehler</string>
 
-    <string name="settings.title">DSub Einstellungen</string>
+    <string name="settings.title">DSub2000 Einstellungen</string>
     <string name="settings.test_connection_title">Teste Verbindung</string>
 	<string name="settings.servers_add">Server hinzufügen</string>
 	<string name="settings.servers_remove">Server entfernen</string>
@@ -270,7 +270,7 @@
     <string name="settings.cache_size">Größe des Cache (MB)</string>
     <string name="settings.cache_location">Position des Cache</string>
     <string name="settings.cache_location_error">Ungültiger Pfad zum Cache. Nutze Standard.</string>
-    <string name="settings.cache_location_reset">Der gesetzte Cachepfad ist nicht (mehr) beschreibbar. Durch die Aktualisierung des Telefon-OS auf KitKat 4.4 wurde der Zugriff auf die SD-Karte durch Apps eingeschränkt auf spezielle Pfade. Der von DSub verwendete Pfad wurde entsprechend korrigiert. Um den alten Cache zu löschen, müssen Sie die SD-Karte an einem Computer anschliessend und den Ordner manuell löschen.</string>
+    <string name="settings.cache_location_reset">Der gesetzte Cachepfad ist nicht (mehr) beschreibbar. Durch die Aktualisierung des Telefon-OS auf KitKat 4.4 wurde der Zugriff auf die SD-Karte durch Apps eingeschränkt auf spezielle Pfade. Der von DSub2000 verwendete Pfad wurde entsprechend korrigiert. Um den alten Cache zu löschen, müssen Sie die SD-Karte an einem Computer anschliessend und den Ordner manuell löschen.</string>
 	<string name="settings.cache_clear">Lösche Cache</string>
 	<string name="settings.cache_clear_complete">Cache wurde geleert</string>
     <string name="settings.testing_connection">Teste Verbindung...</string>
@@ -394,10 +394,10 @@
 	<string name="settings.menu_options.rate_summary">Zeige \"Bewerten\" im Menü</string>
 	<string name="settings.browse_by_tags">Tags nutzen</string>
 	<string name="settings.browse_by_tags_summary">Tags statt Ordner verwenden.  Benötigt Subsonic 4.7+</string>
-	<string name="settings.disable_exit_prompt">DSub direkt verlassen</string>
-	<string name="settings.disable_exit_prompt_summary">DSub mit Zurück-Taste ohne zusätzliche Nachfrage sofort verlassen</string>
+	<string name="settings.disable_exit_prompt">DSub2000 direkt verlassen</string>
+	<string name="settings.disable_exit_prompt_summary">DSub2000 mit Zurück-Taste ohne zusätzliche Nachfrage sofort verlassen</string>
 	<string name="settings.override_system_language">In Englisch anzeigen</string>
-	<string name="settings.override_system_language_summary">Verwende Englisch anstatt Deutsch für DSub. Benötigt einen Neustart der App.</string>
+	<string name="settings.override_system_language_summary">Verwende Englisch anstatt Deutsch für DSub2000. Benötigt einen Neustart der App.</string>
 	<string name="settings.drawer_items_title">Seitenmenü</string>
 	<string name="settings.large_album_art">Große Cover anzeigen</string>
 	<string name="settings.large_album_art_summary">Verwende große Cover zur Anzeige der Alben anstatt einer Liste</string>
@@ -412,7 +412,7 @@
 	<string name="settings.replay_gain_bump">Wiedergabevorverstärkung</string>
 	<string name="settings.replay_gain_untagged">Lieder ohne Wiedergabeverstärkung</string>
 	<string name="settings.casting">Casting</string>
-	<string name="settings.casting_proxy">Nutze DSub als Proxy</string>
+	<string name="settings.casting_proxy">Nutze DSub2000 als Proxy</string>
 	<string name="settings.casting_proxy_summary">Sende alles über dieses Gerät als Proxy.  Dies umgeht Probleme mit selbstsignierten Zertifikaten.</string>
 	<string name="settings.rename_duplicates">Doppelte Medien umbenennen</string>
 	<string name="settings.rename_duplicates_summary">Für doppelte Medien den originalen Dateinamen verwenden, um diese auseinanderhalten zu können.</string>
@@ -483,7 +483,7 @@
 
     <string name="service.connecting">Kontaktiere Server, bitte warten.</string>
 
-    <string name="parser.upgrade_client">Inkompatible Versionen. Aktualisierung von DSub erforderlich.</string>
+    <string name="parser.upgrade_client">Inkompatible Versionen. Aktualisierung von DSub2000 erforderlich.</string>
     <string name="parser.upgrade_server">Inkompatible Versionen. Aktualisierung des Subsonic Server erforderlich.</string>
     <string name="parser.not_authenticated">Benutzername oder/und Passwort falsch.</string>
     <string name="parser.not_authorized">Nicht authorisiert. Bitte prüfen Sie die Einstellungen im Subsonic-Server.</string>
@@ -515,7 +515,7 @@
 
 	<string name="tasker.start_playing">Starte Wiedergabe</string>
 	<string name="tasker.start_playing_shuffled">Starte Zufallswiedergabe</string>
-	<string name="tasker.start_playing_title">Tasker -> Starte DSub</string>
+	<string name="tasker.start_playing_title">Tasker -> Starte DSub2000</string>
 	<string name="tasker.edit_shuffle_mode">Starte im Zufallsmodus: </string>
 	<string name="tasker.edit_shuffle_start_year">Startjahr:</string>
 	<string name="tasker.edit_shuffle_end_year">Endjahr:</string>
@@ -580,10 +580,10 @@
 	<string name="settings.max_video_bitrate_500">500 Kbps</string>
 	<string name="settings.max_video_bitrate_5000">5000 Kbps</string>
 	<string name="settings.max_video_bitrate_700">700 Kbps</string>
-	<string name="widget.4x1">DSub (4x1)</string>
-	<string name="widget.4x2">DSub (4x2)</string>
-	<string name="widget.4x3">DSub (4x3)</string>
-	<string name="widget.4x4">DSub (4x4)</string>
+	<string name="widget.4x1">DSub2000 (4x1)</string>
+	<string name="widget.4x2">DSub2000 (4x2)</string>
+	<string name="widget.4x3">DSub2000 (4x3)</string>
+	<string name="widget.4x4">DSub2000 (4x4)</string>
 	<string name="util.bytes_format.megabyte">0.00 MB</string>
 	<string name="util.bytes_format.kilobyte">0 KB</string>
 	<string name="util.bytes_format.gigabyte">0.00 GB</string>

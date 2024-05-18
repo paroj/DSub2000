@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="Theme.DSub.Light" parent="Theme.DSub.Light.Base">
+	<style name="Theme.DSub2000.Light" parent="Theme.DSub2000.Light.Base">
 		<item name="android:windowTranslucentStatus">true</item>
 	</style>
 
-	<style name="Theme.DSub.Dark" parent="Theme.DSub.Dark.Base">
+	<style name="Theme.DSub2000.Dark" parent="Theme.DSub2000.Dark.Base">
 		<item name="android:windowTranslucentStatus">true</item>
 	</style>
-	<style name="Theme.DSub.Black" parent="Theme.DSub.Black.Base">
+	<style name="Theme.DSub2000.Black" parent="Theme.DSub2000.Black.Base">
 		<item name="android:windowTranslucentStatus">true</item>
 	</style>
-	<style name="Theme.DSub.Holo" parent="Theme.DSub.Holo.Base">
+	<style name="Theme.DSub2000.Holo" parent="Theme.DSub2000.Holo.Base">
 		<item name="android:windowTranslucentStatus">true</item>
 	</style>
 
-	<style name="Theme.DSub.Light.No_Color" parent="Theme.DSub.Light.No_Color.Base">
+	<style name="Theme.DSub2000.Light.No_Color" parent="Theme.DSub2000.Light.No_Color.Base">
 		<item name="android:windowTranslucentStatus">false</item>
 		<item name="android:statusBarColor">@android:color/black</item>
 	</style>
-	<style name="Theme.DSub.Black.No_Color" parent="Theme.DSub.Black.No_Color.Base">
+	<style name="Theme.DSub2000.Black.No_Color" parent="Theme.DSub2000.Black.No_Color.Base">
 		<item name="android:windowTranslucentStatus">false</item>
 		<item name="android:statusBarColor">@android:color/black</item>
 	</style>
-	<style name="Theme.DSub.Dark.No_Color" parent="Theme.DSub.Dark.No_Color.Base">
+	<style name="Theme.DSub2000.Dark.No_Color" parent="Theme.DSub2000.Dark.No_Color.Base">
 		<item name="android:windowTranslucentStatus">false</item>
 		<item name="android:statusBarColor">@android:color/black</item>
 	</style>
-	<style name="Theme.DSub.Holo.No_Color" parent="Theme.DSub.Holo.No_Color.Base">
+	<style name="Theme.DSub2000.Holo.No_Color" parent="Theme.DSub2000.Holo.No_Color.Base">
 		<item name="android:windowTranslucentStatus">false</item>
 		<item name="android:statusBarColor">@android:color/black</item>
 	</style>

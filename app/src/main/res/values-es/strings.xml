@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="common.appname">DSub</string>
+    <string name="common.appname">DSub2000</string>
     <string name="common.ok">OK</string>
     <string name="common.save">Guardar</string>
     <string name="common.cancel">Cancelar</string>
@@ -38,8 +38,8 @@
 	<string name="button_bar.admin">Admin</string>
 
     <string name="main.welcome_title">Bienvenido!</string>
-    <string name="main.welcome_text">Bienvenido a DSub! Ahora la aplicación está configurada para usar el servidor de demostración de Subsonic. Cuando configures tu servidor personal (disponible en <b>subsonic.org</b>), accede a <b>Preferencias</b> y cambia la configuración para conectarte.</string>
-	<string name="main.about_title">Acerca de DSub</string>
+    <string name="main.welcome_text">Bienvenido a DSub2000! Ahora la aplicación está configurada para usar el servidor de demostración de Subsonic. Cuando configures tu servidor personal (disponible en <b>subsonic.org</b>), accede a <b>Preferencias</b> y cambia la configuración para conectarte.</string>
+	<string name="main.about_title">Acerca de DSub2000</string>
 	<string name="main.shuffle">Reproducción aleatoria</string>
     <string name="main.offline">Modo Offline</string>
 	<string name="main.online">Modo Online</string>
@@ -57,7 +57,7 @@
 	<string name="main.faq_text">
 	<![CDATA[
 		<font color="red">Cache vs Cache permanente</font>:
-		<br/>Cuando DSub descarga las canciones, pueden ser eliminadas para dejar espacio a nuevas descargas.  La música en Caché Permanente, nunca será eliminada automáticamente.
+		<br/>Cuando DSub2000 descarga las canciones, pueden ser eliminadas para dejar espacio a nuevas descargas.  La música en Caché Permanente, nunca será eliminada automáticamente.
 		<p/><font color="red">ChromeCast falla</font>:
 		<br/>Asegúrate que no estás utilizando un certificado auto-firmado, porque Chromecast automáticamente lo rechazará.
 	]]>
@@ -224,7 +224,7 @@
 
     <string name="error.label">Error</string>
 
-    <string name="settings.title">Ajustes de DSub</string>
+    <string name="settings.title">Ajustes de DSub2000</string>
     <string name="settings.test_connection_title">Comprobar conexión</string>
 	<string name="settings.servers_add">Añadir servidor</string>
 	<string name="settings.servers_remove">Borrar servidor</string>
@@ -382,9 +382,9 @@
 	<string name="settings.browse_by_tags_summary">Explorar por tags en vez de por estructura de carpetas. Requiere Subsonic 4.7+</string>
 	<string name="settings.server_local_network_ssid" >SSID Red local</string>
 	<string name="settings.server_local_network_ssid_hint">SSID Actual: %s</string>
-	<string name="settings.cache_location_reset">No se puede escribir en la ubicación seleccionada para la caché. Si has actualizado recientemente el sistema operativo de tu dispositivo a KitKat 4.4, la manera en la que las apps escriben en la Tarjeta SD ha cambiado, por lo que sólo pueden escribir en una ubicación específica. La ubicación que utiliza DSub ha sido automáticamente cambiada por la ubicación correcta. Para eliminar todos los datos de la app anterior, tendrás que introducir la Tarjeta SD en el ordenador y eliminar la carpeta manualmente.</string>
+	<string name="settings.cache_location_reset">No se puede escribir en la ubicación seleccionada para la caché. Si has actualizado recientemente el sistema operativo de tu dispositivo a KitKat 4.4, la manera en la que las apps escriben en la Tarjeta SD ha cambiado, por lo que sólo pueden escribir en una ubicación específica. La ubicación que utiliza DSub2000 ha sido automáticamente cambiada por la ubicación correcta. Para eliminar todos los datos de la app anterior, tendrás que introducir la Tarjeta SD en el ordenador y eliminar la carpeta manualmente.</string>
 	<string name="settings.override_system_language">Sobreescribir idioma del sistema</string>
-	<string name="settings.override_system_language_summary">Mostrar la aplicación en inglés aún teniendo disponible DSub en el idioma del sistema. Probablemente necesite borrar la aplicación de la memoria para efectuar los cambios.</string>
+	<string name="settings.override_system_language_summary">Mostrar la aplicación en inglés aún teniendo disponible DSub2000 en el idioma del sistema. Probablemente necesite borrar la aplicación de la memoria para efectuar los cambios.</string>
 	<string name="settings.drawer_items_title">Pestañas</string>
 	<string name="settings.large_album_art">Carátulas grandes</string>
 	<string name="settings.large_album_art_summary">Mostrar los discos con carátulas grandes en vez de en lista</string>
@@ -475,7 +475,7 @@
 
     <string name="service.connecting">Conectando con el servidor, espere por favor.</string>
 
-    <string name="parser.upgrade_client">Versiones incompatibles. Por favor, actualice la aplicación DSub de Android.</string>
+    <string name="parser.upgrade_client">Versiones incompatibles. Por favor, actualice la aplicación DSub2000 de Android.</string>
     <string name="parser.upgrade_server">Versiones incompatibles. Por favor, actualice su servidor Subsonic.</string>
     <string name="parser.not_authenticated">Usuario o contraseña inconrrectos.</string>
     <string name="parser.not_authorized">Sin autorización. Compruebe los permisos en el servidor Subsonic.</string>
@@ -494,10 +494,10 @@
     <string name="equalizer.enabled">Activado</string>
     <string name="equalizer.preset">Seleccionar preset</string>
 
-	<string name="widget.4x1">DSub (4x1)</string>
-	<string name="widget.4x2">DSub (4x2)</string>
-	<string name="widget.4x3">DSub (4x3)</string>
-	<string name="widget.4x4">DSub (4x4)</string>
+	<string name="widget.4x1">DSub2000 (4x1)</string>
+	<string name="widget.4x2">DSub2000 (4x2)</string>
+	<string name="widget.4x3">DSub2000 (4x3)</string>
+	<string name="widget.4x4">DSub2000 (4x4)</string>
     <string name="widget.initial_text">Toca para seleccionar música</string>
     <string name="widget.sdcard_busy">Tarjeta SD no disponible</string>
     <string name="widget.sdcard_missing">No hay tarjeta SD</string>
@@ -515,7 +515,7 @@
 	<string name="chat.send_a_message">Enviar un mensaje</string>
 
 	<string name="tasker.start_playing">Comenzar reproduciendo</string>
-	<string name="tasker.start_playing_title">Tasker -> Encender DSub</string>
+	<string name="tasker.start_playing_title">Tasker -> Encender DSub2000</string>
 	<string name="tasker.edit_shuffle_mode">Comenzar en modo aleatorio: </string>
 	<string name="tasker.start_playing_shuffled">Comenzar en modo aleatorio</string>
 	<string name="tasker.edit_do_nothing">No hacer nada</string>

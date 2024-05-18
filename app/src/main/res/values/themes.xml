@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<style name="Theme.DSub.Light.Base" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+	<style name="Theme.DSub2000.Light.Base" parent="@style/Theme.AppCompat.Light.DarkActionBar">
 		<item name="element_color">@color/lightElement</item>
 		<item name="actionbar_element_color">@color/darkElement</item>
 		<item name="offline_icon">@drawable/main_offline</item>
@@ -57,7 +57,7 @@
 		<item name="drawerAdmin">@drawable/ic_menu_admin</item>
 		<item name="drawerDownloading">@drawable/ic_menu_download</item>
 		<item name="drawerSettings">@drawable/ic_menu_settings</item>
-		<item name="drawerArrowStyle">@style/DSub.DrawerArrow</item>
+		<item name="drawerArrowStyle">@style/DSub2000.DrawerArrow</item>
 		<item name="colorPrimary">@color/lightPrimary</item>
 		<item name="colorPrimaryDark">@color/lightPrimaryDark</item>
 		<item name="colorAccent">@color/lightAccent</item>
@@ -75,7 +75,7 @@
 		<item name="cardBackgroundDrawable">@drawable/card_rounded_corners</item>
 		<item name="drawerHeaderBackground">@drawable/drawer_header_light</item>
 	</style>
-	<style name="Theme.DSub.Dark.Base" parent="@style/Theme.AppCompat">
+	<style name="Theme.DSub2000.Dark.Base" parent="@style/Theme.AppCompat">
 		<item name="element_color">@color/darkElement</item>
 		<item name="actionbar_element_color">@color/darkElement</item>
 		<item name="offline_icon">@drawable/main_offline</item>
@@ -132,7 +132,7 @@
 		<item name="drawerAdmin">@drawable/ic_menu_admin</item>
 		<item name="drawerDownloading">@drawable/ic_menu_download</item>
 		<item name="drawerSettings">@drawable/ic_menu_settings</item>
-		<item name="drawerArrowStyle">@style/DSub.DrawerArrow</item>
+		<item name="drawerArrowStyle">@style/DSub2000.DrawerArrow</item>
 		<item name="colorPrimary">@color/lightPrimary</item>
 		<item name="colorPrimaryDark">@color/lightPrimaryDark</item>
 		<item name="colorAccent">@color/lightAccent</item>
@@ -149,18 +149,18 @@
 		<item name="cardBackgroundDrawable">@drawable/card_rounded_corners</item>
 		<item name="drawerHeaderBackground">@drawable/drawer_header_dark</item>
 	</style>
-	<style name="Theme.DSub.Light" parent="Theme.DSub.Light.Base">
+	<style name="Theme.DSub2000.Light" parent="Theme.DSub2000.Light.Base">
 	</style>
-	<style name="Theme.DSub.Dark" parent="Theme.DSub.Dark.Base">
+	<style name="Theme.DSub2000.Dark" parent="Theme.DSub2000.Dark.Base">
 	</style>
-	<style name="Theme.DSub.Black.Base" parent="Theme.DSub.Dark.Base">
+	<style name="Theme.DSub2000.Black.Base" parent="Theme.DSub2000.Dark.Base">
 		<item name="card_background">@color/background_material_dark</item>
 		<item name="cardBackgroundDrawable">@drawable/card_rounded_corners</item>
 		<item name="android:windowBackground">@android:color/black</item>
 	</style>
-	<style name="Theme.DSub.Black" parent="Theme.DSub.Black.Base">
+	<style name="Theme.DSub2000.Black" parent="Theme.DSub2000.Black.Base">
 	</style>
-	<style name="Theme.DSub.Holo.Base" parent="Theme.DSub.Dark.Base">
+	<style name="Theme.DSub2000.Holo.Base" parent="Theme.DSub2000.Dark.Base">
 		<item name="android:windowBackground">@drawable/background</item>
 		<item name="colorPrimary">@color/holoPrimary</item>
 		<item name="colorPrimaryDark">@color/holoPrimaryDark</item>
@@ -170,27 +170,27 @@
 		<item name="card_background">@color/background_material_dark</item>
 		<item name="cardBackgroundDrawable">@drawable/card_rounded_corners</item>
 	</style>
-	<style name="Theme.DSub.Holo" parent="Theme.DSub.Holo.Base">
+	<style name="Theme.DSub2000.Holo" parent="Theme.DSub2000.Holo.Base">
 	</style>
 
-	<style name="Theme.DSub.Light.No_Actionbar" parent="Theme.DSub.Light">
+	<style name="Theme.DSub2000.Light.No_Actionbar" parent="Theme.DSub2000.Light">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 	</style>
-	<style name="Theme.DSub.Black.No_Actionbar" parent="Theme.DSub.Black">
+	<style name="Theme.DSub2000.Black.No_Actionbar" parent="Theme.DSub2000.Black">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 	</style>
-	<style name="Theme.DSub.Dark.No_Actionbar" parent="Theme.DSub.Dark">
+	<style name="Theme.DSub2000.Dark.No_Actionbar" parent="Theme.DSub2000.Dark">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 	</style>
-	<style name="Theme.DSub.Holo.No_Actionbar" parent="Theme.DSub.Holo">
+	<style name="Theme.DSub2000.Holo.No_Actionbar" parent="Theme.DSub2000.Holo">
 		<item name="windowActionBar">false</item>
 		<item name="windowNoTitle">true</item>
 	</style>
 
-	<style name="Theme.DSub.Light.No_Color.Base" parent="Theme.DSub.Light.No_Actionbar">
+	<style name="Theme.DSub2000.Light.No_Color.Base" parent="Theme.DSub2000.Light.No_Actionbar">
 		<item name="actionbar_element_color">@color/lightElement</item>
 		<item name="actionbarThemeStyle">@style/ThemeOverlay.AppCompat.ActionBar</item>
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
@@ -219,29 +219,29 @@
 		<item name="actionModeStyle">@style/LightActionMode</item>
 		<item name="actionModeCloseButtonStyle">@style/DarkCloseButton</item>
 	</style>
-	<style name="Theme.DSub.Black.No_Color.Base" parent="Theme.DSub.Black.No_Actionbar">
+	<style name="Theme.DSub2000.Black.No_Color.Base" parent="Theme.DSub2000.Black.No_Actionbar">
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
 		<item name="actionModeBackground">@android:color/black</item>
 	</style>
-	<style name="Theme.DSub.Dark.No_Color.Base" parent="Theme.DSub.Dark.No_Actionbar">
+	<style name="Theme.DSub2000.Dark.No_Color.Base" parent="Theme.DSub2000.Dark.No_Actionbar">
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
 		<item name="actionModeBackground">@color/background_material_dark</item>
 	</style>
-	<style name="Theme.DSub.Holo.No_Color.Base" parent="Theme.DSub.Holo.No_Actionbar">
+	<style name="Theme.DSub2000.Holo.No_Color.Base" parent="Theme.DSub2000.Holo.No_Actionbar">
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
 		<item name="actionModeBackground">@drawable/background</item>
 	</style>
 
-	<style name="Theme.DSub.Light.No_Color" parent="Theme.DSub.Light.No_Color.Base">
+	<style name="Theme.DSub2000.Light.No_Color" parent="Theme.DSub2000.Light.No_Color.Base">
 	</style>
-	<style name="Theme.DSub.Black.No_Color" parent="Theme.DSub.Black.No_Color.Base">
+	<style name="Theme.DSub2000.Black.No_Color" parent="Theme.DSub2000.Black.No_Color.Base">
 	</style>
-	<style name="Theme.DSub.Dark.No_Color" parent="Theme.DSub.Dark.No_Color.Base">
+	<style name="Theme.DSub2000.Dark.No_Color" parent="Theme.DSub2000.Dark.No_Color.Base">
 	</style>
-	<style name="Theme.DSub.Holo.No_Color" parent="Theme.DSub.Holo.No_Color.Base">
+	<style name="Theme.DSub2000.Holo.No_Color" parent="Theme.DSub2000.Holo.No_Color.Base">
 	</style>
 
-	<style name="DSub.DrawerArrow" parent="Widget.AppCompat.DrawerArrowToggle">
+	<style name="DSub2000.DrawerArrow" parent="Widget.AppCompat.DrawerArrowToggle">
 		<item name="spinBars">true</item>
 	</style>
 

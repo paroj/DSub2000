@@ -1,17 +1,17 @@
 Privacy Policy
 General
 
-DSub For Subsonic ("DSub") is developed & maintained by one developer. As the developer of DSub, I do care about and respect your privacy.
+DSub2000 For Subsonic ("DSub2000") is developed & maintained by one developer. As the developer of DSub2000, I do care about and respect your privacy.
 
 This Privacy Policy ("Policy") aims to describe how information obtained from users is collected, used and disclosed.
 
-By using DSub, you agree that your personal information will be handled as described in this Policy.
+By using DSub2000, you agree that your personal information will be handled as described in this Policy.
 Information being collected
 
-DSub does not collect any personally identifiable information.
+DSub2000 does not collect any personally identifiable information.
 
-DSub requests the permission 'READ_PHONE_STATE'. This permission is used by DSub solely to determine whether you're in a phone call/the phone is ringing, so that music playback can be paused. This permission also grants access to some personally identifiable information (your phone's IMEI number, your phone number and your network/carrier). This personally identifiable information is never accessed, used, stored or disclosed by DSub.
-DSub requests the permission 'RECORD_AUDIO'. This permission is used by DSub to provide Equalizer functionality and no audio is ever stored or transmitted by DSub.
+DSub2000 requests the permission 'READ_PHONE_STATE'. This permission is used by DSub2000 solely to determine whether you're in a phone call/the phone is ringing, so that music playback can be paused. This permission also grants access to some personally identifiable information (your phone's IMEI number, your phone number and your network/carrier). This personally identifiable information is never accessed, used, stored or disclosed by DSub2000.
+DSub2000 requests the permission 'RECORD_AUDIO'. This permission is used by DSub2000 to provide Equalizer functionality and no audio is ever stored or transmitted by DSub2000.
 
 Changes to the Policy
 
