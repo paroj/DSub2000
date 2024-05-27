@@ -33,13 +33,13 @@
 			android:title="@string/settings.track_title"
 			android:summary="@string/settings.track_summary"
 			android:key="displayTrack"
-			android:defaultValue="true"/>
+			android:defaultValue="false"/>
 
 		<CheckBoxPreference
 			android:title="@string/settings.file_suffix"
 			android:summary="@string/settings.file_suffix_summary"
 			android:key="displayFileSuffix"
-			android:defaultValue="true"/>
+			android:defaultValue="false"/>
 
 
 		<CheckBoxPreference
@@ -98,13 +98,13 @@
 			android:title="@string/common.play_next"
 			android:summary="@string/settings.menu_options.play_next_summary"
 			android:key="showPlayNext"
-			android:defaultValue="false"/>
+			android:defaultValue="true"/>
 
 		<CheckBoxPreference
 			android:title="@string/common.play_last"
 			android:summary="@string/settings.menu_options.play_last_summary"
 			android:key="showPlayLast"
-			android:defaultValue="true"/>
+			android:defaultValue="false"/>
 
 		<CheckBoxPreference
 			android:title="@string/common.download"
