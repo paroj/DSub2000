@@ -1,28 +1,21 @@
-## Basic Instructions
-Grab dependent libraries
-```
-git submodule init
-git submodule update
-```
+# DSub2000
 
-Go to ServerProxy and build project files
-```
-android update project --path ./
-```
+Connect to your Subsonic server and listen to your music wherever you go. Songs
+are cached for playback to save on your mobile bandwidth and to make them
+available when you have no connection at all.
 
-Add both projects and all .jar's in the libs folder
+Subsonic is a cross-platform FOSS media server that's capable of indexing very
+large media collections. The server can transcode if necessary so that the app
+can play files that your device may not normally support.
 
-## SDK Project Dependencies
-Under sdk -> extras:<br>
-android -> support -> v7 -> appcompat<br>
-android -> support -> v7 -> mediarouter<br>
-google -> google_play_services -> libproject -> google-play-services_lib
+## Features
 
-## SDK Library Dependencies
-android -> support -> v4 -> android-support-v4.jar<br>
-android -> support -> v7 -> appcompat -> libs android-support-v7-appcompat.jar<br>
-android -> support -> v7 -> mediarouter -> libs -> android-support-v7-mediarouter.jar<br>
-google -> google_play_services -> libproject -> google-play-services_lib -> lib -> google-play-services.jar
+* Drag and drop songs to rearrange your playlist on the Now Playing tab
+* Pause playback when other apps request audio focus (navigation, etc)
+* Lockscreen controls
+* Gapless Playback
+* Highly customizable UI
+* User defined Cache Size, Network Timeout, and Buffer Length
 
 ## Updating Icons
 Media Icons are double standard size.  On https://romannurik.github.io/AndroidAssetStudio/icons-actionbar.html you can manually change this via the following js commands:
