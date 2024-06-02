@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="5.6.0" versioncode="209" releasedate="28/06/2024">
+		<change>Rebrand app to DSub2000 to indicate the fork</change>
+		<change>Change setting defaults to improve compatibility and UI clarity</change>
+		<change>Added a random option to the songs part of the mainview</change>
+		<change>Add option to show a single rating button</change>
+		<change>Make tapping on cover art to open playlist configurable</change>
+		<change>When the user has made a selection, only the selected songs are downloaded</change>
+		<change>Migrate to vector drawables</change>
+		<change>Setting to add song suffix as details of list song item</change>
+		<change>Toggling the caching status from "permanently cached" to just "cached" (and back) does not require connectivity</change>
+		<change>Fix replaygain selection logic for track gain</change>
+		<change>Fix album sort with duplicate track numbers</change>
+		<change>Fix offline scrobbling for servers without lucene support</change>
+		<change>Make connections secure by default CVE-2018-1000664</change>
+		<change>Port from orphaned cling to jupnp</change>
+		<change>Sync bastp to upstream/ vanilla-music for improved replaygain parsing</change>
+		<change>Replace subsonic.org demo server with navidrome.org demo server</change>
+	</release>
 	<release version="5.5.3" versioncode="208" releasedate="04/01/2022">
 		<change>Fix album art with Airsonic 11</change>
 		<change>Fixed an issue with SSID detection</change>
