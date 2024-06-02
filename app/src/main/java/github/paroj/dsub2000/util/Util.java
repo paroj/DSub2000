@@ -466,7 +466,7 @@ public final class Util {
 
 	public static boolean isAuthHeaderEnabled(Context context, int instance) {
 		SharedPreferences prefs = getPreferences(context);
-		return prefs.getBoolean(Constants.PREFERENCES_KEY_SERVER_AUTHHEADER + instance, true);
+		return prefs.getBoolean(Constants.PREFERENCES_KEY_SERVER_AUTHHEADER + instance, false);
 	}
 
 	public static boolean isAllowInsecureEnabled(Context context, int instance) {
