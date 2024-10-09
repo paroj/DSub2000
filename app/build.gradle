@@ -10,7 +10,7 @@ android {
 		versionCode 209
 		versionName '5.6.0'
 		vectorDrawables.useSupportLibrary = true
-		setProperty("archivesBaseName", "DSub $versionName")
+		setProperty("archivesBaseName", "DSub2000_$versionName")
 		resConfigs 'de', 'es', 'fr', 'hu', 'nl', 'pt-rPT', 'ru', 'sv', 'zh'
 		vectorDrawables.useSupportLibrary = true
 		resValue 'string', 'account_type.subsonic', applicationId + ".subsonic"
