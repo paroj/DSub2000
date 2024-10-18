@@ -1,3 +1,5 @@
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/O5O514FGIG)
+
 # DSub2000
 
 Connect to your Subsonic server and listen to your music wherever you go. Songs
@@ -7,6 +9,10 @@ available when you have no connection at all.
 Subsonic is a cross-platform FOSS media server that's capable of indexing very
 large media collections. The server can transcode if necessary so that the app
 can play files that your device may not normally support.
+
+[<img src="https://f-droid.org/badge/get-it-on.png"
+    alt="Get it on F-Droid"
+    height="80">](https://f-droid.org/packages/github.paroj.dsub2000)
 
 ## Features
 
