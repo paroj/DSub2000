@@ -14,6 +14,17 @@ can play files that your device may not normally support.
     alt="Get it on F-Droid"
     height="80">](https://f-droid.org/packages/github.paroj.dsub2000)
 
+## Screenshots
+
+| Albums | Sidebar | Current Song |
+| ------ | ------- | ------------ |
+| ![](fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/2.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg) |
+
+| Playlists | Now Playing | Details |
+| --------- | ----------- | ------- |
+| ![](fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/5.png) | ![](fastlane/metadata/android/en-US/images/phoneScreenshots/6.png) |
+| You can make playlists available offline by selecting "cached" here. | This shows the play queue. You drag and drop songs to rearrange. Note that you can press the "cached" icon for a context menu. | You can check whether the file was transcoded here. |
+
 ## Features
 
 * Drag and drop songs to rearrange your playlist on the Now Playing tab
