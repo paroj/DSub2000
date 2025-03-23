@@ -240,6 +240,13 @@
         <meta-data android:name="android.app.default_searchable"
                    android:value="github.paroj.dsub2000.activity.QueryReceiverActivity"/>
 
+		<meta-data
+			android:name="com.google.android.gms.car.application"
+			android:resource="@xml/auto_app_description" />
+		<meta-data
+			android:name="com.google.android.gms.car.notification.SmallIcon"
+			android:resource="@drawable/stat_notify_playing" />
+
 	</application>
 
 </manifest>
