@@ -11,8 +11,8 @@ android {
 		versionName '5.6.0'
 		vectorDrawables.useSupportLibrary = true
 		setProperty("archivesBaseName", "DSub2000_$versionName")
-		resConfigs 'de', 'es', 'fr', 'hu', 'nl', 'pt-rPT', 'ru', 'sv', 'zh'
-		vectorDrawables.useSupportLibrary = true
+        resourceConfigurations += ['de', 'es', 'fr', 'hu', 'nl', 'pt-rPT', 'ru', 'sv', 'zh']
+        vectorDrawables.useSupportLibrary = true
 		resValue 'string', 'account_type.subsonic', applicationId + ".subsonic"
 		resValue 'string', 'provider.search', applicationId + ".provider.DSubSearchProvider"
 		resValue 'string', 'provider.playlist', applicationId + ".playlists.provider"
@@ -21,6 +21,9 @@ android {
 		resValue 'string', 'provider.recently_added', applicationId + ".mostrecent.provider"
 		signingConfig signingConfigs.debug
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+	}
+	buildFeatures {
+		buildConfig true
 	}
 	buildTypes {
 		release {
