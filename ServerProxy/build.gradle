@@ -22,6 +22,7 @@ dependencies {
 
 android {
     compileSdkVersion 30
+    namespace "github.paroj.serverproxy"
 
     defaultConfig {
         targetSdkVersion 30
@@ -63,5 +64,9 @@ android {
             // Adds ChromeCast support
             dimension "version"
         }
+    }
+    buildFeatures {
+        renderScript true
+        aidl true
     }
 }
