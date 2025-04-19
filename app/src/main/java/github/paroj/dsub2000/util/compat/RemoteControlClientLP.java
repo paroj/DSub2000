@@ -83,12 +83,12 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 	@Override
 	public void register(Context context, ComponentName mediaButtonReceiverComponent) {
 		downloadService = (DownloadService) context;
-		mediaSession = new MediaSessionCompat(downloadService, "DSub MediaSession");
 
 		Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
 		mediaButtonIntent.setComponent(mediaButtonReceiverComponent);
 		PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, mediaButtonIntent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
-		mediaSession.setMediaButtonReceiver(mediaPendingIntent);
+
+		mediaSession = new MediaSessionCompat(downloadService, "DSub MediaSession", null, mediaPendingIntent);
 
 		Intent activityIntent = new Intent(context, SubsonicFragmentActivity.class);
 		activityIntent.putExtra(Constants.INTENT_EXTRA_NAME_DOWNLOAD, true);
