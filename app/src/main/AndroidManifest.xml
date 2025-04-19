@@ -45,6 +45,7 @@
 
 		<activity android:name="github.paroj.dsub2000.activity.SubsonicFragmentActivity"
 				  android:configChanges="keyboardHidden"
+				  android:exported="true"
 				  android:launchMode="singleTask">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -58,6 +59,7 @@
                   android:launchMode="singleTask"/>
 
         <activity android:name="github.paroj.dsub2000.activity.VoiceQueryReceiverActivity"
+				  android:exported="true"
                   android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
@@ -72,6 +74,7 @@
         </activity>
 
         <activity android:name="github.paroj.dsub2000.activity.QueryReceiverActivity"
+				  android:exported="true"
                   android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
@@ -82,6 +85,7 @@
 		<activity
 			android:name="github.paroj.dsub2000.activity.EditPlayActionActivity"
 			android:label="@string/tasker.start_playing"
+			android:exported="true"
 			android:icon="@drawable/launch">
 
 			<intent-filter>
@@ -102,7 +106,10 @@
 		</service>
 
 		<service android:name="org.jupnp.android.AndroidUpnpServiceImpl"/>
-		<service android:name="github.paroj.dsub2000.service.sync.AuthenticatorService">
+		<service
+			android:name="github.paroj.dsub2000.service.sync.AuthenticatorService"
+			android:exported="true">
+
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator"/>
 			</intent-filter>
@@ -154,20 +161,23 @@
 		<service android:name="github.paroj.dsub2000.service.HeadphoneListenerService"
 			android:label="DSub Headphone Listener"/>
 		<receiver
-			android:name="github.paroj.dsub2000.receiver.BootReceiver">
+			android:name="github.paroj.dsub2000.receiver.BootReceiver"
+			android:exported="true">
 			<intent-filter>
 				<action
 					android:name="android.intent.action.BOOT_COMPLETED" />
 			</intent-filter>
 		</receiver>
 
-        <receiver android:name="github.paroj.dsub2000.receiver.MediaButtonIntentReceiver">
+        <receiver android:name="github.paroj.dsub2000.receiver.MediaButtonIntentReceiver"
+			android:exported="true">
         	<intent-filter>
 				<action android:name="android.intent.action.MEDIA_BUTTON" />
 			</intent-filter>
         </receiver>
 
-		<receiver android:name="github.paroj.dsub2000.receiver.A2dpIntentReceiver">
+		<receiver android:name="github.paroj.dsub2000.receiver.A2dpIntentReceiver"
+			android:exported="true">
 			<intent-filter>
 				<action android:name="android.music.playstatusrequest"/>
 			</intent-filter>
@@ -175,6 +185,7 @@
 
         <receiver
 			android:name="github.paroj.dsub2000.provider.DSubWidget4x1"
+			android:exported="true"
 			android:label="@string/widget.4x1">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -183,6 +194,7 @@
         </receiver>
 		<receiver
 			android:name="github.paroj.dsub2000.provider.DSubWidget4x2"
+			android:exported="true"
 			android:label="@string/widget.4x2">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -191,6 +203,7 @@
         </receiver>
 		<receiver
 			android:name="github.paroj.dsub2000.provider.DSubWidget4x3"
+			android:exported="true"
 			android:label="@string/widget.4x3">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -199,6 +212,7 @@
         </receiver>
 		<receiver
 			android:name="github.paroj.dsub2000.provider.DSubWidget4x4"
+			android:exported="true"
 			android:label="@string/widget.4x4">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -207,7 +221,8 @@
         </receiver>
 
 		<receiver
-			android:name="github.paroj.dsub2000.receiver.PlayActionReceiver">
+			android:name="github.paroj.dsub2000.receiver.PlayActionReceiver"
+			android:exported="true">
 
 			<intent-filter>
 				<action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
