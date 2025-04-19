@@ -34,7 +34,7 @@ public class RemoteControlClientICS extends RemoteControlClientBase {
 		// build the PendingIntent for the remote control client
 		Intent mediaButtonIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
 		mediaButtonIntent.setComponent(mediaButtonReceiverComponent);
-		PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, mediaButtonIntent, 0);
+		PendingIntent mediaPendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, mediaButtonIntent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
 
 		// create and register the remote control client
 		mRemoteControl = new RemoteControlClient(mediaPendingIntent);

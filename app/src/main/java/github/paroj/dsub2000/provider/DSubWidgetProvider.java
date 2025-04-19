@@ -280,7 +280,7 @@ public class DSubWidgetProvider extends AppWidgetProvider {
 		Intent intent = new Intent(context, SubsonicFragmentActivity.class);
 		intent.putExtra(Constants.INTENT_EXTRA_NAME_DOWNLOAD, true);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.appwidget_coverart, pendingIntent);
         views.setOnClickPendingIntent(R.id.appwidget_top, pendingIntent);
 
@@ -291,7 +291,7 @@ public class DSubWidgetProvider extends AppWidgetProvider {
         if (Build.VERSION.SDK_INT >= 26)
             pendingIntent = PendingIntent.getForegroundService(context, 0, intent, 0);
         else
-            pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+            pendingIntent = PendingIntent.getService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.control_play, pendingIntent);
 
         intent = new Intent("DSub.NEXT");  // Use a unique action name to ensure a different PendingIntent to be created.
@@ -300,7 +300,7 @@ public class DSubWidgetProvider extends AppWidgetProvider {
         if (Build.VERSION.SDK_INT >= 26)
             pendingIntent = PendingIntent.getForegroundService(context, 0, intent, 0);
         else
-            pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+            pendingIntent = PendingIntent.getService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.control_next, pendingIntent);
 
         intent = new Intent("DSub.PREVIOUS");  // Use a unique action name to ensure a different PendingIntent to be created.
@@ -309,7 +309,7 @@ public class DSubWidgetProvider extends AppWidgetProvider {
         if (Build.VERSION.SDK_INT >= 26)
             pendingIntent = PendingIntent.getForegroundService(context, 0, intent, 0);
         else
-            pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+            pendingIntent = PendingIntent.getService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.control_previous, pendingIntent);
     }
 }
