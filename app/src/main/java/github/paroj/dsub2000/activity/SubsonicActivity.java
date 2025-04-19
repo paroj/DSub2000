@@ -193,7 +193,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			String currentSSID = Util.getSSID(this);
 
 			if("<unknown ssid>".equals(currentSSID) && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-				ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, SubsonicActivity.PERMISSIONS_REQUEST_LOCATION);
+				ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, SubsonicActivity.PERMISSIONS_REQUEST_LOCATION);
 			}
 		}
 	}
