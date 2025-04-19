@@ -24,11 +24,13 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.RemoteControlClient;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,6 +53,8 @@ import github.paroj.dsub2000.util.SongDBHandler;
 import github.paroj.dsub2000.util.Util;
 
 import static github.paroj.dsub2000.domain.PlayerState.PREPARING;
+
+import androidx.core.content.ContextCompat;
 
 /**
  * @author Sindre Mehus
@@ -158,9 +162,10 @@ public class DownloadServiceLifecycleSupport {
 		// Pause temporarily on incoming phone calls.
 		phoneStateListener = new MyPhoneStateListener();
 
-		// Android 6.0 removes requirement for android.Manifest.permission.READ_PHONE_STATE;
-		TelephonyManager telephonyManager = (TelephonyManager) downloadService.getSystemService(Context.TELEPHONY_SERVICE);
-		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+		if (ContextCompat.checkSelfPermission(this.downloadService, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+			TelephonyManager telephonyManager = (TelephonyManager) downloadService.getSystemService(Context.TELEPHONY_SERVICE);
+			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+		}
 
 		// Register the handler for outside intents.
 		IntentFilter commandFilter = new IntentFilter();

@@ -99,6 +99,8 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 	public static final int PERMISSIONS_REQUEST_LOCATION = 2;
 
+	public static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 3;
+
 	private final List<Runnable> afterServiceAvailable = new ArrayList<>();
 	private boolean drawerIdle = true;
 	private boolean destroyed = false;
@@ -186,6 +188,11 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			ActivityCompat.requestPermissions(this, new String[]{ permission.WRITE_EXTERNAL_STORAGE }, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 		}
 
+		// To be able to stop playback during calls, we need the phone state permission.
+		if (ContextCompat.checkSelfPermission(this, permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+			ActivityCompat.requestPermissions(this, new String[]{ permission.READ_PHONE_STATE }, PERMISSIONS_REQUEST_READ_PHONE_STATE);
+		}
+
 		SharedPreferences prefs = Util.getPreferences(this);
 		int instance = prefs.getInt(Constants.PREFERENCES_KEY_SERVER_INSTANCE, 1);
 		String expectedSSID = prefs.getString(Constants.PREFERENCES_KEY_SERVER_LOCAL_NETWORK_SSID + instance, "");
@@ -216,6 +223,15 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 
 				} else {
 					Util.toast(this, R.string.permission_location_failed);
+				}
+			}
+
+			case PERMISSIONS_REQUEST_READ_PHONE_STATE: {
+				// If request is cancelled, the result arrays are empty.
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+				} else {
+					Util.toast(this, R.string.permission_phone_state_failed);
 				}
 			}
 		}
