@@ -172,7 +172,7 @@ public final class Notifications {
 		Intent notificationIntent = new Intent(context, SubsonicFragmentActivity.class);
 		notificationIntent.putExtra(Constants.INTENT_EXTRA_NAME_DOWNLOAD, true);
 		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		notification.contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+		notification.contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
 
 		playShowing = true;
 		if(downloadForeground && downloadShowing) {
@@ -259,7 +259,7 @@ public final class Notifications {
 			intent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, keyCode));
 		}
 
-		return PendingIntent.getService(context, 0, intent, 0);
+		return PendingIntent.getService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
 	}
 
 	private static void setupViews(RemoteViews rv, Context context, MusicDirectory.Entry song, boolean expanded, boolean playing, boolean remote, boolean isSingleFile, boolean shouldFastForward) {
@@ -460,7 +460,7 @@ public final class Notifications {
 
 		Intent cancelIntent = new Intent(context, DownloadService.class);
 		cancelIntent.setAction(DownloadService.CANCEL_DOWNLOADS);
-		PendingIntent cancelPI = PendingIntent.getService(context, 0, cancelIntent, 0);
+		PendingIntent cancelPI = PendingIntent.getService(context, 0, cancelIntent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
 
 		String currentDownloading, currentSize;
 		if(file != null) {
@@ -488,7 +488,7 @@ public final class Notifications {
 		Intent notificationIntent = new Intent(context, SubsonicFragmentActivity.class);
 		notificationIntent.putExtra(Constants.INTENT_EXTRA_NAME_DOWNLOAD_VIEW, true);
 		notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		builder.setContentIntent(PendingIntent.getActivity(context, 2, notificationIntent, 0));
+		builder.setContentIntent(PendingIntent.getActivity(context, 2, notificationIntent, /* flags */ PendingIntent.FLAG_IMMUTABLE));
 
 		final Notification notification = builder.build();
 		downloadShowing = true;
@@ -605,7 +605,7 @@ public final class Notifications {
 				notificationIntent.putExtra(Constants.INTENT_EXTRA_NAME_ID, extraId);
 			}
 
-			builder.setContentIntent(PendingIntent.getActivity(context, stringId, notificationIntent, 0));
+			builder.setContentIntent(PendingIntent.getActivity(context, stringId, notificationIntent, /* flags */ PendingIntent.FLAG_IMMUTABLE));
 
 			NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 			notificationManager.notify(stringId, builder.build());
