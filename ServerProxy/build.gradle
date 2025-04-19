@@ -25,8 +25,8 @@ android {
     namespace "github.paroj.serverproxy"
 
     defaultConfig {
-        targetSdkVersion 30
-        minSdkVersion = 24
+        targetSdkVersion 33
+        minSdkVersion 24
     }
 
     sourceSets {
