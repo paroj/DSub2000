@@ -6,7 +6,7 @@ android {
 	defaultConfig {
 		applicationId "github.paroj.dsub2000"
 		minSdkVersion 24
-		targetSdkVersion 30
+		targetSdkVersion 31
 		versionCode 209
 		versionName '5.6.0'
 		vectorDrawables.useSupportLibrary = true
