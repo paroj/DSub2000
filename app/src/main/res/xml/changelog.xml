@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="5.6.1" versioncode="210" releasedate="21/04/2025">
+		<change>Target Android API 33</change>
+		<change>Allow Android Auto with the FLOSS build</change>
+	</release>
 	<release version="5.6.0" versioncode="209" releasedate="28/06/2024">
 		<change>Rebrand app to DSub2000 to indicate the fork</change>
 		<change>Change setting defaults to improve compatibility and UI clarity</change>
