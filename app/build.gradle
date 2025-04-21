@@ -7,7 +7,7 @@ android {
 		applicationId "github.paroj.dsub2000"
 		minSdkVersion 24
 		targetSdkVersion 33
-		versionCode 209
+		versionCode 210
 		versionName '5.6.1'
 		vectorDrawables.useSupportLibrary = true
 		setProperty("archivesBaseName", "DSub2000_$versionName")
