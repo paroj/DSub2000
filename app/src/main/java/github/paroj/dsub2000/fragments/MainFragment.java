@@ -286,7 +286,7 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 				@Override
 				protected String doInBackground() throws Throwable {
 					updateProgress("Gathering Logs");
-					File logcat = new File(Environment.getExternalStorageDirectory(), "dsub-logcat.txt");
+					File logcat = new File(context.getExternalFilesDir(null), "dsub-logcat.txt");
 					Util.delete(logcat);
 					Process logcatProc = null;
 
@@ -333,7 +333,7 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 							Util.close(reader);
 						}
 
-						File stacktrace = new File(Environment.getExternalStorageDirectory(), "dsub-stacktrace.txt");
+						File stacktrace = new File(context.getExternalFilesDir(null), "dsub-stacktrace.txt");
 						if(stacktrace.exists() && stacktrace.isFile()) {
 							writer.write("\n\nMost Recent Stacktrace:\n\n");
 

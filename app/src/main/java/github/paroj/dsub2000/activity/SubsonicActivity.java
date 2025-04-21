@@ -184,7 +184,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			Util.getPreferences(this).registerOnSharedPreferenceChangeListener(preferencesListener);
 		}
 
-		if (ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+		if (ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
 			ActivityCompat.requestPermissions(this, new String[]{ permission.WRITE_EXTERNAL_STORAGE }, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 		}
 
@@ -1287,7 +1287,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			try {
 
 				PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-				file = new File(Environment.getExternalStorageDirectory(), "dsub-stacktrace.txt");
+				file = new File(context.getExternalFilesDir(null), "dsub-stacktrace.txt");
 				printWriter = new PrintWriter(file);
 				printWriter.println("Android API level: " + Build.VERSION.SDK);
 				printWriter.println("Subsonic version name: " + packageInfo.versionName);
