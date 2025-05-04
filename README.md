@@ -34,6 +34,15 @@ can play files that your device may not normally support.
 * Highly customizable UI
 * User defined Cache Size, Network Timeout, and Buffer Length
 
+## Permissions
+
+This is why we need the permissions we do:
+
+* Foreground Service - For downloading your playlists to cache
+* Read & Write External Storage - Store the music cache on a sdcard
+* Access Fine Location - Automatic day/ night mode and different server URL in local WiFi
+* Read Phone State - Auto-pause playback when a call is received
+
 ## Updating Icons
 Media Icons are double standard size.  On https://romannurik.github.io/AndroidAssetStudio/icons-actionbar.html you can manually change this via the following js commands:
 ```
