@@ -289,7 +289,7 @@ public class DSubWidgetProvider extends AppWidgetProvider {
         intent.setComponent(new ComponentName(context, DownloadService.class));
 		intent.setAction(DownloadService.CMD_TOGGLEPAUSE);
         if (Build.VERSION.SDK_INT >= 26)
-            pendingIntent = PendingIntent.getForegroundService(context, 0, intent, 0);
+            pendingIntent = PendingIntent.getForegroundService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
         else
             pendingIntent = PendingIntent.getService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.control_play, pendingIntent);
@@ -298,7 +298,7 @@ public class DSubWidgetProvider extends AppWidgetProvider {
         intent.setComponent(new ComponentName(context, DownloadService.class));
 		intent.setAction(DownloadService.CMD_NEXT);
         if (Build.VERSION.SDK_INT >= 26)
-            pendingIntent = PendingIntent.getForegroundService(context, 0, intent, 0);
+            pendingIntent = PendingIntent.getForegroundService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
         else
             pendingIntent = PendingIntent.getService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.control_next, pendingIntent);
@@ -307,7 +307,7 @@ public class DSubWidgetProvider extends AppWidgetProvider {
         intent.setComponent(new ComponentName(context, DownloadService.class));
 		intent.setAction(DownloadService.CMD_PREVIOUS);
         if (Build.VERSION.SDK_INT >= 26)
-            pendingIntent = PendingIntent.getForegroundService(context, 0, intent, 0);
+            pendingIntent = PendingIntent.getForegroundService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
         else
             pendingIntent = PendingIntent.getService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.control_previous, pendingIntent);
