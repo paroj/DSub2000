@@ -67,6 +67,7 @@ public class ImageLoader {
 	private Handler handler;
 	private Bitmap nowPlaying;
 	private Bitmap nowPlayingSmall;
+	private Bitmap avatar;
 	private final int imageSizeDefault;
 	private final int imageSizeLarge;
 	private final int avatarSizeDefault;
@@ -96,7 +97,11 @@ public class ImageLoader {
 			@Override
 			protected void entryRemoved(boolean evicted, String key, Bitmap oldBitmap, Bitmap newBitmap) {
 				if(evicted) {
-					if((oldBitmap != nowPlaying && oldBitmap != nowPlayingSmall) || clearingCache) {
+					boolean inUse = false;
+					inUse |= oldBitmap == nowPlaying;
+					inUse |= oldBitmap == nowPlayingSmall;
+					inUse |= oldBitmap == avatar;
+					if(!inUse || clearingCache) {
 						oldBitmap.recycle();
 					} else if(oldBitmap != newBitmap) {
 						cache.put(key, oldBitmap);
@@ -109,6 +114,7 @@ public class ImageLoader {
 	public void clearCache() {
 		nowPlaying = null;
 		nowPlayingSmall = null;
+		avatar = null;
 		new SilentBackgroundTask<Void>(context) {
 			@Override
 			protected Void doInBackground() throws Throwable {
@@ -309,6 +315,7 @@ public class ImageLoader {
 	}
 
 	public SilentBackgroundTask<Void> loadAvatar(Context context, ImageView view, String username) {
+		avatar = null;
 		if(username == null) {
 			view.setImageResource(R.drawable.ic_social_person);
 			return null;
@@ -318,6 +325,7 @@ public class ImageLoader {
 		if (bitmap != null && !bitmap.isRecycled()) {
 			Drawable drawable = Util.createDrawableFromBitmap(this.context, bitmap);
 			view.setImageDrawable(drawable);
+			avatar = bitmap;
 			return null;
 		}
 		view.setImageDrawable(null);
