@@ -25,7 +25,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
@@ -804,8 +803,8 @@ public class FileUtil {
     public static <T extends Serializable> boolean serialize(Context context, T obj, String fileName) {
 		Output out = null;
 		try {
-			RandomAccessFile file = new RandomAccessFile(context.getCacheDir() + "/" + fileName, "rw");
-			out = new Output(new FileOutputStream(file.getFD()));
+			File file = new File(context.getCacheDir(), fileName);
+			out = new Output(new FileOutputStream(file));
 			synchronized (kryo) {
 				kryo.writeObject(out, obj);
 			}
@@ -839,9 +838,7 @@ public class FileUtil {
 				}
 			}
 
-			RandomAccessFile randomFile = new RandomAccessFile(file, "r");
-
-			in = new Input(new FileInputStream(randomFile.getFD()));
+			in = new Input(new FileInputStream(file));
 			synchronized (kryo) {
 				T result = kryo.readObject(in, tClass);
 				return result;
@@ -861,8 +858,8 @@ public class FileUtil {
 	public static <T extends Serializable> boolean serializeCompressed(Context context, T obj, String fileName) {
 		Output out = null;
 		try {
-			RandomAccessFile file = new RandomAccessFile(context.getCacheDir() + "/" + fileName, "rw");
-			out = new Output(new DeflaterOutputStream(new FileOutputStream(file.getFD())));
+			File file = new File(context.getCacheDir(), fileName);
+			out = new Output(new DeflaterOutputStream(new FileOutputStream(file)));
 			synchronized (kryo) {
 				kryo.writeObject(out, obj);
 			}
@@ -879,9 +876,9 @@ public class FileUtil {
 	public static <T extends Serializable> T deserializeCompressed(Context context, String fileName, Class<T> tClass) {
 		Input in = null;
 		try {
-			RandomAccessFile file = new RandomAccessFile(context.getCacheDir() + "/" + fileName, "r");
+			File file = new File(context.getCacheDir(), fileName);
 
-			in = new Input(new InflaterInputStream(new FileInputStream(file.getFD())));
+			in = new Input(new InflaterInputStream(new FileInputStream(file)));
 			synchronized (kryo) {
 				T result = kryo.readObject(in, tClass);
 				return result;
