@@ -185,6 +185,7 @@ public class SongDBHandler extends SQLiteOpenHelper {
 			return null;
 		}
 		finally {
+			cursor.close();
 			db.close();
 		}
 	}
@@ -229,6 +230,7 @@ public class SongDBHandler extends SQLiteOpenHelper {
 			return null;
 		}
 		finally {
+			cursor.close();
 			db.close();
 		}
 	}
@@ -245,6 +247,7 @@ public class SongDBHandler extends SQLiteOpenHelper {
 			return null;
 		}
 		finally {
+			cursor.close();
 			db.close();
 		}
 	}
