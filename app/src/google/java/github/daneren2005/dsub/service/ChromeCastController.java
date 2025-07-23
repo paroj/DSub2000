@@ -170,7 +170,7 @@ public class ChromeCastController extends RemoteController {
 		apiClient = null;
 
 		if(proxy != null) {
-			proxy.stop();
+			proxy.close();
 			proxy = null;
 		}
 	}

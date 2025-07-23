@@ -391,7 +391,7 @@ public class DownloadService extends Service {
 			remoteController.shutdown();
 		}
 		if(proxy != null) {
-			proxy.stop();
+			proxy.close();
 			proxy = null;
 		}
 		if (audioNoisyReceiver != null) {
@@ -835,7 +835,7 @@ public class DownloadService extends Service {
 		updateRemotePlaylist();
 		setNextPlaying();
 		if(proxy != null) {
-			proxy.stop();
+			proxy.close();
 			proxy = null;
 		}
 
@@ -1185,7 +1185,7 @@ public class DownloadService extends Service {
 
 		// Proxy should not be being used here since the next player was already setup to play
 		if(proxy != null) {
-			proxy.stop();
+			proxy.close();
 			proxy = null;
 		}
 		checkDownloads();
@@ -1964,7 +1964,7 @@ public class DownloadService extends Service {
 					dataSource = proxy.getPrivateAddress(dataSource);
 					Log.i(TAG, "Data Source: " + dataSource);
 				} else if (proxy != null) {
-					proxy.stop();
+					proxy.close();
 					proxy = null;
 				}
 			}

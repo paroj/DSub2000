@@ -276,7 +276,7 @@ public class DLNAController extends RemoteController {
 		}
 
 		if(proxy != null) {
-			proxy.stop();
+			proxy.close();
 			proxy = null;
 		}
 
