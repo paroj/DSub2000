@@ -151,7 +151,7 @@ public abstract class RemoteController {
 			// Check if we want a proxy going still
 			if(Util.isCastProxy(downloadService)) {
 				if(proxy instanceof FileProxy) {
-					proxy.stop();
+					proxy.close();
 					proxy = null;
 				}
 
@@ -160,7 +160,7 @@ public abstract class RemoteController {
 					proxy.start();
 				}
 			} else if(proxy != null) {
-				proxy.stop();
+				proxy.close();
 				proxy = null;
 			}
 

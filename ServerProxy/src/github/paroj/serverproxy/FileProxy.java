@@ -127,6 +127,7 @@ public class FileProxy extends ServerProxy {
 			headers += "\r\n";
 
 			long cbToSend = fileSize - cbSkip;
+			FileInputStream input = null;
 			OutputStream output = null;
 			byte[] buff = new byte[64 * 1024];
 			try {
@@ -143,7 +144,7 @@ public class FileProxy extends ServerProxy {
 					// See if there's more to send
 					int cbSentThisBatch = 0;
 					if (file.exists()) {
-						FileInputStream input = new FileInputStream(file);
+						input = new FileInputStream(file);
 						input.skip(cbSkip);
 						int cbToSendThisBatch = input.available();
 						while (cbToSendThisBatch > 0) {
@@ -160,6 +161,7 @@ public class FileProxy extends ServerProxy {
 							cbSentThisBatch += cbRead;
 						}
 						input.close();
+						input = null;
 					}
 
 					// Done regardless of whether or not it thinks it is
@@ -192,6 +194,9 @@ public class FileProxy extends ServerProxy {
 			try {
 				if (output != null) {
 					output.close();
+				}
+				if(input != null) {
+					input.close();
 				}
 				client.close();
 			}

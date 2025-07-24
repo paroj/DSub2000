@@ -16,6 +16,7 @@
 package github.paroj.serverproxy;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -37,7 +38,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-public abstract class ServerProxy implements Runnable {
+public abstract class ServerProxy implements Runnable, Closeable {
 	private static final String TAG = ServerProxy.class.getSimpleName();
 
 	private Thread thread;
@@ -56,6 +57,16 @@ public abstract class ServerProxy implements Runnable {
 		} catch (UnknownHostException e) { // impossible
 		} catch (IOException e) {
 			Log.e(TAG, "IOException initializing server", e);
+		}
+	}
+
+	@Override
+	public void close() {
+		stop();
+		try {
+			socket.close();
+		} catch (IOException e) {
+			Log.e(TAG, "IOException closing server", e);
 		}
 	}
 

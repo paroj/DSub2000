@@ -79,13 +79,12 @@ public class MediaStoreService {
 			}
 
 			// Look up album, and add cover art if found.
-			Cursor cursor = contentResolver.query(uri, new String[]{MediaStore.Audio.AudioColumns.ALBUM_ID}, null, null, null);
-			if (cursor.moveToFirst()) {
-				int albumId = cursor.getInt(0);
-				insertAlbumArt(albumId, downloadFile);
+			try (Cursor cursor = contentResolver.query(uri, new String[]{MediaStore.Audio.AudioColumns.ALBUM_ID}, null, null, null)){
+				if (cursor.moveToFirst()) {
+					int albumId = cursor.getInt(0);
+					insertAlbumArt(albumId, downloadFile);
+				}
 			}
-
-			cursor.close();
 		} else {
 			values.put(MediaStore.Video.VideoColumns.TITLE, song.getTitle());
 			values.put(MediaStore.Video.VideoColumns.DISPLAY_NAME, song.getTitle());
@@ -169,20 +168,20 @@ public class MediaStoreService {
 	private void insertAlbumArt(int albumId, DownloadFile downloadFile) {
 		ContentResolver contentResolver = context.getContentResolver();
 
-		Cursor cursor = contentResolver.query(Uri.withAppendedPath(ALBUM_ART_URI, String.valueOf(albumId)), null, null, null, null);
-		if (!cursor.moveToFirst()) {
+		try (Cursor cursor = contentResolver.query(Uri.withAppendedPath(ALBUM_ART_URI, String.valueOf(albumId)), null, null, null, null)) {
+			if (!cursor.moveToFirst()) {
 
-			// No album art found, add it.
-			File albumArtFile = FileUtil.getAlbumArtFile(context, downloadFile.getSong());
-			if (albumArtFile.exists()) {
-				ContentValues values = new ContentValues();
-				values.put(MediaStore.Audio.AlbumColumns.ALBUM_ID, albumId);
-				values.put(MediaStore.MediaColumns.DATA, albumArtFile.getPath());
-				contentResolver.insert(ALBUM_ART_URI, values);
-				Log.i(TAG, "Added album art: " + albumArtFile);
+				// No album art found, add it.
+				File albumArtFile = FileUtil.getAlbumArtFile(context, downloadFile.getSong());
+				if (albumArtFile.exists()) {
+					ContentValues values = new ContentValues();
+					values.put(MediaStore.Audio.AlbumColumns.ALBUM_ID, albumId);
+					values.put(MediaStore.MediaColumns.DATA, albumArtFile.getPath());
+					contentResolver.insert(ALBUM_ART_URI, values);
+					Log.i(TAG, "Added album art: " + albumArtFile);
+				}
 			}
 		}
-		cursor.close();
 	}
 
 }
