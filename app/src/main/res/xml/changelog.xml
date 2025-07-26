@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="5.6.2" versioncode="211" releasedate="26/07/2025">
+		<change>Fix multiple crashes and memory leaks</change>
+	</release>
 	<release version="5.6.1" versioncode="210" releasedate="21/04/2025">
 		<change>Target Android API 33</change>
 		<change>Allow Android Auto with the FLOSS build</change>
