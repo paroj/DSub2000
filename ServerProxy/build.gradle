@@ -43,13 +43,13 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles 'proguard.cfg'
+            minifyEnabled false
+            consumerProguardFiles 'proguard.cfg'
             zipAlignEnabled true
         }
         fix {
-            minifyEnabled true
-            proguardFiles 'proguard.cfg'
+            minifyEnabled false
+            consumerProguardFiles 'proguard.cfg'
             zipAlignEnabled true
         }
     }
