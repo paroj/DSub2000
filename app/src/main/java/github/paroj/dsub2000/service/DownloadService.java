@@ -1086,7 +1086,7 @@ public class DownloadService extends Service {
 	public synchronized List<DownloadFile> getRecentDownloads() {
 		int from = Math.max(currentPlayingIndex - 10, 0);
 		int songsToKeep = Math.min(Math.max(Util.getPreloadCount(this), 20), downloadList.size());
-		int to = Math.max(Math.min(currentPlayingIndex + songsToKeep, downloadList.size() - 1), 0);
+		int to = Math.max(Math.min(currentPlayingIndex + songsToKeep, downloadList.size()), 0);
 		List<DownloadFile> temp = downloadList.subList(from, to);
 		temp.addAll(backgroundDownloadList);
 		return temp;
