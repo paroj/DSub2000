@@ -41,6 +41,13 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
 			Log.w(TAG, "Ignore keycode event because downloadService is off");
 			return;
 		}
+
+		if (event == null) {
+			// we only get here, if DownloadService was dead, so we can assume it was not playing 
+			Log.i(TAG, "Got null MEDIA_BUTTON key event, assuming play button pressed");
+			event = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY);
+		}
+
         Log.i(TAG, "Got MEDIA_BUTTON key event: " + event);
 
         Intent serviceIntent = new Intent(context, DownloadService.class);
