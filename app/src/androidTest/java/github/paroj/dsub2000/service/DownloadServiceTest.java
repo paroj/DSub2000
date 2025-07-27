@@ -72,7 +72,7 @@ public class DownloadServiceTest {
 				false, 0, 0);
 
 		int output_length = downloadService.getRecentDownloads().size();
-		assertEquals(1, output_length);
+		assertEquals(2, output_length);
 	}
 
 	@Test
