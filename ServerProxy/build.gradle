@@ -3,10 +3,6 @@ buildscript {
         mavenCentral()
         google()
     }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
-    }
 }
 
 apply plugin: 'com.android.library'
@@ -17,15 +13,15 @@ repositories {
 }
 
 dependencies {
-	implementation 'com.android.support:support-v4:18.0.+'
+	implementation 'com.android.support:support-v4:28.0.0'
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 36
     namespace "github.paroj.serverproxy"
 
     defaultConfig {
-        targetSdkVersion 33
+        targetSdkVersion 36
         minSdkVersion 24
     }
 
@@ -68,5 +64,9 @@ android {
     buildFeatures {
         renderScript true
         aidl true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }

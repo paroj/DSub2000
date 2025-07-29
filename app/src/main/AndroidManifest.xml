@@ -24,6 +24,8 @@
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
 	<uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 	<uses-feature android:name="android.hardware.bluetooth" android:required="false" />
@@ -96,9 +98,10 @@
 
         <service android:name="github.paroj.dsub2000.service.DownloadService"
                  android:label="DSub Playback Service"
-                 android:foregroundServiceType="location"/>
+                 android:foregroundServiceType="mediaPlayback"/>
 
 		<service android:name="github.paroj.dsub2000.service.AutoMediaBrowserService"
+				 android:foregroundServiceType="mediaPlayback"
 				 android:exported="true">
 
 			<intent-filter>
@@ -106,9 +109,11 @@
 			</intent-filter>
 		</service>
 
-		<service android:name="org.jupnp.android.AndroidUpnpServiceImpl"/>
+		<service android:name="org.jupnp.android.AndroidUpnpServiceImpl"
+			     android:foregroundServiceType="mediaPlayback|dataSync"/>
 		<service
 			android:name="github.paroj.dsub2000.service.sync.AuthenticatorService"
+			android:foregroundServiceType="mediaPlayback|dataSync"
 			android:exported="true">
 
 			<intent-filter>
@@ -119,6 +124,7 @@
 				android:resource="@xml/authenticator" />
 		</service>
 		<service android:name="github.paroj.dsub2000.service.sync.PlaylistSyncService"
+			android:foregroundServiceType="mediaPlayback|dataSync"
 			android:exported="true"
 			android:process=":sync">
 
@@ -129,6 +135,7 @@
 				android:resource="@xml/playlists_syncadapter" />
 		</service>
 		<service android:name="github.paroj.dsub2000.service.sync.PodcastSyncService"
+			     android:foregroundServiceType="mediaPlayback|dataSync"
 				 android:exported="true"
 				 android:process=":sync">
 
@@ -139,6 +146,7 @@
 					   android:resource="@xml/podcasts_syncadapter" />
 		</service>
 		<service android:name="github.paroj.dsub2000.service.sync.StarredSyncService"
+			     android:foregroundServiceType="dataSync|mediaPlayback"
 				 android:exported="true"
 				 android:process=":sync">
 
@@ -149,6 +157,7 @@
 					   android:resource="@xml/starred_syncadapter" />
 		</service>
 		<service android:name="github.paroj.dsub2000.service.sync.MostRecentSyncService"
+			     android:foregroundServiceType="dataSync|mediaPlayback"
 				 android:exported="true"
 				 android:process=":sync">
 
@@ -160,6 +169,7 @@
 		</service>
 
 		<service android:name="github.paroj.dsub2000.service.HeadphoneListenerService"
+			android:foregroundServiceType="mediaPlayback"
 			android:label="DSub Headphone Listener"/>
 		<receiver
 			android:name="github.paroj.dsub2000.receiver.BootReceiver"

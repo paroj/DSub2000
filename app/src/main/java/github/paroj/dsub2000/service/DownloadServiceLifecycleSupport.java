@@ -18,6 +18,8 @@
  */
 package github.paroj.dsub2000.service;
 
+import static android.content.Context.RECEIVER_EXPORTED;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +35,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.RemoteControlClient;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.telephony.PhoneStateListener;
@@ -111,7 +115,8 @@ public class DownloadServiceLifecycleSupport {
 		this.downloadService = downloadService;
 	}
 
-	public void onCreate() {
+	@SuppressLint("UnspecifiedRegisterReceiverFlag")
+    public void onCreate() {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -154,7 +159,11 @@ public class DownloadServiceLifecycleSupport {
 		IntentFilter ejectFilter = new IntentFilter(Intent.ACTION_MEDIA_EJECT);
 		ejectFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);
 		ejectFilter.addDataScheme("file");
-		downloadService.registerReceiver(ejectEventReceiver, ejectFilter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            downloadService.registerReceiver(ejectEventReceiver, ejectFilter, RECEIVER_EXPORTED);
+        } else {
+			downloadService.registerReceiver(ejectEventReceiver, ejectFilter);
+		}
 
 		// React to media buttons.
 		Util.registerMediaButtonEventReceiver(downloadService);
@@ -176,7 +185,11 @@ public class DownloadServiceLifecycleSupport {
 		commandFilter.addAction(DownloadService.CMD_PREVIOUS);
 		commandFilter.addAction(DownloadService.CMD_NEXT);
 		commandFilter.addAction(DownloadService.CANCEL_DOWNLOADS);
-		downloadService.registerReceiver(intentReceiver, commandFilter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            downloadService.registerReceiver(intentReceiver, commandFilter, RECEIVER_EXPORTED);
+        } else {
+			downloadService.registerReceiver(intentReceiver, commandFilter);
+		}
 
 		new CacheCleaner(downloadService, downloadService).clean();
 	}

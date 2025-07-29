@@ -31,6 +31,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AlertDialog;
@@ -132,6 +133,24 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 		}
 
 		super.onCreate(savedInstanceState);
+
+		OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+			@Override
+			public void handleOnBackPressed() {
+				if(slideUpPanel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED && secondaryFragment == null) {
+					slideUpPanel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+				} else if(onBackPressedSupport()) {
+					if(!Util.disableExitPrompt(currentFragment.requireContext()) && lastBackPressTime < (System.currentTimeMillis() - 4000)) {
+						lastBackPressTime = System.currentTimeMillis();
+						Util.toast(currentFragment.requireContext(), R.string.main_back_confirm);
+					} else {
+						finish();
+					}
+				}
+			}
+		};
+		getOnBackPressedDispatcher().addCallback(this, callback);
+
 		if (getIntent().hasExtra(Constants.INTENT_EXTRA_NAME_EXIT)) {
 			stopService(new Intent(this, DownloadService.class));
 			finish();
@@ -202,51 +221,44 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			}
 
 			@Override
-			public void onPanelCollapsed(View panel) {
-				isPanelClosing = false;
-				if(bottomBar.getVisibility() == View.GONE) {
-					bottomBar.setVisibility(View.VISIBLE);
-					nowPlayingToolbar.setVisibility(View.GONE);
-					nowPlayingFragment.setPrimaryFragment(false);
-					setSupportActionBar(mainToolbar);
-					recreateSpinner();
+			public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+				switch (newState) {
+					case COLLAPSED:
+						isPanelClosing = false;
+						if(bottomBar.getVisibility() == View.GONE) {
+							bottomBar.setVisibility(View.VISIBLE);
+							nowPlayingToolbar.setVisibility(View.GONE);
+							nowPlayingFragment.setPrimaryFragment(false);
+							setSupportActionBar(mainToolbar);
+							recreateSpinner();
+						}
+						break;
+					case EXPANDED:
+						isPanelClosing = false;
+						currentFragment.stopActionMode();
+
+						// Disable custom view before switching
+						getSupportActionBar().setDisplayShowCustomEnabled(false);
+						getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+						bottomBar.setVisibility(View.GONE);
+						nowPlayingToolbar.setVisibility(View.VISIBLE);
+						setSupportActionBar(nowPlayingToolbar);
+
+						if(secondaryFragment == null) {
+							nowPlayingFragment.setPrimaryFragment(true);
+						} else {
+							secondaryFragment.setPrimaryFragment(true);
+						}
+
+						drawerToggle.setDrawerIndicatorEnabled(false);
+						getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+						break;
 				}
 			}
 
-			@Override
-			public void onPanelExpanded(View panel) {
-				isPanelClosing = false;
-				currentFragment.stopActionMode();
-
-				// Disable custom view before switching
-				getSupportActionBar().setDisplayShowCustomEnabled(false);
-				getSupportActionBar().setDisplayShowTitleEnabled(true);
-
-				bottomBar.setVisibility(View.GONE);
-				nowPlayingToolbar.setVisibility(View.VISIBLE);
-				setSupportActionBar(nowPlayingToolbar);
-
-				if(secondaryFragment == null) {
-					nowPlayingFragment.setPrimaryFragment(true);
-				} else {
-					secondaryFragment.setPrimaryFragment(true);
-				}
-
-				drawerToggle.setDrawerIndicatorEnabled(false);
-				getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-			}
-
-			@Override
-			public void onPanelAnchored(View panel) {
-
-			}
-
-			@Override
-			public void onPanelHidden(View panel) {
-
-			}
 		};
-		slideUpPanel.setPanelSlideListener(panelSlideListener);
+		slideUpPanel.addPanelSlideListener(panelSlideListener);
 
 		if(getIntent().hasExtra(Constants.INTENT_EXTRA_NAME_DOWNLOAD)) {
 			// Post this later so it actually runs
@@ -507,7 +519,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 		}
 
 		if(savedInstanceState.getInt(Constants.MAIN_SLIDE_PANEL_STATE, -1) == SlidingUpPanelLayout.PanelState.EXPANDED.hashCode()) {
-			panelSlideListener.onPanelExpanded(null);
+			panelSlideListener.onPanelStateChanged(null, null, SlidingUpPanelLayout.PanelState.EXPANDED);
 		}
 	}
 
@@ -522,20 +534,6 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onBackPressed() {
-		if(slideUpPanel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED && secondaryFragment == null) {
-			slideUpPanel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-		} else if(onBackPressedSupport()) {
-			if(!Util.disableExitPrompt(this) && lastBackPressTime < (System.currentTimeMillis() - 4000)) {
-				lastBackPressTime = System.currentTimeMillis();
-				Util.toast(this, R.string.main_back_confirm);
-			} else {
-				finish();
-			}
-		}
 	}
 
 	@Override

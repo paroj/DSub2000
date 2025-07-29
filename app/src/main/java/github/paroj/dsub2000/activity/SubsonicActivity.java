@@ -764,13 +764,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		}
 	}
 
-	@Override
-	public void onBackPressed() {
-		if(onBackPressedSupport()) {
-			super.onBackPressed();
-		}
-	}
-
 	public SubsonicFragment getCurrentFragment() {
 		return this.currentFragment;
 	}
