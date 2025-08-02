@@ -207,7 +207,9 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 
 	@Override
 	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-		switch (requestCode) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
 			case PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
 				// If request is cancelled, the result arrays are empty.
 				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
