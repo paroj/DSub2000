@@ -129,7 +129,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	SharedPreferences.OnSharedPreferenceChangeListener preferencesListener;
 
 	static {
-		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+		AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 	}
 
 	@Override
