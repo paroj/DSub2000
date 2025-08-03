@@ -27,6 +27,13 @@
 			android:summary="@string/settings.casting_cache_summary"
 			android:key="castCache"
 			android:defaultValue="false"/>
+
+		<CheckBoxPreference
+			android:defaultValue="false"
+			android:enabled="false"
+			android:key="castChromecastAvailability"
+			android:summary="@string/settings.casting.chromecast_available_summary"
+			android:title="@string/settings.casting.chromecast_available" />
 	</PreferenceCategory>
 
 	<PreferenceCategory
