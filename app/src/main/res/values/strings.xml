@@ -498,6 +498,8 @@
 	<string name="settings.casting_cache_summary">Cache currently playing songs while casting</string>
 	<string name="settings.casting.dlna_casting_enabled">DLNA Enabled</string>
 	<string name="settings.casting.dlna_casting_enabled.summary">If you are having battery drain problems on Android 7.0 try turning this off</string>
+	<string name="settings.casting.chromecast_available">Chromecast Support</string>
+	<string name="settings.casting.chromecast_available_summary">Whether Chromecast Support is enabled in this DSub2000 release.</string>
     <string name="settings.rewind_interval">Rewind Interval</string>
     <string name="settings.fastforward_interval">Fast Forward Interval</string>
 	<string name="settings.media_style_notification">Native Android media notification (5.0+)</string>

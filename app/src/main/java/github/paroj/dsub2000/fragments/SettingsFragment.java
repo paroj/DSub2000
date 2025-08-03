@@ -61,6 +61,7 @@ import github.paroj.dsub2000.util.LoadingTask;
 import github.paroj.dsub2000.util.MediaRouteManager;
 import github.paroj.dsub2000.util.SyncUtil;
 import github.paroj.dsub2000.util.Util;
+import github.paroj.dsub2000.util.compat.GoogleCompat;
 import github.paroj.dsub2000.view.CacheLocationPreference;
 import github.paroj.dsub2000.view.ErrorDialog;
 import github.paroj.dsub2000.view.EditPasswordPreference;
@@ -358,6 +359,12 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 				serversCategory.addPreference(addServer(i));
 				serverSettings.put(String.valueOf(i), new ServerSettings(i));
 			}
+		}
+
+		CheckBoxPreference chromecastAvailabilityPreference =
+				(CheckBoxPreference) findPreference("castChromecastAvailability");
+		if (chromecastAvailabilityPreference != null) {
+			chromecastAvailabilityPreference.setChecked(GoogleCompat.castAvailable());
 		}
 
 		SharedPreferences prefs = Util.getPreferences(context);
