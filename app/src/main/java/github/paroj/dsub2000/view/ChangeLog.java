@@ -32,15 +32,7 @@
  */
 package github.paroj.dsub2000.view;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import androidx.appcompat.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -51,7 +43,21 @@ import android.content.res.XmlResourceParser;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import androidx.appcompat.app.AlertDialog;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import github.paroj.dsub2000.R;
 
 
@@ -316,7 +322,40 @@ public class ChangeLog {
                     });
         }
 
-        return builder.create();
+        AlertDialog mDialog =  builder.create();
+
+        wv.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                view.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Attach listener to get final layout height
+                        wv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                            @Override
+                            public void onGlobalLayout() {
+                                if (wv == null) return; // Safety check
+
+                                wv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                                // Calculate and set WebView's height based on content
+                                int contentHeight = (int) Math.ceil(wv.getContentHeight() * wv.getScale());
+                                int screenHeight = mContext.getResources().getDisplayMetrics().heightPixels;
+                                int maxHeight = (int) (screenHeight * 0.7f); // 70% of screen height
+                                int finalHeight = Math.min(contentHeight, maxHeight);
+
+                                ViewGroup.LayoutParams params = wv.getLayoutParams();
+                                params.height = finalHeight;
+                                wv.setLayoutParams(params);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        return mDialog;
     }
 
     /**
