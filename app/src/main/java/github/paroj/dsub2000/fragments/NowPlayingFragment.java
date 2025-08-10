@@ -75,7 +75,6 @@ import github.paroj.dsub2000.service.ServerTooOldException;
 import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.SilentBackgroundTask;
 import github.paroj.dsub2000.adapter.DownloadFileAdapter;
-import github.paroj.dsub2000.view.compat.CustomMediaRouteDialogFactory;
 import github.paroj.dsub2000.view.FadeOutAnimation;
 import github.paroj.dsub2000.view.FastScroller;
 import github.paroj.dsub2000.view.UpdateView;
@@ -519,7 +518,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			MenuItem mediaRouteItem = menu.findItem(R.id.menu_mediaroute);
 			if(mediaRouteItem != null) {
 				MediaRouteButton mediaRouteButton = (MediaRouteButton) MenuItemCompat.getActionView(mediaRouteItem);
-				mediaRouteButton.setDialogFactory(new CustomMediaRouteDialogFactory());
 				mediaRouteButton.setRouteSelector(downloadService.getRemoteSelector());
 			}
 
