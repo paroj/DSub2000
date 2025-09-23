@@ -225,10 +225,10 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 				List<String> details = new ArrayList<>();
 
 				headers.add(R.string.details_author);
-				details.add("Scott Jackson");
+				details.add("Pavel Rojtberg / Contributors");
 
 				headers.add(R.string.details_email);
-				details.add("dsub.android@gmail.com");
+				details.add("play.dsub2000@gmail.com");
 
 				try {
 					headers.add(R.string.details_version);
