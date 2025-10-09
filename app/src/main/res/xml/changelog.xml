@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="5.6.3" versioncode="212" releasedate="09/10/2025">
+		<change>Fix resume playing after being backgrounded</change>
+		<change>Fix flickering changelog</change>
+		<change>Add a fake setting showing Chromecast support</change>
+		<change>Port to API 36</change>
+	</release>
 	<release version="5.6.2" versioncode="211" releasedate="26/07/2025">
 		<change>Fix multiple crashes and memory leaks</change>
 		<change>Fix downloading files when cache is full</change>
