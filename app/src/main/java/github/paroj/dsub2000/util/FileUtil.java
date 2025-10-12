@@ -214,6 +214,13 @@ public class FileUtil {
 			} else {
 				artFile = hexFile;
 			}
+
+			// If the cover art ID is the same as the song ID, it's embedded.
+			// In that case, use the song ID in the filename to make it unique.
+			if (entry.getCoverArt() != null && entry.getCoverArt().equals(entry.getId())) {
+				artFile = new File(albumDir, entry.getId() + ".jpg");
+			}
+
 			return artFile;
 		}
     }
