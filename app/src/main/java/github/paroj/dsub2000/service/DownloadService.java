@@ -2096,7 +2096,14 @@ public class DownloadService extends Service {
 				Log.w(TAG, "Error on playing file " + "(" + what + ", " + extra + "): " + downloadFile);
 				int pos = getPlayerPosition();
 				reset();
-				if (!isPartial || (downloadFile.isWorkDone() && (Math.abs(duration - pos) < 10000))) {
+                boolean isError38 = (what == -38 && extra == 0);
+                if (isError38) {
+                    // Occasionally, an "Invalid state" error (-38) may occur
+                    // because the player state is not handled correctly in this
+                    // implementation. In such cases, we simply retry the operation.
+                    Log.w(TAG, "Error -38 occurred – retrying to play the current song.");
+                }
+                if (!isError38 && (!isPartial || (downloadFile.isWorkDone() && (Math.abs(duration - pos) < 10000)))) {
 					playNext();
 				} else {
 					downloadFile.setPlaying(false);
