@@ -29,6 +29,8 @@ import github.paroj.dsub2000.domain.PodcastChannel;
 import github.paroj.dsub2000.util.ImageLoader;
 import github.paroj.dsub2000.util.SyncUtil;
 import github.paroj.dsub2000.util.FileUtil;
+import github.paroj.dsub2000.util.TouchDelegateUtil;
+
 import java.io.File;
 
 public class PodcastChannelView extends UpdateView<PodcastChannel> {
@@ -62,6 +64,7 @@ public class PodcastChannelView extends UpdateView<PodcastChannel> {
 				v.showContextMenu();
 			}
 		});
+        TouchDelegateUtil.expandTouchArea(moreButton);
 		coverArtView = findViewById(R.id.item_art);
 	}
 

@@ -40,6 +40,7 @@ import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.activity.SubsonicFragmentActivity;
 import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.MenuUtil;
+import github.paroj.dsub2000.util.TouchDelegateUtil;
 import github.paroj.dsub2000.util.Util;
 import github.paroj.dsub2000.view.BasicHeaderView;
 import github.paroj.dsub2000.view.UpdateView;
@@ -154,6 +155,7 @@ public abstract class SectionAdapter<T> extends RecyclerView.Adapter<UpdateViewH
 							}
 						}
 					});
+                    TouchDelegateUtil.expandTouchArea(moreButton);
 
 					if(checkable) {
 						updateView.getChildAt(0).setOnLongClickListener(new View.OnLongClickListener() {

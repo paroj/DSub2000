@@ -30,6 +30,7 @@ import java.util.Locale;
 
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.domain.Share;
+import github.paroj.dsub2000.util.TouchDelegateUtil;
 
 public class ShareView extends UpdateView<Share> {
 	private static final String TAG = ShareView.class.getSimpleName();
@@ -51,6 +52,7 @@ public class ShareView extends UpdateView<Share> {
 				v.showContextMenu();
 			}
 		});
+        TouchDelegateUtil.expandTouchArea(moreButton);
 	}
 
 	public void setObjectImpl(Share share) {
