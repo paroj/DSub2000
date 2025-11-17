@@ -12,7 +12,7 @@ public class TouchDelegateUtil {
 
     /**
      * Expands the touch area of a view on both sides (left/right).
-     * Reads the expansion value from dimens.xml using MoreButton.TouchExpand.
+     * Reads the expansion value from dimens.xml using View.TouchExpand.
      * Can be called before or after setting an OnClickListener.
      */
     public static void expandTouchArea(final View view) {
