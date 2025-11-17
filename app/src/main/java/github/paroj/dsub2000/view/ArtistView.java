@@ -27,6 +27,7 @@ import android.widget.TextView;
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.domain.Artist;
 import github.paroj.dsub2000.util.FileUtil;
+import github.paroj.dsub2000.util.TouchDelegateUtil;
 
 import java.io.File;
 
@@ -54,6 +55,7 @@ public class ArtistView extends UpdateView<Artist> {
 				v.showContextMenu();
 			}
 		});
+        TouchDelegateUtil.expandTouchArea(moreButton);
     }
     
     protected void setObjectImpl(Artist artist) {

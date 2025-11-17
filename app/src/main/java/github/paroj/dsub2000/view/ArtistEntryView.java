@@ -27,6 +27,7 @@ import android.widget.TextView;
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.domain.MusicDirectory;
 import github.paroj.dsub2000.util.FileUtil;
+import github.paroj.dsub2000.util.TouchDelegateUtil;
 
 import java.io.File;
 /**
@@ -53,6 +54,7 @@ public class ArtistEntryView extends UpdateView<MusicDirectory.Entry> {
 				v.showContextMenu();
 			}
 		});
+        TouchDelegateUtil.expandTouchArea(moreButton);
     }
     
     protected void setObjectImpl(MusicDirectory.Entry artist) {

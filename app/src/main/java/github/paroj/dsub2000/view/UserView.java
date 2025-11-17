@@ -24,6 +24,7 @@ import android.widget.TextView;
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.domain.User;
 import github.paroj.dsub2000.util.ImageLoader;
+import github.paroj.dsub2000.util.TouchDelegateUtil;
 
 public class UserView extends UpdateView2<User, ImageLoader> {
 	private TextView usernameView;
@@ -41,6 +42,7 @@ public class UserView extends UpdateView2<User, ImageLoader> {
 				v.showContextMenu();
 			}
 		});
+        TouchDelegateUtil.expandTouchArea(moreButton);
 	}
 
 	protected void setObjectImpl(User user, ImageLoader imageLoader) {

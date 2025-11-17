@@ -13,4 +13,5 @@
 	<dimen name="FastScroller.LeftAlignedMargin">6dp</dimen>
 	<dimen name="FastScroller.NormalBarMargin">4dp</dimen>
 	<dimen name="FastScroller.RightMargin">4dp</dimen>
+    <dimen name="View.TouchExpand">8dp</dimen>
 </resources>
