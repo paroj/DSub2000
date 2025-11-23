@@ -17,6 +17,7 @@ package github.paroj.dsub2000.fragments;
 
 import android.os.Bundle;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +30,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,14 +37,15 @@ import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.adapter.SectionAdapter;
 import github.paroj.dsub2000.service.MusicService;
 import github.paroj.dsub2000.service.MusicServiceFactory;
-import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.ProgressListener;
 import github.paroj.dsub2000.util.TabBackgroundTask;
 import github.paroj.dsub2000.view.FastScroller;
+import github.paroj.dsub2000.viewmodel.GenericListViewModel;
 
 public abstract class SelectRecyclerFragment<T> extends SubsonicFragment implements SectionAdapter.OnItemClickedListener<T> {
 	private static final String TAG = SelectRecyclerFragment.class.getSimpleName();
 	protected RecyclerView recyclerView;
+    protected GenericListViewModel<T> viewModel;
 	protected FastScroller fastScroller;
 	protected SectionAdapter<T> adapter;
 	protected UpdateTask currentTask;
@@ -54,12 +55,14 @@ public abstract class SelectRecyclerFragment<T> extends SubsonicFragment impleme
 	protected boolean pullToRefresh = true;
 	protected boolean backgroundUpdate = true;
 
-	@Override
+    @SuppressWarnings("unchecked")
+    @Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 
+        viewModel = (GenericListViewModel<T>) new ViewModelProvider(this).get(GenericListViewModel.class);
 		if(bundle != null && serialize) {
-			objects = (List<T>) bundle.getSerializable(Constants.FRAGMENT_LIST);
+            objects = viewModel.getData().getValue();
 		}
 	}
 
@@ -67,7 +70,7 @@ public abstract class SelectRecyclerFragment<T> extends SubsonicFragment impleme
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if(serialize) {
-			outState.putSerializable(Constants.FRAGMENT_LIST, (Serializable) objects);
+            viewModel.setData(objects);
 		}
 	}
 
