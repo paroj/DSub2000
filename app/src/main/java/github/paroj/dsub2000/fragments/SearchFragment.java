@@ -10,6 +10,7 @@ import java.util.TreeMap;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.core.view.MenuItemCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +39,7 @@ import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.TabBackgroundTask;
 import github.paroj.dsub2000.util.Util;
 import github.paroj.dsub2000.view.UpdateView;
+import github.paroj.dsub2000.viewmodel.SearchViewModel;
 
 public class SearchFragment extends SubsonicFragment implements SectionAdapter.OnItemClickedListener<Serializable> {
 	private static final String TAG = SearchFragment.class.getSimpleName();
@@ -48,6 +50,7 @@ public class SearchFragment extends SubsonicFragment implements SectionAdapter.O
 	private static final int MIN_CLOSENESS = 1;
 
 	protected RecyclerView recyclerView;
+    private SearchViewModel viewModel;
 	protected SearchAdapter adapter;
 	protected boolean largeAlbums = false;
 
@@ -64,8 +67,9 @@ public class SearchFragment extends SubsonicFragment implements SectionAdapter.O
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
 		if(savedInstanceState != null) {
-			searchResult = (SearchResult) savedInstanceState.getSerializable(Constants.FRAGMENT_LIST);
+            searchResult = viewModel.getSearchResult().getValue();
 		}
 		largeAlbums = Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_LARGE_ALBUM_ART, true);
 	}
@@ -73,7 +77,7 @@ public class SearchFragment extends SubsonicFragment implements SectionAdapter.O
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(Constants.FRAGMENT_LIST, searchResult);
+        viewModel.setSearchResult(searchResult);
 	}
 
 	@Override

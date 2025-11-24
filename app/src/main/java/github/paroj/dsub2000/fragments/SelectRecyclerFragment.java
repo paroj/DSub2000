@@ -40,12 +40,12 @@ import github.paroj.dsub2000.service.MusicServiceFactory;
 import github.paroj.dsub2000.util.ProgressListener;
 import github.paroj.dsub2000.util.TabBackgroundTask;
 import github.paroj.dsub2000.view.FastScroller;
-import github.paroj.dsub2000.viewmodel.GenericListViewModel;
+import github.paroj.dsub2000.viewmodel.SelectRecyclerViewModel;
 
 public abstract class SelectRecyclerFragment<T> extends SubsonicFragment implements SectionAdapter.OnItemClickedListener<T> {
 	private static final String TAG = SelectRecyclerFragment.class.getSimpleName();
 	protected RecyclerView recyclerView;
-    protected GenericListViewModel<T> viewModel;
+    private SelectRecyclerViewModel<T> viewModel;
 	protected FastScroller fastScroller;
 	protected SectionAdapter<T> adapter;
 	protected UpdateTask currentTask;
@@ -60,9 +60,9 @@ public abstract class SelectRecyclerFragment<T> extends SubsonicFragment impleme
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 
-        viewModel = (GenericListViewModel<T>) new ViewModelProvider(this).get(GenericListViewModel.class);
-		if(bundle != null && serialize) {
-            objects = viewModel.getData().getValue();
+        viewModel = (SelectRecyclerViewModel<T>) new ViewModelProvider(this).get(SelectRecyclerViewModel.class);
+        if(bundle != null && serialize) {
+            objects = viewModel.getObjects().getValue();
 		}
 	}
 
@@ -70,7 +70,7 @@ public abstract class SelectRecyclerFragment<T> extends SubsonicFragment impleme
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if(serialize) {
-            viewModel.setData(objects);
+            viewModel.setObjects(objects);
 		}
 	}
 

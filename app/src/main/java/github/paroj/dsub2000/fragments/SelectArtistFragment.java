@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.adapter.ArtistAdapter;
 import github.paroj.dsub2000.adapter.SectionAdapter;
@@ -25,6 +27,7 @@ import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.ProgressListener;
 import github.paroj.dsub2000.util.Util;
 import github.paroj.dsub2000.view.UpdateView;
+import github.paroj.dsub2000.viewmodel.SelectArtistViewModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ import java.util.List;
 
 public class SelectArtistFragment extends SelectRecyclerFragment<Serializable> implements ArtistAdapter.OnMusicFolderChanged {
 	private static final String TAG = SelectArtistFragment.class.getSimpleName();
-
+    private SelectArtistViewModel viewModel;
 	private List<MusicFolder> musicFolders = null;
 	private List<Entry> entries;
 	private String groupId;
@@ -46,8 +49,9 @@ public class SelectArtistFragment extends SelectRecyclerFragment<Serializable> i
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 
+        viewModel = new ViewModelProvider(this).get(SelectArtistViewModel.class);
 		if(bundle != null) {
-			musicFolders = (List<MusicFolder>) bundle.getSerializable(Constants.FRAGMENT_LIST2);
+            musicFolders = viewModel.getMusicFolders().getValue();
 		}
 		artist = true;
 	}
@@ -55,7 +59,7 @@ public class SelectArtistFragment extends SelectRecyclerFragment<Serializable> i
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(Constants.FRAGMENT_LIST2, (Serializable) musicFolders);
+        viewModel.setMusicFolders(musicFolders);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
