@@ -49,7 +49,7 @@ public class SelectArtistFragment extends SelectRecyclerFragment<Serializable> i
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 
-        viewModel = new ViewModelProvider(this).get(SelectArtistViewModel.class);
+	    viewModel = new ViewModelProvider(this).get(SelectArtistViewModel.class);
 		if(bundle != null) {
             musicFolders = viewModel.getMusicFolders().getValue();
 		}

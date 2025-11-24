@@ -67,7 +67,7 @@ public class SearchFragment extends SubsonicFragment implements SectionAdapter.O
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-        viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+	    viewModel = new ViewModelProvider(this).get(SearchViewModel.class);
 		if(savedInstanceState != null) {
             searchResult = viewModel.getSearchResult().getValue();
 		}

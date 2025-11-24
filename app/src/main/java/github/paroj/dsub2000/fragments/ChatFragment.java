@@ -59,7 +59,7 @@ public class ChatFragment extends SubsonicFragment {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 
-        viewModel = new ViewModelProvider(this).get(ChatViewModel.class);
+	    viewModel = new ViewModelProvider(this).get(ChatViewModel.class);
 		if(bundle != null) {
             messageList = viewModel.getMessageList().getValue();
 		}

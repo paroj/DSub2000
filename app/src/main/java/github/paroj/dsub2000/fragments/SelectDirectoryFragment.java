@@ -122,7 +122,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 
-        viewModel = new ViewModelProvider(this).get(SelectDirectoryViewModel.class);
+	    viewModel = new ViewModelProvider(this).get(SelectDirectoryViewModel.class);
 		if(bundle != null) {
             entries = viewModel.getEntries().getValue();
             albums = viewModel.getAlbums().getValue();

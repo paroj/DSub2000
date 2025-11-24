@@ -68,7 +68,7 @@ public class SelectPodcastsFragment extends SelectRecyclerFragment<Serializable>
 			largeAlbums = true;
 		}
 
-        viewModel = new ViewModelProvider(this).get(SelectPodcastViewModel.class);
+	    viewModel = new ViewModelProvider(this).get(SelectPodcastViewModel.class);
 		if(bundle != null && serialize) {
             newestEpisodes = viewModel.getNewestEpisodes().getValue();
 		}
