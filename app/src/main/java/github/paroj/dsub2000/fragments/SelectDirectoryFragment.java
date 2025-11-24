@@ -140,7 +140,6 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
         viewModel.setEntries(entries);
         viewModel.setAlbums(albums);
         viewModel.setArtistInfo(artistInfo);
-		outState.putSerializable(Constants.FRAGMENT_EXTRA, (Serializable) artistInfo);
 	}
 
 	@Override
