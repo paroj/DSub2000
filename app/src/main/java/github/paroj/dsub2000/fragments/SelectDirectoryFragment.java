@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -64,6 +66,7 @@ import github.paroj.dsub2000.view.FastScroller;
 import github.paroj.dsub2000.view.MyLeadingMarginSpan2;
 import github.paroj.dsub2000.view.RecyclingImageView;
 import github.paroj.dsub2000.view.UpdateView;
+import github.paroj.dsub2000.viewmodel.SelectDirectoryViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,6 +79,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	private static final String TAG = SelectDirectoryFragment.class.getSimpleName();
 
 	private RecyclerView recyclerView;
+    private SelectDirectoryViewModel viewModel;
 	private FastScroller fastScroller;
 	private EntryGridAdapter entryGridAdapter;
 	private Boolean licenseValid;
@@ -117,13 +121,15 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+
+	    viewModel = new ViewModelProvider(this).get(SelectDirectoryViewModel.class);
 		if(bundle != null) {
-			entries = (List<Entry>) bundle.getSerializable(Constants.FRAGMENT_LIST);
-			albums = (List<Entry>) bundle.getSerializable(Constants.FRAGMENT_LIST2);
+            entries = viewModel.getEntries().getValue();
+            albums = viewModel.getAlbums().getValue();
 			if(albums == null) {
 				albums = new ArrayList<>();
 			}
-			artistInfo = (ArtistInfo) bundle.getSerializable(Constants.FRAGMENT_EXTRA);
+            artistInfo = viewModel.getArtistInfo().getValue();
 			restoredInstance = true;
 		}
 	}
@@ -131,9 +137,9 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(Constants.FRAGMENT_LIST, (Serializable) entries);
-		outState.putSerializable(Constants.FRAGMENT_LIST2, (Serializable) albums);
-		outState.putSerializable(Constants.FRAGMENT_EXTRA, (Serializable) artistInfo);
+        viewModel.setEntries(entries);
+        viewModel.setAlbums(albums);
+        viewModel.setArtistInfo(artistInfo);
 	}
 
 	@Override
@@ -165,14 +171,10 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 				id = childId;
 				lookupParent = true;
 			}
-			if(entries == null) {
-				entries = (List<Entry>) args.getSerializable(Constants.FRAGMENT_LIST);
-				albums = (List<Entry>) args.getSerializable(Constants.FRAGMENT_LIST2);
 
-				if(albums == null) {
-					albums = new ArrayList<Entry>();
-				}
-			}
+            if(albums == null) {
+                albums = new ArrayList<Entry>();
+            }
 		}
 
 		rootView = inflater.inflate(R.layout.abstract_recycler_fragment, container, false);

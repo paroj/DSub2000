@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,6 +36,8 @@ import github.paroj.dsub2000.util.TabBackgroundTask;
 import github.paroj.dsub2000.util.Util;
 import github.paroj.dsub2000.adapter.ChatAdapter;
 import github.paroj.dsub2000.util.Constants;
+import github.paroj.dsub2000.viewmodel.ChatViewModel;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -44,6 +48,7 @@ import java.util.concurrent.TimeUnit;
 public class ChatFragment extends SubsonicFragment {
 	private static final String TAG = ChatFragment.class.getSimpleName();
 	private ListView chatListView;
+    private ChatViewModel viewModel;
 	private EditText messageEditText;
 	private ImageButton sendButton;
 	private Long lastChatMessageTime = (long) 0;
@@ -54,16 +59,16 @@ public class ChatFragment extends SubsonicFragment {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 
+	    viewModel = new ViewModelProvider(this).get(ChatViewModel.class);
 		if(bundle != null) {
-			List<ChatMessage> abstractList = (List<ChatMessage>) bundle.getSerializable(Constants.FRAGMENT_LIST);
-			messageList = new ArrayList<ChatMessage>(abstractList);
+            messageList = viewModel.getMessageList().getValue();
 		}
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putSerializable(Constants.FRAGMENT_LIST, (Serializable) messageList);
+        viewModel.setMessageList(messageList);
 	}
 	
 	@Override

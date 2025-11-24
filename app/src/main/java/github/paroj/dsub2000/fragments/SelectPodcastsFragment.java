@@ -18,6 +18,8 @@ import android.content.res.Resources;
 import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
@@ -45,6 +47,7 @@ import github.paroj.dsub2000.util.UserUtil;
 import github.paroj.dsub2000.util.Util;
 import github.paroj.dsub2000.adapter.PodcastChannelAdapter;
 import github.paroj.dsub2000.view.UpdateView;
+import github.paroj.dsub2000.viewmodel.SelectPodcastViewModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -53,7 +56,7 @@ import java.util.List;
 
 public class SelectPodcastsFragment extends SelectRecyclerFragment<Serializable> {
 	private static final String TAG = SelectPodcastsFragment.class.getSimpleName();
-
+    private SelectPodcastViewModel viewModel;
 	private boolean hasCoverArt;
 	private MusicDirectory newestEpisodes;
 
@@ -65,8 +68,9 @@ public class SelectPodcastsFragment extends SelectRecyclerFragment<Serializable>
 			largeAlbums = true;
 		}
 
+	    viewModel = new ViewModelProvider(this).get(SelectPodcastViewModel.class);
 		if(bundle != null && serialize) {
-			newestEpisodes = (MusicDirectory) bundle.getSerializable(Constants.FRAGMENT_LIST2);
+            newestEpisodes = viewModel.getNewestEpisodes().getValue();
 		}
 	}
 
@@ -74,7 +78,7 @@ public class SelectPodcastsFragment extends SelectRecyclerFragment<Serializable>
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if(serialize) {
-			outState.putSerializable(Constants.FRAGMENT_LIST2, newestEpisodes);
+			viewModel.setNewestEpisodes(newestEpisodes);
 		}
 	}
 	
