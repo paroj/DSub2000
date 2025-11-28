@@ -68,6 +68,7 @@
 	<string name="main.albums_year">Jahrzehnt</string>
 	<string name="main.albums_alphabetical">Alphabetisch</string>
 	<string name="main.videos">Videos</string>
+    <string name="main.songs_random">@string/main.albums_random</string>
 	<string name="main.songs_genres">@string/main.albums_genres</string>
 	<string name="main.back_confirm">Zum beenden nochmal zurück drücken</string>
 	<string name="main.scan_complete">Durchsuchen des Server abgeschlossen</string>

@@ -73,6 +73,7 @@
 	<string name="main.albums_year">Årtionden</string>
 	<string name="main.albums_alphabetical">Alfabetiskt</string>
 	<string name="main.videos">Videor</string>
+    <string name="main.songs_random">@string/main.albums_random</string>
 	<string name="main.songs_genres">@string/main.albums_genres</string>
 	<string name="main.back_confirm">Tryck bakåt igen för att avsluta</string>
 	<string name="main.scan_complete">Skanning av server klar</string>

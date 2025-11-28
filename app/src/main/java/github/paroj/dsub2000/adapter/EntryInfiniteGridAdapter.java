@@ -132,7 +132,7 @@ public class EntryInfiniteGridAdapter extends EntryGridAdapter {
 		} else if("genres".equals(type) || "genres-songs".equals(type)) {
 			result = service.getSongsByGenre(extra, size, offset, context, null);
 		} else if (type.equals("randomsongs")) {
-			result = service.getRandomTracks(size, context, null);
+			result = service.getRandomSongs(size, context, null);
 		}else if(type.indexOf(MainFragment.SONGS_LIST_PREFIX) != -1) {
 			result = service.getSongList(type, size, offset, context, null);
 		} else {

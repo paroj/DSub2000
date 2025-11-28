@@ -46,7 +46,6 @@ import github.paroj.dsub2000.service.DownloadService;
 import github.paroj.dsub2000.util.DrawableTint;
 import github.paroj.dsub2000.util.ImageLoader;
 
-import java.io.Serializable;
 import java.util.List;
 
 import github.paroj.dsub2000.domain.PodcastEpisode;
@@ -554,7 +553,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			setTitle(albumListExtra);
 		} else if("alphabeticalByName".equals(albumListType)) {
 			setTitle(R.string.main_albums_alphabetical);
-		} if (MainFragment.SONGS_NEWEST.equals(albumListType)) {
+		} else if (MainFragment.SONGS_NEWEST.equals(albumListType)) {
 			setTitle(R.string.main_songs_newest);
 		} else if (MainFragment.SONGS_TOP_PLAYED.equals(albumListType)) {
 			setTitle(R.string.main_songs_top_played);
@@ -579,7 +578,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 				} else if("genres".equals(albumListType) || "genres-songs".equals(albumListType)) {
 					result = service.getSongsByGenre(albumListExtra, size, 0, context, this);
 				} else if("randomsongs".equals(albumListType)) {
-					result = service.getRandomTracks(size,context, this);
+					result = service.getRandomSongs(size,context, this);
 				}  else if(albumListType.indexOf(MainFragment.SONGS_LIST_PREFIX) != -1) {
 					result = service.getSongList(albumListType, size, 0, context, this);
 				} else {
