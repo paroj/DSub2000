@@ -71,6 +71,7 @@
 	<string name="main.albums_year">Decennia</string>
 	<string name="main.albums_alphabetical">Alfabetisch</string>
 	<string name="main.videos">Video\'s</string>
+    <string name="main.songs_random">@string/main.albums_random</string>
 	<string name="main.songs_genres">@string/main.albums_genres</string>
 	<string name="main.back_confirm">Druk nogmaals terug om te stoppen</string>
 	<string name="main.scan_complete">Server scan afgerond</string>

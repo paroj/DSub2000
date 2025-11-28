@@ -735,12 +735,22 @@ public class RESTMusicService implements MusicService {
     }
 
     @Override
-    public MusicDirectory getRandomTracks(int size, Context context, ProgressListener progressListener) throws Exception {
+    public MusicDirectory getRandomSongs(int size, Context context, ProgressListener progressListener) throws Exception {
         List<String> names = new ArrayList<String>();
         List<Object> values = new ArrayList<Object>();
 
         names.add("size");
         values.add(size);
+
+        // Add folder if it was set and is non null
+        int instance = getInstance(context);
+        if(Util.getAlbumListsPerFolder(context, instance)) {
+            String folderId = Util.getSelectedMusicFolderId(context, instance);
+            if(folderId != null) {
+                names.add("musicFolderId");
+                values.add(folderId);
+            }
+        }
 
         Reader reader = getReader(context, progressListener, "getRandomSongs", names, values);
         try {
