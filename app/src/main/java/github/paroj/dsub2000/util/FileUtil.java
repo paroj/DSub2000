@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Iterator;
@@ -69,7 +70,7 @@ public class FileUtil {
     private static final List<String> MUSIC_FILE_EXTENSIONS = Arrays.asList("mp3", "ogg", "aac", "flac", "m4a", "wav", "wma", "opus", "oga");
 	private static final List<String> VIDEO_FILE_EXTENSIONS = Arrays.asList("flv", "mp4", "m4v", "wmv", "avi", "mov", "mpg", "mkv", "3gp", "webm");
 	private static final List<String> PLAYLIST_FILE_EXTENSIONS = Arrays.asList("m3u");
-	private static final int MAX_FILENAME_LENGTH = 254 - ".complete.mp3".length();
+	private static final int MAX_FILENAME_LENGTH = 254 - "00-000-.complete.ext".length();
     private static File DEFAULT_MUSIC_DIR;
 	private static final Kryo kryo = new Kryo();
 	private static HashMap<String, MusicDirectory.Entry> entryLookup;
@@ -115,41 +116,69 @@ public class FileUtil {
 	}
 
     public static File getSongFile(Context context, MusicDirectory.Entry song) {
+        return getSongFile(context, song, null);
+    }
+    public static File getSongFile(Context context, MusicDirectory.Entry song, String stage) {
         File dir = getAlbumDirectory(context, song);
 
-        StringBuilder fileName = new StringBuilder();
-        Integer track = song.getTrack();
-        if (track != null) {
-            if (track < 10) {
-                fileName.append("0");
-            }
-            fileName.append(track).append("-");
+        Integer trackNumber = song.getTrack();
+        Integer discNumber = song.getDiscNumber();
+        if (discNumber == null || discNumber == 0) {
+            discNumber = 1;
+        }
+        String title = fileSystemSafe(song.getTitle());
+        String extension = getSongFileNameExtension(context, song);
+
+        String fileNameV1 = getSongFileNameV1(trackNumber, title);
+        fileNameV1 = getSongFileNameFull(fileNameV1, stage, extension);
+        if (new File(dir, fileNameV1).exists()) {
+            return new File(dir, fileNameV1);
         }
 
-        fileName.append(fileSystemSafe(song.getTitle()));
-		if(fileName.length() >= MAX_FILENAME_LENGTH) {
-			fileName.setLength(MAX_FILENAME_LENGTH);
-		}
+        String fileNameV2 = getSongFileNameV2(trackNumber, discNumber, title);
+        fileNameV2 = getSongFileNameFull(fileNameV2, stage, extension);
+        return new File(dir, fileNameV2);
+    }
 
-		fileName.append(".");
-		if(song.isVideo()) {
-			String videoPlayerType = Util.getVideoPlayerType(context);
-			if("hls".equals(videoPlayerType)) {
-				// HLS should be able to transcode to mp4 automatically
-				fileName.append("mp4");
-			} else if("raw".equals(videoPlayerType)) {
-				// Download the original video without any transcoding
-				fileName.append(song.getSuffix());
-			}
-		} else {
-			if (song.getTranscodedSuffix() != null) {
-				fileName.append(song.getTranscodedSuffix());
-			} else {
-				fileName.append(song.getSuffix());
-			}
-		}
+    private static String getSongFileNameV1(Integer trackNumber, String title) {
+        return String.format(Locale.ROOT, "%02d-%s", trackNumber, title);
+    }
 
-        return new File(dir, fileName.toString());
+    private static String getSongFileNameV2(Integer trackNumber, Integer discNumber, String title) {
+        return String.format(Locale.ROOT, "%02d-%03d-%s", discNumber, trackNumber, title);
+    }
+
+    private static String getSongFileNameFull(String fileName, String stage, String extension) {
+        fileName = getSongFileNameTruncated(fileName);
+        if (stage != null) {
+            fileName = fileName + "." + stage;
+        }
+        return fileName + "." + extension;
+    }
+
+    private static String getSongFileNameTruncated(String fileName) {
+        if(fileName.length() >= MAX_FILENAME_LENGTH) {
+            fileName = fileName.substring(0, MAX_FILENAME_LENGTH);
+        }
+        return fileName;
+    }
+
+    private static String getSongFileNameExtension(Context context, MusicDirectory.Entry song) {
+        if(song.isVideo()) {
+            String videoPlayerType = Util.getVideoPlayerType(context);
+            if("hls".equals(videoPlayerType)) {
+                // HLS should be able to transcode to mp4 automatically
+                return "mp4";
+            } else if("raw".equals(videoPlayerType)) {
+                // Download the original video without any transcoding
+                return song.getSuffix();
+            }
+        } else {
+            if (song.getTranscodedSuffix() != null) {
+                return song.getTranscodedSuffix();
+            }
+        }
+        return song.getSuffix();
     }
 
 	public static File getPlaylistFile(Context context, String server, String name) {
