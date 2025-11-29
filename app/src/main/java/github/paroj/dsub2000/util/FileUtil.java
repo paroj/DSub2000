@@ -122,10 +122,6 @@ public class FileUtil {
         File dir = getAlbumDirectory(context, song);
 
         Integer trackNumber = song.getTrack();
-        Integer discNumber = song.getDiscNumber();
-        if (discNumber == null || discNumber == 0) {
-            discNumber = 1;
-        }
         String title = fileSystemSafe(song.getTitle());
         String extension = getSongFileNameExtension(context, song);
 
@@ -135,6 +131,10 @@ public class FileUtil {
             return new File(dir, fileNameV1);
         }
 
+        Integer discNumber = song.getDiscNumber();
+        if (discNumber == null) {
+            discNumber = 1;
+        }
         String fileNameV2 = getSongFileNameV2(trackNumber, discNumber, title);
         fileNameV2 = getSongFileNameFull(fileNameV2, stage, extension);
         return new File(dir, fileNameV2);
