@@ -236,6 +236,7 @@
     <string name="main.settings">设置</string>
     <string name="main.shuffle">随机播放</string>
     <string name="main.songs_random">@string/main.albums_random</string>
+    <string name="main.songs_starred">@string/main.albums_starred</string>
     <string name="main.songs_top_played">最高播放</string>
     <string name="main.title">标题</string>
     <string name="main.videos">视频</string>

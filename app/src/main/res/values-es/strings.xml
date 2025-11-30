@@ -52,6 +52,8 @@
     <string name="main.albums_starred">Con estrella</string>
     <string name="main.albums_random">Aleatorio</string>
 	<string name="main.albums_genres">Géneros</string>
+    <string name="main.songs_random">@string/main.albums_random</string>
+    <string name="main.songs_starred">@string/main.albums_starred</string>
 	<string name="main.back_confirm">Pulsa atrás de nuevo para salir</string>
 	<string name="main.albums_year">Décadas</string>
 	<string name="main.faq_text">

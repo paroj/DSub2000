@@ -42,6 +42,8 @@
     <string name="main.albums_highest">Максимальный рейтинг</string>
     <string name="main.albums_starred">Закладки</string>
     <string name="main.albums_random">Случайные</string>
+    <string name="main.songs_random">@string/main.albums_random</string>
+    <string name="main.songs_starred">@string/main.albums_starred</string>
 
 	<string name="menu.search">Поиск</string>
 	<string name="menu.shuffle">Перемешать</string>
