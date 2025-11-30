@@ -70,7 +70,8 @@ public class FileUtil {
     private static final List<String> MUSIC_FILE_EXTENSIONS = Arrays.asList("mp3", "ogg", "aac", "flac", "m4a", "wav", "wma", "opus", "oga");
 	private static final List<String> VIDEO_FILE_EXTENSIONS = Arrays.asList("flv", "mp4", "m4v", "wmv", "avi", "mov", "mpg", "mkv", "3gp", "webm");
 	private static final List<String> PLAYLIST_FILE_EXTENSIONS = Arrays.asList("m3u");
-	private static final int MAX_FILENAME_LENGTH = 254 - "00-000-.complete.ext".length();
+    private static final int MAX_FILENAME_LENGTH_V1 = 254 - ".complete.mp3".length();
+    private static final int MAX_FILENAME_LENGTH_V2 = 254 - "00-000-.complete.abcd".length();
     private static File DEFAULT_MUSIC_DIR;
 	private static final Kryo kryo = new Kryo();
 	private static HashMap<String, MusicDirectory.Entry> entryLookup;
@@ -141,26 +142,26 @@ public class FileUtil {
     }
 
     private static String getSongFileNameV1(Integer trackNumber, String title) {
-        return String.format(Locale.ROOT, "%02d-%s", trackNumber, title);
+        String fileName = String.format(Locale.ROOT, "%02d-%s", trackNumber, title);
+        if(fileName.length() >= MAX_FILENAME_LENGTH_V1) {
+            fileName = fileName.substring(0, MAX_FILENAME_LENGTH_V1);
+        }
+        return fileName;
     }
 
     private static String getSongFileNameV2(Integer trackNumber, Integer discNumber, String title) {
-        return String.format(Locale.ROOT, "%02d-%03d-%s", discNumber, trackNumber, title);
+        String fileName = String.format(Locale.ROOT, "%02d-%03d-%s", discNumber, trackNumber, title);
+        if(fileName.length() >= MAX_FILENAME_LENGTH_V2) {
+            fileName = fileName.substring(0, MAX_FILENAME_LENGTH_V2);
+        }
+        return fileName;
     }
 
     private static String getSongFileNameFull(String fileName, String stage, String extension) {
-        fileName = getSongFileNameTruncated(fileName);
         if (stage != null) {
             fileName = fileName + "." + stage;
         }
         return fileName + "." + extension;
-    }
-
-    private static String getSongFileNameTruncated(String fileName) {
-        if(fileName.length() >= MAX_FILENAME_LENGTH) {
-            fileName = fileName.substring(0, MAX_FILENAME_LENGTH);
-        }
-        return fileName;
     }
 
     private static String getSongFileNameExtension(Context context, MusicDirectory.Entry song) {
