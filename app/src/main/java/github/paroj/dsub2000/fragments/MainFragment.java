@@ -149,6 +149,7 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 		if(ServerInfo.checkServerVersion(context, "1.2.0")) {
 			songs.add(R.string.main_songs_random);
 		}
+        songs.add(R.string.main_songs_starred);
 
 		sections.add(songs);
 		headers.add("songs");
@@ -418,8 +419,10 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 		} else if (item == R.string.main_albums_frequent) {
 			showAlbumList("frequent");
 		} else if (item == R.string.main_albums_starred) {
-			showAlbumList("starred");
-		} else if(item == R.string.main_albums_genres) {
+			showAlbumList("starredalbums");
+		} else if (item == R.string.main_songs_starred) {
+            showAlbumList("starredsongs");
+        } else if(item == R.string.main_albums_genres) {
 			showAlbumList("genres");
 		} else if(item == R.string.main_albums_year) {
 			showAlbumList("years");
