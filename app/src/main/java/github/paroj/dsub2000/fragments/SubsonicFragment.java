@@ -79,6 +79,7 @@ import github.paroj.dsub2000.util.ProgressListener;
 import github.paroj.dsub2000.util.SilentBackgroundTask;
 import github.paroj.dsub2000.util.LoadingTask;
 import github.paroj.dsub2000.util.SongDBHandler;
+import github.paroj.dsub2000.domain.repository.StarredRepository;
 import github.paroj.dsub2000.util.UpdateHelper;
 import github.paroj.dsub2000.util.UserUtil;
 import github.paroj.dsub2000.util.Util;
@@ -899,6 +900,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			protected Boolean doInBackground() throws Throwable {
 				musicService = MusicServiceFactory.getMusicService(context);
 				MusicDirectory root;
+                StarredRepository starredRepository = new StarredRepository(musicService, context);
 				if(share != null) {
 					root = share.getMusicDirectory();
 				}
@@ -906,7 +908,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 					if(id != null) {
 						root = getMusicDirectory(id, name, false, musicService, this);
 					} else {
-						root = musicService.getStarredList(context, this);
+                        root = starredRepository.getStarredAlbums(this);
 					}
 				}
 				else {

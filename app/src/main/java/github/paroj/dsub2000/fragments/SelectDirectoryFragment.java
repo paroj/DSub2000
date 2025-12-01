@@ -3,7 +3,6 @@ package github.paroj.dsub2000.fragments;
 import android.annotation.TargetApi;
 import androidx.appcompat.app.AlertDialog;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -55,10 +54,10 @@ import github.paroj.dsub2000.service.MusicService;
 import github.paroj.dsub2000.service.MusicServiceFactory;
 import github.paroj.dsub2000.service.OfflineException;
 import github.paroj.dsub2000.service.ServerTooOldException;
+import github.paroj.dsub2000.domain.repository.StarredRepository;
 import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.LoadingTask;
 import github.paroj.dsub2000.util.Pair;
-import github.paroj.dsub2000.util.ProgressListener;
 import github.paroj.dsub2000.util.SilentBackgroundTask;
 import github.paroj.dsub2000.util.TabBackgroundTask;
 import github.paroj.dsub2000.util.UpdateHelper;
@@ -363,7 +362,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 
 			onSongPress(Arrays.asList(entry), entry, false);
 		} else {
-			onSongPress(entries, entry, albumListType == null || albumListType.startsWith("starred"));
+			onSongPress(entries, entry, albumListType == null || "starredsongs".equals(albumListType));
 		}
 	}
 
@@ -572,10 +571,11 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			@Override
 			protected MusicDirectory load(MusicService service) throws Exception {
 				MusicDirectory result;
+                StarredRepository starredRepository = new StarredRepository(service, context);
 				if ("starredalbums".equals(albumListType)) {
-					result = getStarredAlbumsList(service, context, this);
+					result = starredRepository.getStarredAlbums(this);
 				} else if ("starredsongs".equals(albumListType)) {
-                    result = getStarredSongsList(service, context, this);
+                    result = starredRepository.getStarredSongs(this);
                 } else if(("genres".equals(albumListType) && ServerInfo.checkServerVersion(context, "1.10.0")) || "years".equals(albumListType)) {
 					result = service.getAlbumList(albumListType, albumListExtra, size, 0, refresh, context, this);
 					if(result.getChildrenSize() == 0 && "genres".equals(albumListType)) {
@@ -831,7 +831,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	private void playAll(final boolean shuffle, final boolean append, final boolean playNext) {
 		boolean hasSubFolders = albums != null && !albums.isEmpty();
 
-		if (hasSubFolders && (id != null || share != null || albumListType.startsWith("starred"))) {
+		if (hasSubFolders && (id != null || share != null || "starredalbums".equals(albumListType))) {
 			downloadRecursively(id, false, append, !append, shuffle, false, playNext);
 		} else if(hasSubFolders && albumListType != null) {
 			downloadRecursively(albums, shuffle, append, playNext);
@@ -1356,18 +1356,4 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			ratingBar.setVisibility(View.GONE);
 		}
 	}
-
-    private MusicDirectory getStarredAlbumsList(MusicService service, Context context, ProgressListener progressListener) throws Exception {
-        return getStarredFilteredList(service, context, progressListener, true, false);
-    }
-
-    private MusicDirectory getStarredSongsList(MusicService service, Context context, ProgressListener progressListener) throws Exception {
-        return getStarredFilteredList(service, context, progressListener, false, true);
-    }
-
-    private MusicDirectory getStarredFilteredList(MusicService service, Context context, ProgressListener progressListener, boolean includeDirs, boolean includeFiles) throws Exception {
-        MusicDirectory result = service.getStarredList(context, progressListener);
-        List<Entry> children = result.getChildren(includeDirs, includeFiles);
-        return new MusicDirectory(children);
-    }
 }
