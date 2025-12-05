@@ -11,7 +11,8 @@
 			android:key="randomSize"
 			android:defaultValue="20"
 			android:dialogLayout="@layout/seekbar_preference"
-			myns:max="100"/>
+            myns:min="5"
+			myns:max="200"/>
 
 		<ListPreference
 			android:title="@string/settings.keep_played_count_title"
