@@ -227,7 +227,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 	public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
 		if(licenseValid == null) {
 			menuInflater.inflate(R.menu.empty, menu);
-		} else if(albumListType != null && !albumListType.startsWith("starred")) {
+		} else if(albumListType != null && !albumListType.startsWith("starred") && !albumListType.startsWith("random")) {
 			menuInflater.inflate(R.menu.select_album_list, menu);
 		} else if(artist && !showAll) {
 			menuInflater.inflate(R.menu.select_album, menu);
@@ -261,6 +261,12 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 				if(!prefs.getBoolean(Constants.PREFERENCES_KEY_MENU_PLAY_LAST, true)) {
 					menu.setGroupVisible(R.id.hide_play_last, false);
 				}
+
+                if (albumListType.startsWith("random")) {
+                    menu.removeItem(R.id.menu_download);
+                    menu.removeItem(R.id.menu_cache);
+                    menu.removeItem(R.id.menu_delete);
+                }
 			} else {
 				if(Util.isOffline(context)) {
 					menuInflater.inflate(R.menu.select_podcast_episode_offline, menu);
@@ -362,7 +368,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 
 			onSongPress(Arrays.asList(entry), entry, false);
 		} else {
-			onSongPress(entries, entry, albumListType == null || "starredsongs".equals(albumListType));
+			onSongPress(entries, entry, albumListType == null || "starredsongs".equals(albumListType) || "randomsongs".equals(albumListType));
 		}
 	}
 
@@ -585,7 +591,10 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 				} else if("genres".equals(albumListType) || "genres-songs".equals(albumListType)) {
 					result = service.getSongsByGenre(albumListExtra, size, 0, context, this);
 				} else if("randomsongs".equals(albumListType)) {
-					result = service.getRandomSongs(size,context, this);
+                    // Get users desired random playlist size
+                    SharedPreferences prefs = Util.getPreferences(context);
+                    int listSize = Math.max(1, Integer.parseInt(prefs.getString(Constants.PREFERENCES_KEY_RANDOM_SIZE, "20")));
+					result = service.getRandomSongs(listSize,context, this);
 				}  else if(albumListType.indexOf(MainFragment.SONGS_LIST_PREFIX) != -1) {
 					result = service.getSongList(albumListType, size, 0, context, this);
 				} else {
