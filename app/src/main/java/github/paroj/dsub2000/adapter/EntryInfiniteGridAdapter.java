@@ -90,7 +90,7 @@ public class EntryInfiniteGridAdapter extends EntryGridAdapter {
 		this.extra = extra;
 		this.size = size;
 
-		if(super.getItemCount() < size) {
+		if(super.getItemCount() < size && !"randomsongs".equals(type)) {
 			allLoaded = true;
 		}
 	}
