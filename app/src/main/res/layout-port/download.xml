@@ -61,6 +61,12 @@
 								style="@style/DownloadActionImageButton"
 								android:src="@drawable/ic_toggle_star" />
 
+                            <ImageButton
+                                android:id="@+id/download_add_to_playlist"
+                                style="@style/DownloadActionImageButton"
+                                android:src="@drawable/ic_action_add"
+                                android:tint="@android:color/white" />
+
 							<ImageButton
 								android:id="@+id/download_playback_speed"
 								style="@style/DownloadActionImageButton"

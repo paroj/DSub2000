@@ -14,6 +14,7 @@
 */
 package github.paroj.dsub2000.fragments;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -115,6 +116,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	private ImageButton repeatButton;
 	private View toggleListButton;
 	private ImageButton starButton;
+    private ImageButton addToPlaylist;
 	private ImageButton bookmarkButton;
 	private ImageButton rateBadButton;
 	private ImageButton rateGoodButton;
@@ -210,6 +212,15 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		} else {
 			starButton.setVisibility(View.GONE);
 		}
+
+        addToPlaylist = (ImageButton)rootView.findViewById(R.id.download_add_to_playlist);
+        addToPlaylist.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Entry song = currentPlaying.getSong();
+                addToPlaylist(Collections.singletonList(song));
+            }
+        });
 
 		View.OnTouchListener touchListener = new View.OnTouchListener() {
 			@Override
