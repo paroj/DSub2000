@@ -29,6 +29,7 @@
 	<string name="common.false">No</string>
 	<string name="common.true">Yes</string>
 	<string name="common.never">Never</string>
+    <string name="common.reset">Reset</string>
 
     <string name="button_bar.home">Home</string>
     <string name="button_bar.browse">Library</string>
@@ -488,6 +489,10 @@
 	<string name="settings.start_on_headphones_summary">Start when headphones are plugged in.  This requires the use of a service which starts on boot up to check for the headphone plug event even when DSub2000 is not running.</string>
 	<string name="settings.color_action_bar">Color Action Bar</string>
 	<string name="settings.color_action_bar.summary">Color the action bar and status bar or leave them alone</string>
+    <string name="settings.general_action_bar_color">General Action Bar Color</string>
+    <string name="settings.general_action_bar_color_summary">Choose a color for the general action bar</string>
+    <string name="settings.now_playing_action_bar_color">Now Playing Action Bar Color</string>
+    <string name="settings.now_playing_action_bar_color_summary">Choose a color for the action bar in the Now Playing screen</string>
 	<string name="settings.shuffle_by_album">Shuffle By Album</string>
 	<string name="settings.shuffle_by_album.true">Shuffle order of albums</string>
 	<string name="settings.shuffle_by_album.false">Shuffle all songs together</string>
@@ -703,4 +708,8 @@
 	<string name="settings.combine_thumbs_up_down">Combine rating buttons</string>
 	<string name="settings.combine_thumbs_up_down_summary">Merge the thumbs up and thumbs down buttons into one single button that opens a rating dialog</string>
 
+    <string name="color_picker.title">Select a Color</string>
+    <string name="color_picker.hue">Hue</string>
+    <string name="color_picker.saturation">Saturation</string>
+    <string name="color_picker.lightness">Lightness</string>
 </resources>

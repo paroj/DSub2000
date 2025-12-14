@@ -628,10 +628,17 @@
 	<string name="common.false">Nein</string>
 	<string name="settings.menu_options.play_now_summary">Zeige \"Jetzt wiedergeben\" im Menü</string>
 	<string name="settings.menu_options.play_shuffled_summary">Zeige \"Mischen\" im Menü</string>
+    <string name="settings.color_action_bar">Bedienleiste einfärben</string>
+    <string name="settings.color_action_bar.summary">Die Bedienleiste und die Statusleiste einfärben oder unverändert lassen</string>
+    <string name="settings.general_action_bar_color">Farbe allgemeine Bedienleiste</string>
+    <string name="settings.general_action_bar_color_summary">Wähle die Farbe für die allgemeine Bedienleiste</string>
+    <string name="settings.now_playing_action_bar_color">Farbe Bedienleiste „Aktuelle Wiedergabe“</string>
+    <string name="settings.now_playing_action_bar_color_summary">Wähle die Farbe der Bedienleiste im „Aktuelle Wiedergabe“-Bildschirm</string>
 	<string name="settings.shuffle_by_album.false">Alle Titel mischen</string>
 	<string name="settings.shuffle_by_album.true">Albenreihenfolge mischen</string>
 	<string name="settings.shuffle_by_album">Alben mischen</string>
 	<string name="common.never">Nie</string>
+    <string name="common.reset">Zurücksetzen</string>
 	<string name="details.starred">Favorit</string>
 	<string name="download.thumbs_up">Gefällt mir</string>
 	<string name="download.thumbs_down">Gefällt mir nicht</string>
@@ -658,5 +665,8 @@
 	<string name="settings.tap_cover_for_playlist_summary">Zeige die aktuelle Wiedergabeliste wenn auf das Albumcover getippt wird</string>
 	<string name="settings.combine_thumbs_up_down">Bewertungsknöpfe zusammenfassen</string>
 	<string name="settings.combine_thumbs_up_down_summary">Vereint die \"Daumen hoch\" und \"Daumen runter\" Knöpfe zu einem Knopf, welcher einen Bewertungsdialog öffnet</string>
-
+    <string name="color_picker.title">Wähle eine Farbe</string>
+    <string name="color_picker.hue">Farbton</string>
+    <string name="color_picker.saturation">Sättigung</string>
+    <string name="color_picker.lightness">Helligkeit</string>
 </resources>

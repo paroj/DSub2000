@@ -64,6 +64,7 @@
 	<attr name="actionbarSubtitleStyle" format="reference"/>
 	<attr name="actionbarPopupStyle" format="reference"/>
 	<attr name="actionbarBackgroundColor" format="reference"/>
+    <attr name="actionbarNowPlayingBackgroundColor" format="reference"/>
 	<attr name="drawerTitleStyle" format="reference"/>
 	<attr name="drawerSubtitleStyle" format="reference"/>
 	<attr name="cardBackgroundDrawable" format="reference"/>
