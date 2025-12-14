@@ -94,6 +94,8 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	protected static String theme;
 	protected static boolean fullScreen;
 	protected static boolean actionbarColored;
+    protected static int actionbarCustomColor;
+    protected static int actionbarNowPlayingCustomColor;
 	private static final int MENU_GROUP_SERVER = 10;
 	private static final int MENU_ITEM_SERVER_BASE = 100;
 	public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
@@ -280,13 +282,20 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		Util.registerMediaButtonEventReceiver(this);
 
 		// Make sure to update theme
-		SharedPreferences prefs = Util.getPreferences(this);
-		if (theme != null && !theme.equals(ThemeUtil.getTheme(this)) || fullScreen != prefs.getBoolean(Constants.PREFERENCES_KEY_FULL_SCREEN, false) || actionbarColored != prefs.getBoolean(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR, true)) {
-			restart();
-			overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-			DrawableTint.clearCache();
-			return;
-		}
+		if (theme != null) {
+            SharedPreferences prefs = Util.getPreferences(this);
+            boolean isThemeUpdated = !theme.equals(ThemeUtil.getTheme(this));
+            boolean isFullScreenUpdated = fullScreen != prefs.getBoolean(Constants.PREFERENCES_KEY_FULL_SCREEN, false);
+            boolean isActionBarColoredUpdated = actionbarColored != prefs.getBoolean(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR, true);
+            boolean isActionBarCustomColorUpdated = actionbarCustomColor != prefs.getInt(Constants.PREFERENCES_KEY_ACTION_BAR_COLOR, -1);
+            boolean isActionBarNowPlayingCustomColorUpdated = actionbarNowPlayingCustomColor != prefs.getInt(Constants.PREFERENCES_KEY_ACTION_BAR_NOW_PLAYING_COLOR, -1);
+            if (isThemeUpdated || isFullScreenUpdated || isActionBarColoredUpdated || isActionBarCustomColorUpdated || isActionBarNowPlayingCustomColorUpdated) {
+                restart();
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                DrawableTint.clearCache();
+                return;
+            }
+        }
 
 		getImageLoader().onUIVisible();
 		UpdateView.addActiveActivity();
@@ -988,7 +997,10 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		}
 
 		ThemeUtil.applyTheme(this, theme);
-		actionbarColored = Util.getPreferences(this).getBoolean(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR, true);
+        SharedPreferences prefs = Util.getPreferences(this);
+		actionbarColored = prefs.getBoolean(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR, true);
+        actionbarCustomColor = prefs.getInt(Constants.PREFERENCES_KEY_ACTION_BAR_COLOR, -1);
+        actionbarNowPlayingCustomColor = prefs.getInt(Constants.PREFERENCES_KEY_ACTION_BAR_NOW_PLAYING_COLOR, -1);
 	}
 	private void applyFullscreen() {
 		fullScreen = Util.getPreferences(this).getBoolean(Constants.PREFERENCES_KEY_FULL_SCREEN, false);

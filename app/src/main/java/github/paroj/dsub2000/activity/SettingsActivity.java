@@ -19,6 +19,7 @@
 package github.paroj.dsub2000.activity;
 
 import android.annotation.TargetApi;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
@@ -27,6 +28,7 @@ import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.fragments.PreferenceCompatFragment;
 import github.paroj.dsub2000.fragments.SettingsFragment;
 import github.paroj.dsub2000.util.Constants;
+import github.paroj.dsub2000.util.Util;
 
 public class SettingsActivity extends SubsonicActivity {
 	private static final String TAG = SettingsActivity.class.getSimpleName();
@@ -53,6 +55,13 @@ public class SettingsActivity extends SubsonicActivity {
 		}
 
 		Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-		setSupportActionBar(mainToolbar);
+        SharedPreferences prefs = Util.getPreferences(this);
+        if (prefs.getBoolean(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR, true)) {
+            int color = prefs.getInt(Constants.PREFERENCES_KEY_ACTION_BAR_COLOR, -1);
+            if (color != -1) {
+                mainToolbar.setBackgroundColor(color);
+            }
+        }
+        setSupportActionBar(mainToolbar);
 	}
 }

@@ -74,6 +74,13 @@ public class DrawableTint {
 
 		return color;
 	}
+    public static int getColorRes(Context context, @AttrRes int colorAttr, @AttrRes int themeResId) {
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = context.getTheme();
+        theme.applyStyle(themeResId, true);
+        theme.resolveAttribute(colorAttr, typedValue, true);
+        return typedValue.data;
+    }
 	public static int getDrawableRes(Context context, @AttrRes int drawableAttr) {
 		if(attrMap.containsKey(drawableAttr)) {
 			return attrMap.get(drawableAttr);

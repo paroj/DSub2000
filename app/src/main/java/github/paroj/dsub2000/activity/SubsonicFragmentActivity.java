@@ -39,6 +39,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -98,7 +99,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	private SubsonicFragment secondaryFragment;
 	private Toolbar mainToolbar;
 	private Toolbar nowPlayingToolbar;
-
+    private FrameLayout slideUpSwipeTarget;
 	private View bottomBar;
 	private ImageView coverArtView;
 	private TextView trackView;
@@ -278,7 +279,20 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 		coverArtView = (ImageView) bottomBar.findViewById(R.id.album_art);
 		trackView = (TextView) bottomBar.findViewById(R.id.track_name);
 		artistView = (TextView) bottomBar.findViewById(R.id.artist_name);
+        slideUpSwipeTarget = (FrameLayout) findViewById(R.id.slide_up_swipe_target);
 
+        SharedPreferences prefs = Util.getPreferences(this);
+        if (prefs.getBoolean(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR, true)) {
+            int mainToolbarColor = prefs.getInt(Constants.PREFERENCES_KEY_ACTION_BAR_COLOR, -1);
+            if (mainToolbarColor != -1) {
+                mainToolbar.setBackgroundColor(mainToolbarColor);
+            }
+            int nowPlayingToolbarColor = prefs.getInt(Constants.PREFERENCES_KEY_ACTION_BAR_NOW_PLAYING_COLOR, -1);
+            if (nowPlayingToolbarColor != -1) {
+                nowPlayingToolbar.setBackgroundColor(nowPlayingToolbarColor);
+                slideUpSwipeTarget.setBackgroundColor(nowPlayingToolbarColor);
+            }
+        }
 		setSupportActionBar(mainToolbar);
 
 		if (findViewById(R.id.fragment_container) != null && savedInstanceState == null) {

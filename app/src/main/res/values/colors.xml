@@ -9,13 +9,13 @@
 	<color name="holo_red_light">#ffff4444</color>
 
 	<color name="lightPrimary">#2196f3</color>
-	<color name="lightPrimaryDark">#1e88e5</color>
+	<color name="lightPrimaryDark">#0d47a1</color>
 	<color name="lightAccent">#448aff</color>
 	<color name="lightElement">#A0000000</color>
 
 
 	<color name="holoPrimary">#009688</color>
-	<color name="holoPrimaryDark">#00897b</color>
+	<color name="holoPrimaryDark">#003c36</color>
 	<color name="holoAccent">#64ffda</color>
 
 	<color name="darkElement">#F8F8F8</color>

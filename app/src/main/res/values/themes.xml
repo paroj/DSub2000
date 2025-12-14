@@ -62,6 +62,7 @@
 		<item name="colorPrimaryDark">@color/lightPrimaryDark</item>
 		<item name="colorAccent">@color/lightAccent</item>
 		<item name="actionbarBackgroundColor">@color/lightPrimary</item>
+        <item name="actionbarNowPlayingBackgroundColor">@color/lightPrimaryDark</item>
 		<item name="actionbarTitleStyle">@style/TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse</item>
 		<item name="actionbarSubtitleStyle">@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Inverse</item>
 		<item name="actionbarPopupStyle">@style/ThemeOverlay.AppCompat.Light</item>
@@ -137,6 +138,7 @@
 		<item name="colorPrimaryDark">@color/lightPrimaryDark</item>
 		<item name="colorAccent">@color/lightAccent</item>
 		<item name="actionbarBackgroundColor">@color/lightPrimary</item>
+        <item name="actionbarNowPlayingBackgroundColor">@color/lightPrimaryDark</item>
 		<item name="actionbarTitleStyle">@style/TextAppearance.AppCompat.Widget.ActionBar.Title</item>
 		<item name="actionbarSubtitleStyle">@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle</item>
 		<item name="actionbarPopupStyle">@style/ThemeOverlay.AppCompat.Dark</item>
@@ -166,6 +168,7 @@
 		<item name="colorPrimaryDark">@color/holoPrimaryDark</item>
 		<item name="colorAccent">@color/holoAccent</item>
 		<item name="actionbarBackgroundColor">@color/holoPrimary</item>
+        <item name="actionbarNowPlayingBackgroundColor">@color/holoPrimaryDark</item>
 		<item name="drawerHeaderBackground">@drawable/drawer_header_holo</item>
 		<item name="card_background">@color/background_material_dark</item>
 		<item name="cardBackgroundDrawable">@drawable/card_rounded_corners</item>
@@ -194,6 +197,7 @@
 		<item name="actionbar_element_color">@color/lightElement</item>
 		<item name="actionbarThemeStyle">@style/ThemeOverlay.AppCompat.ActionBar</item>
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
+        <item name="actionbarNowPlayingBackgroundColor">@android:color/transparent</item>
 		<item name="actionbarTitleStyle">@style/TextAppearance.AppCompat.Widget.ActionBar.Title</item>
 		<item name="actionbarSubtitleStyle">@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle</item>
 		<item name="android:spinnerItemStyle">@style/LightSpinnerItem</item>
@@ -221,14 +225,17 @@
 	</style>
 	<style name="Theme.DSub2000.Black.No_Color.Base" parent="Theme.DSub2000.Black.No_Actionbar">
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
+        <item name="actionbarNowPlayingBackgroundColor">@android:color/transparent</item>
 		<item name="actionModeBackground">@android:color/black</item>
 	</style>
 	<style name="Theme.DSub2000.Dark.No_Color.Base" parent="Theme.DSub2000.Dark.No_Actionbar">
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
+        <item name="actionbarNowPlayingBackgroundColor">@android:color/transparent</item>
 		<item name="actionModeBackground">@color/background_material_dark</item>
 	</style>
 	<style name="Theme.DSub2000.Holo.No_Color.Base" parent="Theme.DSub2000.Holo.No_Actionbar">
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
+        <item name="actionbarNowPlayingBackgroundColor">@android:color/transparent</item>
 		<item name="actionModeBackground">@drawable/background</item>
 	</style>
 
