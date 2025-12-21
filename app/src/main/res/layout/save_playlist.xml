@@ -20,7 +20,6 @@
 			android:text="@string/playlist.overwrite"
 			android:layout_marginLeft="4dp"
 			android:checked="false"
-			android:visibility="gone"
 			android:textColor="?android:textColorPrimary"/>
 
 </LinearLayout>

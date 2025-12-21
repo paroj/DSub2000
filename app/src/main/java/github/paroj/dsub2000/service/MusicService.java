@@ -73,16 +73,16 @@ public interface MusicService {
 
     List<Playlist> getPlaylists(boolean refresh, Context context, ProgressListener progressListener) throws Exception;
 
-    void createPlaylist(String id, String name, List<MusicDirectory.Entry> entries, Context context, ProgressListener progressListener) throws Exception;
+    String createPlaylist(String id, String name, List<MusicDirectory.Entry> entries, Context context, ProgressListener progressListener) throws Exception;
 	
 	void deletePlaylist(String id, Context context, ProgressListener progressListener) throws Exception;
 	
 	void addToPlaylist(String id, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception;
 	
 	void removeFromPlaylist(String id, List<Integer> toRemove, Context context, ProgressListener progressListener) throws Exception;
-	
-	void overwritePlaylist(String id, String name, int toRemove, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception;
-	
+
+	String overwritePlaylist(String id, String name, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception;
+
 	void updatePlaylist(String id, String name, String comment, boolean pub, Context context, ProgressListener progressListener) throws Exception;
 
     Lyrics getLyrics(String artist, String title, Context context, ProgressListener progressListener) throws Exception;

@@ -201,6 +201,7 @@
     <string name="download.playlist_saving">Saving playlist \"%s\"...</string>
     <string name="download.playlist_done">Playlist was successfully saved.</string>
     <string name="download.playlist_error">Failed to save playlist, please try later.</string>
+    <string name="download.playlist_name_in_used">This name is already taken. Please choose another one.</string>
     <string name="download.repeat_off">Repeat off</string>
     <string name="download.repeat_all">Repeat all</string>
     <string name="download.repeat_single">Repeat song</string>

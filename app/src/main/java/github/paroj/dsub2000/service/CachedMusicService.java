@@ -392,10 +392,10 @@ public class CachedMusicService implements MusicService {
     }
 
     @Override
-    public void createPlaylist(String id, String name, List<Entry> entries, Context context, ProgressListener progressListener) throws Exception {
+    public String createPlaylist(String id, String name, List<Entry> entries, Context context, ProgressListener progressListener) throws Exception {
 		cachedPlaylists.clear();
 		Util.delete(new File(context.getCacheDir(), getCacheName(context, "playlist")));
-        musicService.createPlaylist(id, name, entries, context, progressListener);
+        return musicService.createPlaylist(id, name, entries, context, progressListener);
     }
 	
 	@Override
@@ -481,8 +481,8 @@ public class CachedMusicService implements MusicService {
 	}
 	
 	@Override
-	public void overwritePlaylist(String id, String name, int toRemove, final List<Entry> toAdd, Context context, ProgressListener progressListener) throws Exception {
-		musicService.overwritePlaylist(id, name, toRemove, toAdd, context, progressListener);
+	public String overwritePlaylist(String id, String name, final List<Entry> toAdd, Context context, ProgressListener progressListener) throws Exception {
+		String paylistId = musicService.overwritePlaylist(id, name, toAdd, context, progressListener);
 
 		new MusicDirectoryUpdater(context, "playlist", id) {
 			@Override
@@ -496,6 +496,7 @@ public class CachedMusicService implements MusicService {
 				objects.addAll(toAdd);
 			}
 		}.execute();
+        return paylistId;
 	}
 	
 	@Override
