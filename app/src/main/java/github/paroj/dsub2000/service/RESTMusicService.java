@@ -79,6 +79,7 @@ import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.FileUtil;
 import github.paroj.dsub2000.util.ProgressListener;
 import github.paroj.dsub2000.util.SongDBHandler;
+import github.paroj.dsub2000.util.UserUtil;
 import github.paroj.dsub2000.util.Util;
 import github.paroj.dsub2000.util.compat.GoogleCompat;
 
@@ -377,29 +378,74 @@ public class RESTMusicService implements MusicService {
     }
 
     @Override
-    public void createPlaylist(String id, String name, List<MusicDirectory.Entry> entries, Context context, ProgressListener progressListener) throws Exception {
-        List<String> parameterNames = new LinkedList<String>();
-        List<Object> parameterValues = new LinkedList<Object>();
+    public String createPlaylist(String id, String name, List<MusicDirectory.Entry> entries, Context context, ProgressListener progressListener) throws Exception {
+        // To prevent URLs from exceeding 2048 characters, we first create the playlist
+        // and then update it with the remaining songs.
+        // The base URL (including required parameters) is about 160+ characters long.
+        // One `songIdToAdd` parameter can add up to 35 characters (Navidrom).
+        // With a chunk size of 45, the total URL length is roughly 1800 characters.
+        int chunkSize = 45;
+        List<List<MusicDirectory.Entry>> entriesParts = new ArrayList<>();
 
-        if (id != null) {
-            parameterNames.add("playlistId");
-            parameterValues.add(id);
-        }
-        if (name != null) {
-            parameterNames.add("name");
-            parameterValues.add(name);
-        }
-        for (MusicDirectory.Entry entry : entries) {
-            parameterNames.add("songId");
-            parameterValues.add(getOfflineSongId(entry.getId(), context, progressListener));
+        for (int i = 0; i < entries.size(); i += chunkSize) {
+            List<MusicDirectory.Entry> sublist = entries.subList(i, Math.min(i + chunkSize, entries.size()));
+            entriesParts.add(sublist);
         }
 
-        Reader reader = getReader(context, progressListener, "createPlaylist", parameterNames, parameterValues);
-        try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
+        for (int i = 0; i < entriesParts.size(); i++) {
+            List<MusicDirectory.Entry> entriesPart = entriesParts.get(i);
+            List<String> parameterNames = new LinkedList<String>();
+            List<Object> parameterValues = new LinkedList<Object>();
+            if (id != null) {
+                parameterNames.add("playlistId");
+                parameterValues.add(id);
+            }
+            if (i == 0) {
+                // Create a new playlist; replaces existing content if playlistId is set.
+                if (name != null) {
+                    parameterNames.add("name");
+                    parameterValues.add(name);
+                }
+                for (MusicDirectory.Entry entry : entriesPart) {
+                    parameterNames.add("songId");
+                    parameterValues.add(getOfflineSongId(entry.getId(), context, progressListener));
+                }
+                MusicDirectory createdPlaylist;
+                Reader reader = getReader(context, progressListener, "createPlaylist", parameterNames, parameterValues);
+                try {
+                    createdPlaylist = new PlaylistParser(context, getInstance(context)).parse(reader, progressListener);
+                } finally {
+                    Util.close(reader);
+                }
+                id = createdPlaylist.getId();
+                if (id == null) {
+                    // with airsonic-advanced no id is returned, we have to search for the playlist by name
+                    List<Playlist> playlists = this.getPlaylists(false, context, progressListener);
+                    String username = UserUtil.getCurrentUsername(context);
+                    if (name != null && username != null) {
+                        Playlist filteredPlaylist = playlists.stream().filter(playlist -> {
+                            boolean matchesName = name.equals(playlist.getName());
+                            boolean matchesOwner = username.equals(playlist.getOwner());
+                            return matchesName && matchesOwner;
+                        }).findFirst().orElse(new Playlist());
+                        id = filteredPlaylist.getId();
+                    }
+                }
+            } else {
+                // Update the newly created playlist using the playlistId.
+                for (MusicDirectory.Entry entry : entriesPart) {
+                    parameterNames.add("songIdToAdd");
+                    parameterValues.add(getOfflineSongId(entry.getId(), context, progressListener));
+                }
+                Reader reader = getReader(context, progressListener, "updatePlaylist", parameterNames, parameterValues);
+                try {
+                    new ErrorParser(context, getInstance(context)).parse(reader);
+                } finally {
+                    Util.close(reader);
+                }
+            }
         }
+        return id;
     }
 
 	@Override
@@ -451,28 +497,13 @@ public class RESTMusicService implements MusicService {
 	}
 
 	@Override
-	public void overwritePlaylist(String id, String name, int toRemove, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception {
+	public String overwritePlaylist(String id, String name, List<MusicDirectory.Entry> toAdd, Context context, ProgressListener progressListener) throws Exception {
 		checkServerVersion(context, "1.8", "Updating playlists is not supported.");
-		List<String> names = new ArrayList<String>();
-		List<Object> values = new ArrayList<Object>();
-		names.add("playlistId");
-		values.add(id);
-		names.add("name");
-		values.add(name);
-		for(MusicDirectory.Entry song: toAdd) {
-			names.add("songIdToAdd");
-			values.add(song.getId());
-		}
-		for(int i = 0; i < toRemove; i++) {
-			names.add("songIndexToRemove");
-			values.add(i);
-		}
-		Reader reader = getReader(context, progressListener, "updatePlaylist", names, values);
-    	try {
-            new ErrorParser(context, getInstance(context)).parse(reader);
-        } finally {
-            Util.close(reader);
+		if (id == null || id.isEmpty()) {
+            throw new IllegalArgumentException("id must be specified when calling overwritePlaylist()");
         }
+        // When calling createPlaylist() with a specified playlistId, existing content is replaced.
+        return this.createPlaylist(id, name, toAdd, context, progressListener);
 	}
 
 	@Override

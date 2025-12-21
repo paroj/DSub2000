@@ -187,6 +187,7 @@
     <string name="download.playlist_saving">Sichere Wiedergabeliste \"%s\"...</string>
     <string name="download.playlist_done">Wiedergabeliste wurde erfolgreich gespeichert.</string>
     <string name="download.playlist_error">Fehler beim speichern der Wiedergabeliste, bitte später erneut probieren.</string>
+    <string name="download.playlist_name_in_used">Dieser Name ist bereits vergeben. Bitte wählen Sie einen anderen.</string>
     <string name="download.repeat_off">Keine Wiederholung</string>
     <string name="download.repeat_all">Wiederhole alle</string>
     <string name="download.repeat_single">Aktuelles Lied wiederholen</string>

@@ -39,6 +39,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
+
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -1129,6 +1132,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 		View layout = context.getLayoutInflater().inflate(R.layout.save_playlist, null);
 		final EditText playlistNameView = (EditText) layout.findViewById(R.id.save_playlist_name);
 		final CheckBox overwriteCheckBox = (CheckBox) layout.findViewById(R.id.save_playlist_overwrite);
+
 		if(getSuggestion) {
 			DownloadService downloadService = getDownloadService();
 			String playlistName = null;
@@ -1140,15 +1144,28 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			if (playlistName != null) {
 				playlistNameView.setText(playlistName);
 				if(playlistId != null) {
-					try {
-						if (ServerInfo.checkServerVersion(context, "1.8.0") && Integer.parseInt(playlistId) != -1) {
-							overwriteCheckBox.setChecked(true);
-							overwriteCheckBox.setVisibility(View.VISIBLE);
-						}
-					} catch (Exception e) {
-						Log.i(TAG, "Playlist id isn't a integer, probably MusicCabinet", e);
-					}
+                    if (ServerInfo.checkServerVersion(context, "1.8.0")) {
+                        overwriteCheckBox.setChecked(true);
+                    }
 				}
+                final String initialPlaylistName = playlistName;
+                playlistNameView.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        String currentPlaylistName = s.toString();
+                        boolean isCheckBoxSet = currentPlaylistName.equals(initialPlaylistName);
+                        overwriteCheckBox.setChecked(isCheckBoxSet);
+
+                    }
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+                });
 			} else {
 				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				playlistNameView.setText(dateFormat.format(new Date()));
@@ -1156,30 +1173,15 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 		} else {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			playlistNameView.setText(dateFormat.format(new Date()));
+            overwriteCheckBox.setChecked(false);
+            overwriteCheckBox.setVisibility(View.GONE);
 		}
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(R.string.download_playlist_title)
 				.setMessage(R.string.download_playlist_name)
 				.setView(layout)
-				.setPositiveButton(R.string.common_save, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int id) {
-						String playlistName = String.valueOf(playlistNameView.getText());
-						if(overwriteCheckBox.isChecked()) {
-							overwritePlaylist(songs, playlistName, getDownloadService().getSuggestedPlaylistId());
-						} else {
-							createNewPlaylist(songs, playlistName);
-
-							if(getSuggestion) {
-								DownloadService downloadService = getDownloadService();
-								if(downloadService != null) {
-									downloadService.setSuggestedPlaylistName(playlistName, null);
-								}
-							}
-						}
-					}
-				})
+				.setPositiveButton(R.string.common_save, null)
 				.setNegativeButton(R.string.common_cancel, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
@@ -1187,61 +1189,99 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 					}
 				})
 				.setCancelable(true);
-
 		AlertDialog dialog = builder.create();
+		dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        new SilentBackgroundTask<Void>(context) {
+                            @Override
+                            protected Void doInBackground() throws Throwable {
+                                String playlistName = String.valueOf(playlistNameView.getText());
+                                MusicService musicService = MusicServiceFactory.getMusicService(context);
+                                String playlistId = null;
+                                String username = UserUtil.getCurrentUsername(context);
+                                List<Playlist> playlists = musicService.getPlaylists(true, context, null);
+                                boolean isPlaylistNameUsed = false;
+                                if (username != null) {
+                                    isPlaylistNameUsed = playlists.stream().anyMatch(playlist -> {
+                                        boolean matchesName = playlistName.equals(playlist.getName());
+                                        boolean matchesOwner = username.equals(playlist.getOwner());
+                                        return matchesName && matchesOwner;
+                                    });
+                                }
+                                if (overwriteCheckBox.isChecked() && isPlaylistNameUsed) {
+                                    // overwrite existing
+                                    playlistId = getDownloadService().getSuggestedPlaylistId();
+
+                                    // Check if the loaded playlistId and playlistName match.
+                                    // It is possible that an playlistId is loaded via getSuggestedPlaylistId(),
+                                    // but the name was manually edited to overwrite another playlist with the same name.
+                                    boolean isPlaylistIdValid = true;
+                                    if (playlistId != null) {
+                                        String finalPlaylistId = playlistId;
+                                        isPlaylistIdValid = playlists.stream().anyMatch(playlist -> {
+                                            boolean matchesId = finalPlaylistId.equals(playlist.getId());
+                                            boolean matchesName = playlistName.equals(playlist.getName());
+                                            boolean matchesOwner = username.equals(playlist.getOwner());
+                                            return matchesId && matchesName && matchesOwner;
+                                        });
+                                    }
+                                    if (!isPlaylistIdValid) {
+                                        playlistId = null;
+                                    }
+                                    if (playlistId == null) {
+                                        // find playlist by name
+                                        Playlist filteredPlaylist = playlists.stream().filter(playlist -> {
+                                            boolean matchesName = playlistName.equals(playlist.getName());
+                                            boolean matchesOwner = username.equals(playlist.getOwner());
+                                            return matchesName && matchesOwner;
+                                        }).findFirst().orElse(null);
+                                        if (filteredPlaylist != null) {
+                                            playlistId = filteredPlaylist.getId();
+                                        }
+                                    }
+                                    dialog.dismiss();
+                                    playlistId = musicService.overwritePlaylist(playlistId, playlistName, songs, context, null);
+                                } else if (!isPlaylistNameUsed) {
+                                    // create new
+                                    dialog.dismiss();
+                                    playlistId = musicService.createPlaylist(null, playlistName, songs, context, null);
+                                } else {
+                                    // name collision warning, don't overwrite
+                                    Util.toast(context, R.string.download_playlist_name_in_used);
+                                    return null;
+                                }
+
+                                if(getSuggestion) {
+                                    DownloadService downloadService = getDownloadService();
+                                    if(downloadService != null) {
+                                        downloadService.setSuggestedPlaylistName(playlistName, playlistId);
+                                    }
+                                }
+                                return  null;
+                            };
+
+                            @Override
+                            protected void done(Void result) {
+                                Util.toast(context, R.string.download_playlist_done);
+                            }
+
+                            @Override
+                            protected void error(Throwable error) {
+                                String msg = context.getResources().getString(R.string.download_playlist_error) + " " + getErrorMessage(error);
+                                Log.e(TAG, "Failed to create playlist", error);
+                                Util.toast(context, msg);
+                            }
+                        }.execute();
+                    };
+                });
+            }
+        });
 		dialog.show();
-	}
-	private void createNewPlaylist(final List<Entry> songs, final String name) {
-		new SilentBackgroundTask<Void>(context) {
-			@Override
-			protected Void doInBackground() throws Throwable {
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				musicService.createPlaylist(null, name, songs, context, null);
-				return null;
-			}
-
-			@Override
-			protected void done(Void result) {
-				Util.toast(context, R.string.download_playlist_done);
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				String msg = context.getResources().getString(R.string.download_playlist_error) + " " + getErrorMessage(error);
-				Log.e(TAG, "Failed to create playlist", error);
-				Util.toast(context, msg);
-			}
-		}.execute();
-	}
-	private void overwritePlaylist(final List<Entry> songs, final String name, final String id) {
-		new SilentBackgroundTask<Void>(context) {
-			@Override
-			protected Void doInBackground() throws Throwable {
-				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				MusicDirectory playlist = musicService.getPlaylist(true, id, name, context, null);
-				List<Entry> toDelete = playlist.getChildren();
-				musicService.overwritePlaylist(id, name, toDelete.size(), songs, context, null);
-				return null;
-			}
-
-			@Override
-			protected void done(Void result) {
-				Util.toast(context, R.string.download_playlist_done);
-			}
-
-			@Override
-			protected void error(Throwable error) {
-				String msg;
-				if (error instanceof OfflineException || error instanceof ServerTooOldException) {
-					msg = getErrorMessage(error);
-				} else {
-					msg = context.getResources().getString(R.string.download_playlist_error) + " " + getErrorMessage(error);
-				}
-
-				Log.e(TAG, "Failed to overwrite playlist", error);
-				Util.toast(context, msg, false);
-			}
-		}.execute();
 	}
 
 	public void displaySongInfo(final Entry song) {

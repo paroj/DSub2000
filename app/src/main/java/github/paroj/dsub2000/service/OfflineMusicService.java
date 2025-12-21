@@ -509,7 +509,7 @@ public class OfflineMusicService implements MusicService {
     }
 
     @Override
-    public void createPlaylist(String id, String name, List<Entry> entries, Context context, ProgressListener progressListener) throws Exception {
+    public String createPlaylist(String id, String name, List<Entry> entries, Context context, ProgressListener progressListener) throws Exception {
 		throw new OfflineException(ERRORMSG);
     }
 	
@@ -529,7 +529,7 @@ public class OfflineMusicService implements MusicService {
 	}
 	
 	@Override
-	public void overwritePlaylist(String id, String name, int toRemove, List<Entry> toAdd, Context context, ProgressListener progressListener) throws Exception {
+	public String overwritePlaylist(String id, String name, List<Entry> toAdd, Context context, ProgressListener progressListener) throws Exception {
 		throw new OfflineException(ERRORMSG);
 	}
 	
