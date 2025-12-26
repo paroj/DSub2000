@@ -25,13 +25,16 @@
 				android:background="@android:color/transparent">
 
 				<FrameLayout
+                    android:id="@+id/download_album_art_background"
+                    android:clickable="true"
 					android:layout_width="match_parent"
 					android:layout_height="0dp"
 					android:layout_weight="1">
 
 					<FrameLayout android:orientation="vertical"
 						android:layout_width="match_parent"
-						android:layout_height="wrap_content">
+						android:layout_height="wrap_content"
+                        android:layout_gravity="center">
 
 						<github.paroj.dsub2000.view.RecyclingImageView
 							android:id="@+id/download_album_art_image"
