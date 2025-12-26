@@ -28,6 +28,10 @@ import android.widget.ImageView;
 public class RecyclingImageView extends ImageView {
 	private boolean invalidated = false;
 	private OnInvalidated onInvalidated;
+    private OnImageChangedListener listener;
+    public interface OnImageChangedListener {
+        void onImageChanged(Drawable drawable);
+    }
 
 	public RecyclingImageView(Context context) {
 		super(context);
@@ -84,6 +88,9 @@ public class RecyclingImageView extends ImageView {
 	public void setImageDrawable(Drawable drawable) {
 		super.setImageDrawable(drawable);
 		setInvalidated(false);
+        if (listener != null) {
+            listener.onImageChanged(drawable);
+        }
 	}
 
 	private boolean isBitmapRecycled(Drawable drawable) {
@@ -98,6 +105,10 @@ public class RecyclingImageView extends ImageView {
 			return false;
 		}
 	}
+
+    public void setOnImageChangedListener(OnImageChangedListener listener) {
+        this.listener = listener;
+    }
 
 	public void setInvalidated(boolean invalidated) {
 		this.invalidated = invalidated;

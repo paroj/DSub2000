@@ -21,15 +21,23 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import androidx.appcompat.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.core.graphics.ColorUtils;
 import androidx.core.view.MenuItemCompat;
 import androidx.mediarouter.app.MediaRouteButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -50,14 +58,15 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
 import com.shehabic.droppy.DroppyMenuPopup;
 import com.shehabic.droppy.animations.DroppyFadeInAnimation;
+
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.activity.SubsonicFragmentActivity;
 import github.paroj.dsub2000.adapter.SectionAdapter;
@@ -78,6 +87,7 @@ import github.paroj.dsub2000.util.SilentBackgroundTask;
 import github.paroj.dsub2000.adapter.DownloadFileAdapter;
 import github.paroj.dsub2000.view.FadeOutAnimation;
 import github.paroj.dsub2000.view.FastScroller;
+import github.paroj.dsub2000.view.RecyclingImageView;
 import github.paroj.dsub2000.view.UpdateView;
 import github.paroj.dsub2000.util.Util;
 
@@ -95,12 +105,15 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	private static final int ACTION_PREVIOUS = 1;
 	private static final int ACTION_NEXT = 2;
 	private static final int ACTION_REWIND = 3;
-	private static final int ACTION_FORWARD = 4;
+	private static final int ACTION_CLOSE = 4;
 
+    private FrameLayout downloadLayout;
+    private int lastAlbumArtColor;
+    private GradientDrawable glowDrawable;
 	private ViewFlipper playlistFlipper;
 	private TextView emptyTextView;
 	private TextView songTitleTextView;
-	private ImageView albumArtImageView;
+	private RecyclingImageView albumArtImageView;
 	private RecyclerView playlistView;
 	private TextView positionTextView;
 	private TextView durationTextView;
@@ -169,11 +182,63 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		swipeDistance = (d.getWidth() + d.getHeight()) * PERCENTAGE_OF_SCREEN_FOR_SWIPE / 100;
 		swipeVelocity = (d.getWidth() + d.getHeight()) * PERCENTAGE_OF_SCREEN_FOR_SWIPE / 100;
 		gestureScanner = new GestureDetector(this);
+        downloadLayout = (FrameLayout) rootView.findViewById(R.id.download_album_art_background);
+        downloadLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent me) {
+                return gestureScanner.onTouchEvent(me);
+            }
+        });
+        albumArtImageView = (RecyclingImageView)rootView.findViewById(R.id.download_album_art_image);
+        if (albumArtImageView != null && downloadLayout != null) {
+            glowDrawable = new GradientDrawable();
+            downloadLayout.setBackground(glowDrawable);
+            albumArtImageView.setOnImageChangedListener(drawable -> {
+                if (drawable instanceof TransitionDrawable) {
+                    return;
+                }
+                Bitmap bitmap = ImageUtil.getBitmapFromDrawable(drawable);
+                int albumArtColor = ImageUtil.getVibrantColorFromBitmap(bitmap, Color.TRANSPARENT);
+                if (albumArtColor == Color.TRANSPARENT || lastAlbumArtColor == albumArtColor) {
+                    return;
+                }
+
+                int gWidth = downloadLayout.getMeasuredWidth();
+                int gHeight = downloadLayout.getMeasuredHeight();
+                float gradientRadius = Math.max(gWidth, gHeight) * 0.52f;
+                glowDrawable.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+                glowDrawable.setGradientRadius(gradientRadius);
+                glowDrawable.setDither(true);
+
+                ValueAnimator animator = ValueAnimator.ofArgb(lastAlbumArtColor, albumArtColor);
+                animator.setDuration(900);
+                animator.addUpdateListener(animation -> {
+                    int color = (int) animation.getAnimatedValue();
+                    glowDrawable.setColors(new int[]{
+                            ColorUtils.setAlphaComponent(color, 100),
+                            ColorUtils.setAlphaComponent(color, 100),
+                            ColorUtils.setAlphaComponent(color, 100),
+                            ColorUtils.setAlphaComponent(color, 80),
+                            ColorUtils.setAlphaComponent(color, 0)
+                    });
+                });
+                animator.start();
+                lastAlbumArtColor = albumArtColor;
+            });
+            albumArtImageView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent me) {
+                    if (me.getAction() == MotionEvent.ACTION_DOWN) {
+                        lastY = (int) me.getRawY();
+                    }
+                    return gestureScanner.onTouchEvent(me);
+                }
+            });
+        }
 
 		playlistFlipper = (ViewFlipper)rootView.findViewById(R.id.download_playlist_flipper);
 		emptyTextView = (TextView)rootView.findViewById(R.id.download_empty);
 		songTitleTextView = (TextView)rootView.findViewById(R.id.download_song_title);
-		albumArtImageView = (ImageView)rootView.findViewById(R.id.download_album_art_image);
 		positionTextView = (TextView)rootView.findViewById(R.id.download_position);
 		durationTextView = (TextView)rootView.findViewById(R.id.download_duration);
 		statusTextView = (TextView)rootView.findViewById(R.id.download_status);
@@ -237,15 +302,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		rateCombinedButton.setOnTouchListener(touchListener);
 		playbackSpeedButton.setOnTouchListener(touchListener);
 		emptyTextView.setOnTouchListener(touchListener);
-		albumArtImageView.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent me) {
-				if (me.getAction() == MotionEvent.ACTION_DOWN) {
-					lastY = (int) me.getRawY();
-				}
-				return gestureScanner.onTouchEvent(me);
-			}
-		});
 
 		previousButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -436,7 +492,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		albumArtImageView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if(Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_TAP_COVER_FOR_PLAYLIST, true)) {
+				if(Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_TAP_COVER_FOR_PLAYLIST, false)) {
 					if (overlayHeight == -1 || lastY < (view.getBottom() - overlayHeight)) {
 						toggleFullscreenAlbumArt();
 						setControlsVisible(true);
@@ -1190,12 +1246,21 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		}
 		// Top to Bottom swipe
 		else if (e2.getY() - e1.getY() > swipeDistance && Math.abs(velocityY) > swipeVelocity) {
-			action = ACTION_FORWARD;
+			action = ACTION_CLOSE;
 		}
 		// Bottom to Top swipe
 		else if (e1.getY() - e2.getY() > swipeDistance && Math.abs(velocityY) > swipeVelocity) {
 			action = ACTION_REWIND;
 		}
+
+        Rect rect = new Rect();
+        albumArtImageView.getGlobalVisibleRect(rect);
+        int x = (int) e1.getRawX();
+        int y = (int) e1.getRawY();
+        boolean startedOnImage = rect.contains(x, y);
+        if (!startedOnImage && action != ACTION_CLOSE) {
+            return false;
+        }
 
 		if(action > 0) {
 			final int performAction = action;
@@ -1210,8 +1275,9 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 						case ACTION_PREVIOUS:
 							downloadService.previous();
 							break;
-						case ACTION_FORWARD:
-							downloadService.fastForward();
+						case ACTION_CLOSE:
+                            SubsonicFragmentActivity activity = (SubsonicFragmentActivity) getActivity();
+                            activity.closeNowPlaying();
 							break;
 						case ACTION_REWIND:
 							downloadService.rewind();

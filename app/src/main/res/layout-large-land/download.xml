@@ -5,19 +5,27 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<github.paroj.dsub2000.view.RecyclingImageView
-		android:id="@+id/download_album_art_image"
-		android:src="@drawable/unknown_album_large"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_weight="1"
-		android:scaleType="fitCenter"/>
+    <FrameLayout
+        android:id="@+id/download_album_art_background"
+        android:clickable="true"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <github.paroj.dsub2000.view.RecyclingImageView
+            android:id="@+id/download_album_art_image"
+            android:src="@drawable/unknown_album_large"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"/>
+    </FrameLayout>
 
 	<RelativeLayout
 		android:id="@+id/download_control_layout"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
 		android:background="@android:color/transparent">
 
 		<ViewFlipper
