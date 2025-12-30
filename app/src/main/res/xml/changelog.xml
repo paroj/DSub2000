@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="5.7.0" versioncode="213" releasedate="30/12/2025">
+		<change>Special thanks to @Faeb35 for the contributions to this release</change>
+		<change>Improved Now Playing layout and gestures</change>
+		<change>add to playlist button in Now Playing view</change>
+		<change>configurable Action Bar colors</change>
+		<change>replay song instead of skip on error</change>
+		<change>fixes for TransactionTooLargeException</change>
+		<change>new file naming pattern, respecting disc number</change>
+		<change>Respect Per Folder setting in random song feature</change>
+	</release>
 	<release version="5.6.3" versioncode="212" releasedate="09/10/2025">
 		<change>Fix resume playing after being backgrounded</change>
 		<change>Fix flickering changelog</change>
