@@ -9,7 +9,7 @@
 		<ListPreference
 			android:title="@string/settings.theme_title"
 			android:key="theme"
-			android:defaultValue="light"
+			android:defaultValue="black"
 			android:entryValues="@array/themeValues"
 			android:entries="@array/themeNames"/>
 
