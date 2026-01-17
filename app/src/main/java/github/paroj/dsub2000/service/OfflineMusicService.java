@@ -177,7 +177,6 @@ public class OfflineMusicService implements MusicService {
 			entry.setGrandParent(file.getParentFile().getParent());
 		}
 		entry.setPath(file.getPath().replaceFirst("^" + root + "/" , ""));
-		String title = name;
 		if (file.isFile()) {
 			File artistFolder = file.getParentFile().getParentFile();
 			File albumFolder = file.getParentFile();
@@ -187,23 +186,14 @@ public class OfflineMusicService implements MusicService {
 				entry.setArtist(artistFolder.getName());
 			}
 			entry.setAlbum(albumFolder.getName());
-
-			int index = name.indexOf('-');
-			if(index != -1) {
-				try {
-					entry.setTrack(Integer.parseInt(name.substring(0, index)));
-					title = title.substring(index + 1);
-				} catch(Exception e) {
-					// Failed parseInt, just means track filled out
-				}
-			}
-
+			FileUtil.parseFileNameIntoEntry(entry, name);
 			if(load) {
 				entry.loadMetadata(file);
 			}
-		}
+		} else {
+            entry.setTitle(name);
+        }
 
-		entry.setTitle(title);
 		entry.setSuffix(FileUtil.getExtension(file.getName().replace(".complete", "")));
 
 		File albumArt = FileUtil.getAlbumArtFile(context, entry);
