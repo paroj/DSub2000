@@ -34,6 +34,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -155,6 +157,45 @@ public class FileUtil {
             fileName = fileName.substring(0, MAX_FILENAME_LENGTH_V2);
         }
         return fileName;
+    }
+
+    public static void parseFileNameIntoEntry(MusicDirectory.Entry entry, String fileName) {
+        String discNumber = null;
+        String trackNumber = null;
+        String title = null;
+
+        Pattern fileNameV2 = Pattern.compile("(\\d{2})-(\\d{3})-(.+)");
+        Matcher matcher = fileNameV2.matcher(fileName);
+        if (matcher.matches()) {
+            discNumber = matcher.group(1);
+            trackNumber = matcher.group(2);
+            title = matcher.group(3);
+        } else {
+            Pattern fileNameV1 = Pattern.compile("(\\d{2})-(.+)");
+            matcher = fileNameV1.matcher(fileName);
+            if (matcher.matches()) {
+                trackNumber = matcher.group(1);
+                title = matcher.group(2);
+            }
+        }
+
+        if (discNumber != null) {
+            try {
+                entry.setDiscNumber(Integer.parseInt(discNumber));
+            } catch(Exception e) {
+                entry.setDiscNumber(1);
+            }
+        }
+        if (trackNumber != null) {
+            try {
+                entry.setTrack(Integer.parseInt(trackNumber));
+            } catch(Exception e) {
+                entry.setTrack(1);
+            }
+        }
+        if (title != null) {
+            entry.setTitle(title);
+        }
     }
 
     private static String getSongFileNameFull(String fileName, String stage, String extension) {
