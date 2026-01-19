@@ -75,7 +75,9 @@
 		<item name="card_background">@android:color/white</item>
 		<item name="cardBackgroundDrawable">@drawable/card_rounded_corners</item>
 		<item name="drawerHeaderBackground">@drawable/drawer_header_light</item>
-	</style>
+        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 	<style name="Theme.DSub2000.Dark.Base" parent="@style/Theme.AppCompat">
 		<item name="element_color">@color/darkElement</item>
 		<item name="actionbar_element_color">@color/darkElement</item>
@@ -150,7 +152,9 @@
 		<item name="card_background">@android:color/black</item>
 		<item name="cardBackgroundDrawable">@drawable/card_rounded_corners</item>
 		<item name="drawerHeaderBackground">@drawable/drawer_header_dark</item>
-	</style>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 	<style name="Theme.DSub2000.Light" parent="Theme.DSub2000.Light.Base">
 	</style>
 	<style name="Theme.DSub2000.Dark" parent="Theme.DSub2000.Dark.Base">
@@ -222,22 +226,30 @@
 		<item name="actionModeBackground">@color/background_material_light</item>
 		<item name="actionModeStyle">@style/LightActionMode</item>
 		<item name="actionModeCloseButtonStyle">@style/DarkCloseButton</item>
-	</style>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+    </style>
 	<style name="Theme.DSub2000.Black.No_Color.Base" parent="Theme.DSub2000.Black.No_Actionbar">
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
         <item name="actionbarNowPlayingBackgroundColor">@android:color/transparent</item>
 		<item name="actionModeBackground">@android:color/black</item>
-	</style>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+    </style>
 	<style name="Theme.DSub2000.Dark.No_Color.Base" parent="Theme.DSub2000.Dark.No_Actionbar">
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
         <item name="actionbarNowPlayingBackgroundColor">@android:color/transparent</item>
 		<item name="actionModeBackground">@color/background_material_dark</item>
-	</style>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+    </style>
 	<style name="Theme.DSub2000.Holo.No_Color.Base" parent="Theme.DSub2000.Holo.No_Actionbar">
 		<item name="actionbarBackgroundColor">@android:color/transparent</item>
         <item name="actionbarNowPlayingBackgroundColor">@android:color/transparent</item>
 		<item name="actionModeBackground">@drawable/background</item>
-	</style>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+    </style>
 
 	<style name="Theme.DSub2000.Light.No_Color" parent="Theme.DSub2000.Light.No_Color.Base">
 	</style>
