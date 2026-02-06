@@ -73,7 +73,7 @@ public class FileUtil {
 	private static final List<String> VIDEO_FILE_EXTENSIONS = Arrays.asList("flv", "mp4", "m4v", "wmv", "avi", "mov", "mpg", "mkv", "3gp", "webm");
 	private static final List<String> PLAYLIST_FILE_EXTENSIONS = Arrays.asList("m3u");
     private static final int MAX_FILENAME_LENGTH_V1 = 254 - ".complete.mp3".length();
-    private static final int MAX_FILENAME_LENGTH_V2 = 254 - "00-000-.complete.abcd".length();
+    private static final int MAX_FILENAME_LENGTH_V2 = 254 - "00-null-.complete.abcd".length();
     private static File DEFAULT_MUSIC_DIR;
 	private static final Kryo kryo = new Kryo();
 	private static HashMap<String, MusicDirectory.Entry> entryLookup;
@@ -164,7 +164,8 @@ public class FileUtil {
         String trackNumber = null;
         String title = null;
 
-        Pattern fileNameV2 = Pattern.compile("(\\d{2})-(\\d{3})-(.+)");
+		// tracknumber could be writte as null in v5.7.0 - dont think we can recover from this..
+        Pattern fileNameV2 = Pattern.compile("(\\d{2})-(\\d{3}|null)-(.+)");
         Matcher matcher = fileNameV2.matcher(fileName);
         if (matcher.matches()) {
             discNumber = matcher.group(1);
@@ -190,7 +191,6 @@ public class FileUtil {
             try {
                 entry.setTrack(Integer.parseInt(trackNumber));
             } catch(Exception e) {
-                entry.setTrack(1);
             }
         }
         if (title != null) {
