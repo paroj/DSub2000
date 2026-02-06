@@ -43,6 +43,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuProvider;
+import androidx.lifecycle.Lifecycle;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -201,6 +204,38 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 				ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, SubsonicActivity.PERMISSIONS_REQUEST_LOCATION);
 			}
 		}
+
+		addMenuProvider(new MenuProvider() {
+			@Override
+			public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+				SubsonicFragment currentFragment = getCurrentFragment();
+				if(currentFragment != null) {
+					try {
+						SubsonicFragment fragment = getCurrentFragment();
+						fragment.setContext(SubsonicActivity.this);
+						fragment.onCreateOptionsMenu(menu, menuInflater);
+
+						if(isTouchscreen()) {
+							menu.setGroupVisible(R.id.not_touchscreen, false);
+						}
+					} catch(Exception e) {
+						Log.w(TAG, "Error on creating options menu", e);
+					}
+				}
+			}
+
+			@Override
+			public boolean onMenuItemSelected(@NonNull MenuItem item) {
+				if(drawerToggle != null && drawerToggle.onOptionsItemSelected(item)) {
+					return true;
+				} else if(item.getItemId() == android.R.id.home) {
+					onBackPressed();
+					return true;
+				}
+
+				return getCurrentFragment().onOptionsItemSelected(item);
+			}
+		}, this, Lifecycle.State.RESUMED);
 	}
 
 	@Override
@@ -571,37 +606,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	@Override
 	public void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater menuInflater = getMenuInflater();
-		SubsonicFragment currentFragment = getCurrentFragment();
-		if(currentFragment != null) {
-			try {
-				SubsonicFragment fragment = getCurrentFragment();
-				fragment.setContext(this);
-				fragment.onCreateOptionsMenu(menu, menuInflater);
-
-				if(isTouchscreen()) {
-					menu.setGroupVisible(R.id.not_touchscreen, false);
-				}
-			} catch(Exception e) {
-				Log.w(TAG, "Error on creating options menu", e);
-			}
-		}
-		return true;
-	}
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if(drawerToggle != null && drawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		} else if(item.getItemId() == android.R.id.home) {
-			onBackPressed();
-			return true;
-		}
-
-		return getCurrentFragment().onOptionsItemSelected(item);
 	}
 
 	@Override
