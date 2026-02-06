@@ -1543,7 +1543,17 @@ public class DownloadService extends Service {
 			Notifications.hidePlayingNotification(this, this, handler);
 		}
 		if(mRemoteControl != null) {
-			mRemoteControl.setPlaybackState(playerState.getRemoteControlClientPlayState(), getCurrentPlayingIndex(), size());
+			final int state = playerState.getRemoteControlClientPlayState();
+			final int index = getCurrentPlayingIndex();
+			final int queueSize = size();
+			handler.post(new Runnable() {
+				@Override
+				public void run() {
+					if(mRemoteControl != null) {
+						mRemoteControl.setPlaybackState(state, index, queueSize);
+					}
+				}
+			});
 		}
 
 		if (playerState == STARTED) {
