@@ -415,7 +415,15 @@ public class DownloadService extends Service {
 		if (Build.VERSION.SDK_INT < 26 || (powerManager != null && powerManager.isIgnoringBatteryOptimizations(intent.getPackage()))) {
 			context.startService(intent);
 		} else {
-			context.startForegroundService(intent);
+			try {
+				context.startForegroundService(intent);
+			} catch (IllegalStateException e) {
+				if (Build.VERSION.SDK_INT >= 31 && e instanceof android.app.ForegroundServiceStartNotAllowedException) {
+					Log.w(TAG, "ForegroundServiceStartNotAllowedException: " + e.getMessage());
+				} else {
+					throw e;
+				}
+			}
 		}
 	}
 	public static DownloadService getInstance() {
