@@ -262,7 +262,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 					menu.setGroupVisible(R.id.hide_play_last, false);
 				}
 
-                if (albumListType.startsWith("random")) {
+                if (albumListType != null && albumListType.startsWith("random")) {
                     menu.removeItem(R.id.menu_download);
                     menu.removeItem(R.id.menu_cache);
                     menu.removeItem(R.id.menu_delete);
@@ -281,7 +281,7 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			}
 		}
 
-		if(albumListType.startsWith("starred")) {
+		if(albumListType != null && albumListType.startsWith("starred")) {
 			menuInflater.inflate(R.menu.unstar, menu);
 		}
 	}
