@@ -280,8 +280,9 @@ public class MusicDirectory implements Serializable {
 		
 		@TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
 		public void loadMetadata(File file) {
+			MediaMetadataRetriever metadata = null;
 			try {
-				MediaMetadataRetriever metadata = new MediaMetadataRetriever();
+				metadata = new MediaMetadataRetriever();
 				metadata.setDataSource(file.getAbsolutePath());
 				String discNumber = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DISC_NUMBER);
 				if(discNumber == null) {
@@ -308,9 +309,16 @@ public class MusicDirectory implements Serializable {
 				if(album != null) {
 					setAlbum(album);
 				}
-				metadata.release();
 			} catch(Exception e) {
 				Log.i(TAG, "Device doesn't properly support MediaMetadataRetreiver", e);
+			} finally {
+				try {
+					if(metadata != null) {
+						metadata.release();
+					}
+				} catch(Exception e) {
+					// ignore
+				}
 			}
 		}
 		public void rebaseTitleOffPath() {
