@@ -105,6 +105,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	public static final int PERMISSIONS_REQUEST_LOCATION = 2;
 
 	public static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 3;
+	public static final int PERMISSIONS_REQUEST_POST_NOTIFICATIONS = 4;
 
 	private final List<Runnable> afterServiceAvailable = new ArrayList<>();
 	private boolean drawerIdle = true;
@@ -192,6 +193,12 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		// To be able to stop playback during calls, we need the phone state permission.
 		if (ContextCompat.checkSelfPermission(this, permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
 			ActivityCompat.requestPermissions(this, new String[]{ permission.READ_PHONE_STATE }, PERMISSIONS_REQUEST_READ_PHONE_STATE);
+		}
+
+		// On Android 13+ we need the POST_NOTIFICATIONS permission to show notifications.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+				ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+			ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.POST_NOTIFICATIONS }, PERMISSIONS_REQUEST_POST_NOTIFICATIONS);
 		}
 
 		SharedPreferences prefs = Util.getPreferences(this);
