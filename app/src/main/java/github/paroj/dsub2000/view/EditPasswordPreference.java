@@ -21,14 +21,12 @@ public class EditPasswordPreference extends EditTextPreference {
         final EditPasswordPreference editPassPref = this;
         this.instance = instance;
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            this.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    return editPassPref.onPreferenceClick();
-                }
-            });
-        }
+        this.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                return editPassPref.onPreferenceClick();
+            }
+        });
     }
 
     private boolean onPreferenceClick() {
@@ -55,7 +53,7 @@ public class EditPasswordPreference extends EditTextPreference {
 
     @Override
     protected void onDialogClosed(boolean positiveResult) {
-        if ((positiveResult) && (Build.VERSION.SDK_INT >= 23)) {
+        if (positiveResult) {
             Context context = this.getContext();
 
             String encryptedString = KeyStoreUtil.encrypt(this.getEditText().getText().toString());

@@ -54,14 +54,6 @@ public class CardView extends FrameLayout{
 	private void init(Context context) {
 		setClipChildren(true);
 		setBackgroundResource(DrawableTint.getDrawableRes(context, R.attr.cardBackgroundDrawable));
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			setElevation(getResources().getInteger(R.integer.Card_Elevation));
-		}
-
-		// clipPath is not supported with Hardware Acceleration before API 18
-		// http://stackoverflow.com/questions/8895677/work-around-canvas-clippath-that-is-not-supported-in-android-any-more/8895894#8895894
-		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR2 && isHardwareAccelerated()) {
-			setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-		}
+		setElevation(getResources().getInteger(R.integer.Card_Elevation));
 	}
 }

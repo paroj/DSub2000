@@ -32,10 +32,8 @@ public class UpdaterNoDLNA extends Updater {
 	public void update(Context context) {
 		SharedPreferences prefs = Util.getPreferences(context);
 
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-			SharedPreferences.Editor editor = prefs.edit();
-			editor.putBoolean(Constants.PREFERENCES_KEY_DLNA_CASTING_ENABLED, false);
-			editor.commit();
-		}
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putBoolean(Constants.PREFERENCES_KEY_DLNA_CASTING_ENABLED, false);
+		editor.commit();
 	}
 }

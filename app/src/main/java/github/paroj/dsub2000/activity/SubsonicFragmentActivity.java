@@ -705,13 +705,11 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 	}
 
 	private void loadSession() {
-		if (Build.VERSION.SDK_INT >= 23) {
-			try {
-				KeyStoreUtil.loadKeyStore();
-			} catch (Exception e) {
-				Log.w(TAG, "Error loading keystore");
-				Log.w(TAG, Log.getStackTraceString(e));
-			}
+		try {
+			KeyStoreUtil.loadKeyStore();
+		} catch (Exception e) {
+			Log.w(TAG, "Error loading keystore");
+			Log.w(TAG, Log.getStackTraceString(e));
 		}
 
 		loadSettings();
@@ -753,21 +751,17 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			editor.putString(Constants.PREFERENCES_KEY_SERVER_NAME + 1, "Demo Server");
 			editor.putString(Constants.PREFERENCES_KEY_SERVER_URL + 1, "https://demo.navidrome.org");
 			editor.putString(Constants.PREFERENCES_KEY_USERNAME + 1, "demo");
-			if (Build.VERSION.SDK_INT < 23) {
-				editor.putString(Constants.PREFERENCES_KEY_PASSWORD + 1, "demo");
-			} else {
-				// Attempt to encrypt password
-				String encryptedDefaultPassword = KeyStoreUtil.encrypt("demo");
+			// Attempt to encrypt password
+			String encryptedDefaultPassword = KeyStoreUtil.encrypt("demo");
 
-				if (encryptedDefaultPassword != null) {
-					// If encryption succeeds, store encrypted password and flag password as encrypted
-					editor.putString(Constants.PREFERENCES_KEY_PASSWORD + 1, encryptedDefaultPassword);
-					editor.putBoolean(Constants.PREFERENCES_KEY_ENCRYPTED_PASSWORD + 1, true);
-				} else {
-					// Fall back to plaintext if Keystore is having issue
-					editor = editor.putString(Constants.PREFERENCES_KEY_PASSWORD + 1, "demo");
-					editor.putBoolean(Constants.PREFERENCES_KEY_ENCRYPTED_PASSWORD + 1, false);
-				}
+			if (encryptedDefaultPassword != null) {
+				// If encryption succeeds, store encrypted password and flag password as encrypted
+				editor.putString(Constants.PREFERENCES_KEY_PASSWORD + 1, encryptedDefaultPassword);
+				editor.putBoolean(Constants.PREFERENCES_KEY_ENCRYPTED_PASSWORD + 1, true);
+			} else {
+				// Fall back to plaintext if Keystore is having issue
+				editor = editor.putString(Constants.PREFERENCES_KEY_PASSWORD + 1, "demo");
+				editor.putBoolean(Constants.PREFERENCES_KEY_ENCRYPTED_PASSWORD + 1, false);
 			}
 			editor.putInt(Constants.PREFERENCES_KEY_SERVER_INSTANCE, 1);
 			editor.commit();

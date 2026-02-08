@@ -526,7 +526,7 @@ public class FileUtil {
     public static File getDefaultMusicDirectory(Context context) {
 		if(DEFAULT_MUSIC_DIR == null) {
 			File[] dirs;
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+			if(Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
 				dirs = context.getExternalMediaDirs();
 			} else {
 				dirs = ContextCompat.getExternalFilesDirs(context, null);
@@ -538,15 +538,13 @@ public class FileUtil {
 				Log.e(TAG, "Failed to create default dir " + DEFAULT_MUSIC_DIR);
 
 				// Some devices seem to have screwed up the new media directory API.  Go figure.  Try again with standard locations
-				if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-					dirs = ContextCompat.getExternalFilesDirs(context, null);
+				dirs = ContextCompat.getExternalFilesDirs(context, null);
 
-					DEFAULT_MUSIC_DIR = new File(getBestDir(dirs), "music");
-					if (!DEFAULT_MUSIC_DIR.exists() && !DEFAULT_MUSIC_DIR.mkdirs()) {
-						Log.e(TAG, "Failed to create default dir " + DEFAULT_MUSIC_DIR);
-					} else {
-						Log.w(TAG, "Stupid OEM's messed up media dir API added in 5.0");
-					}
+				DEFAULT_MUSIC_DIR = new File(getBestDir(dirs), "music");
+				if (!DEFAULT_MUSIC_DIR.exists() && !DEFAULT_MUSIC_DIR.mkdirs()) {
+					Log.e(TAG, "Failed to create default dir " + DEFAULT_MUSIC_DIR);
+				} else {
+					Log.w(TAG, "Stupid OEM's messed up media dir API added in 5.0");
 				}
 			}
 		}
@@ -555,15 +553,13 @@ public class FileUtil {
     }
 	private static File getBestDir(File[] dirs) {
 		// Past 5.0 we can query directly for SD Card
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			for(int i = 0; i < dirs.length; i++) {
-				try {
-					if (dirs[i] != null && Environment.isExternalStorageRemovable(dirs[i])) {
-						return dirs[i];
-					}
-				} catch (Exception e) {
-					Log.e(TAG, "Failed to check if is external", e);
+		for(int i = 0; i < dirs.length; i++) {
+			try {
+				if (dirs[i] != null && Environment.isExternalStorageRemovable(dirs[i])) {
+					return dirs[i];
 				}
+			} catch (Exception e) {
+				Log.e(TAG, "Failed to check if is external", e);
 			}
 		}
 

@@ -116,12 +116,10 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 
-		if(Build.VERSION.SDK_INT >= 21) {
-			CheckBoxPreference mediaButtons = (CheckBoxPreference) findPreference("mediaButtons");
-			if (mediaButtons != null) {
-				PreferenceCategory otherCategory = (PreferenceCategory) findPreference("otherSettings");
-				otherCategory.removePreference(mediaButtons);
-			}
+		CheckBoxPreference mediaButtons = (CheckBoxPreference) findPreference("mediaButtons");
+		if (mediaButtons != null) {
+			PreferenceCategory otherCategory = (PreferenceCategory) findPreference("otherSettings");
+			otherCategory.removePreference(mediaButtons);
 		}
 
 		int instance = this.getArguments().getInt(Constants.PREFERENCES_KEY_SERVER_INSTANCE, -1);
@@ -182,9 +180,6 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 
 		if (Constants.PREFERENCES_KEY_HIDE_MEDIA.equals(key)) {
 			setHideMedia(sharedPreferences.getBoolean(key, false));
-		}
-		else if (Constants.PREFERENCES_KEY_MEDIA_BUTTONS.equals(key)) {
-			setMediaButtonsEnabled(sharedPreferences.getBoolean(key, true));
 		}
 		else if (Constants.PREFERENCES_KEY_CACHE_LOCATION.equals(key)) {
 			setCacheLocation(sharedPreferences.getString(key, ""));
@@ -769,14 +764,6 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 			}
 		}
 		Util.toast(context, R.string.settings_hide_media_toast, false);
-	}
-
-	private void setMediaButtonsEnabled(boolean enabled) {
-		if (enabled) {
-			Util.registerMediaButtonEventReceiver(context);
-		} else {
-			Util.unregisterMediaButtonEventReceiver(context);
-		}
 	}
 
 	private void setCacheLocation(String path) {
