@@ -7,7 +7,7 @@
 	android:layout_height="match_parent"
 	android:gravity="bottom"
 	sothree:umanoPanelHeight="?attr/actionBarSize"
-	sothree:umanoShadowHeight="4dp"
+	sothree:umanoShadowHeight="0dp"
 	sothree:umanoDragView="@+id/slide_up_swipe_target">
 
 	<FrameLayout
