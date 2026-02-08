@@ -16,6 +16,8 @@
 package github.paroj.dsub2000.util;
 
 import android.os.Build;
+
+import androidx.annotation.NonNull;
 import androidx.mediarouter.media.MediaRouteProvider;
 import androidx.mediarouter.media.MediaRouteSelector;
 import androidx.mediarouter.media.MediaRouter;
@@ -62,7 +64,7 @@ public class MediaRouteManager extends MediaRouter.Callback {
 	}
 
 	@Override
-	public void onRouteSelected(MediaRouter router, RouteInfo info) {
+	public void onRouteSelected(@NonNull MediaRouter router, @NonNull RouteInfo info, int reason) {
 		if(castAvailable) {
 			RemoteController controller = GoogleCompat.getController(downloadService, info);
 			if(controller != null) {
@@ -75,7 +77,7 @@ public class MediaRouteManager extends MediaRouter.Callback {
 		}
 	}
 	@Override
-	public void onRouteUnselected(MediaRouter router, RouteInfo info) {
+	public void onRouteUnselected(@NonNull MediaRouter router, @NonNull RouteInfo info, int reason) {
 		if(downloadService.isRemoteEnabled()) {
 			downloadService.unregisterRoute(router);
 		}
@@ -141,7 +143,7 @@ public class MediaRouteManager extends MediaRouter.Callback {
 			addOnlineProviders();
 		}
 
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH && Util.getPreferences(downloadService).getBoolean(Constants.PREFERENCES_KEY_DLNA_CASTING_ENABLED, false)) {
+		if(Util.getPreferences(downloadService).getBoolean(Constants.PREFERENCES_KEY_DLNA_CASTING_ENABLED, false)) {
 			addDLNAProvider();
 		}
 	}
@@ -153,10 +155,8 @@ public class MediaRouteManager extends MediaRouter.Callback {
 		if(castAvailable) {
 			builder.addControlCategory(GoogleCompat.getCastControlCategory());
 		}
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-			builder.addControlCategory(DLNARouteProvider.CATEGORY_DLNA);
-		}
-		selector = builder.build();
+        builder.addControlCategory(DLNARouteProvider.CATEGORY_DLNA);
+        selector = builder.build();
 	}
 
 	public void addDLNAProvider() {

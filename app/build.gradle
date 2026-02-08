@@ -5,7 +5,7 @@ android {
 
 	defaultConfig {
 		applicationId "github.paroj.dsub2000"
-		minSdkVersion 24
+		minSdkVersion 26
 		targetSdkVersion 36
 		versionCode 214
 		versionName '5.7.1'
@@ -88,8 +88,9 @@ dependencies {
 	implementation 'com.sothree.slidinguppanel:library:3.4.0'
 	implementation 'de.hdodenhof:circleimageview:3.1.0'
 	implementation 'com.shehabic.droppy:Droppy:0.6.0@aar'
-	implementation 'org.eclipse.jetty:jetty-servlet:9.4.14.v20181114'
-	implementation 'org.eclipse.jetty:jetty-client:9.4.14.v20181114'
+	implementation 'org.eclipse.jetty:jetty-servlet:9.4.57.v20241219'
+	implementation 'org.eclipse.jetty:jetty-server:9.4.57.v20241219'
+	implementation 'org.eclipse.jetty:jetty-client:9.4.57.v20241219'
 	implementation 'javax.servlet:javax.servlet-api:4.0.1'
 	implementation 'androidx.vectordrawable:vectordrawable:1.2.0'
 	implementation 'org.jupnp:org.jupnp:3.0.3'
