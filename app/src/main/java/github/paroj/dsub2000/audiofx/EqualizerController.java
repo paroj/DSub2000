@@ -144,7 +144,7 @@ public class EqualizerController {
 		return loudnessEnhancerController;
 	}
 
-	private static class EqualizerSettings implements Serializable {
+	public static class EqualizerSettings implements Serializable {
 
 		private short[] bandLevels;
 		private short preset;
