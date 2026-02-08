@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-	<release version="5.7.1" versioncode="214" releasedate="01/01/2026">
+	<release version="5.7.1" versioncode="214" releasedate="08/02/2026">
 		<change>Fix track names / file names in offline mode</change>
 		<change>Use dark navigation bar for dark themes</change>
 		<change>Fix saving of pinned playlists</change>
