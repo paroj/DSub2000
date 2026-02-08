@@ -314,7 +314,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Util.registerMediaButtonEventReceiver(this);
 
 		// Make sure to update theme
 		if (theme != null) {
@@ -1010,15 +1009,11 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		fullScreen = Util.getPreferences(this).getBoolean(Constants.PREFERENCES_KEY_FULL_SCREEN, false);
 		if(fullScreen || isTv()) {
 			// Hide additional elements on higher Android versions
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				int flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-						View.SYSTEM_UI_FLAG_FULLSCREEN |
-						View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+			int flags = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+					View.SYSTEM_UI_FLAG_FULLSCREEN |
+					View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 
-				getWindow().getDecorView().setSystemUiVisibility(flags);
-			} else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-				getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-			}
+			getWindow().getDecorView().setSystemUiVisibility(flags);
 			getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		}
 	}

@@ -273,7 +273,6 @@ public class DownloadService extends Service {
 			}
 		}, "DownloadService").start();
 
-		Util.registerMediaButtonEventReceiver(this);
 		audioNoisyReceiver = new AudioNoisyReceiver();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 			registerReceiver(audioNoisyReceiver, audioNoisyIntent, RECEIVER_EXPORTED);

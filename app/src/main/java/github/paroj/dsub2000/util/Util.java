@@ -1314,40 +1314,6 @@ public final class Util {
             return new BitmapDrawable(bitmap);
         }
     }
-
-    public static void registerMediaButtonEventReceiver(Context context) {
-
-        // Only do it if enabled in the settings and api < 21
-        SharedPreferences prefs = getPreferences(context);
-        boolean enabled = prefs.getBoolean(Constants.PREFERENCES_KEY_MEDIA_BUTTONS, true);
-
-        if (enabled && Build.VERSION.SDK_INT < 21) {
-
-            // AudioManager.registerMediaButtonEventReceiver() was introduced in Android 2.2.
-            // Use reflection to maintain compatibility with 1.5.
-            try {
-                AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                ComponentName componentName = new ComponentName(context.getPackageName(), MediaButtonIntentReceiver.class.getName());
-                Method method = AudioManager.class.getMethod("registerMediaButtonEventReceiver", ComponentName.class);
-                method.invoke(audioManager, componentName);
-            } catch (Throwable x) {
-                // Ignored.
-            }
-        }
-    }
-
-    public static void unregisterMediaButtonEventReceiver(Context context) {
-        // AudioManager.unregisterMediaButtonEventReceiver() was introduced in Android 2.2.
-        // Use reflection to maintain compatibility with 1.5.
-        try {
-            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-            ComponentName componentName = new ComponentName(context.getPackageName(), MediaButtonIntentReceiver.class.getName());
-            Method method = AudioManager.class.getMethod("unregisterMediaButtonEventReceiver", ComponentName.class);
-            method.invoke(audioManager, componentName);
-        } catch (Throwable x) {
-            // Ignored.
-        }
-    }
     
     @TargetApi(8)
 	public static void requestAudioFocus(final Context context, final AudioManager audioManager) {
