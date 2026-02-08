@@ -78,7 +78,8 @@ android {
 dependencies {
 	implementation project(':ServerProxy')
 	implementation fileTree(include: ['*.jar'], dir: 'libs')
-	implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+	implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+	implementation 'androidx.media:media:1.7.0'
 	implementation 'androidx.appcompat:appcompat:1.7.1'
 	implementation 'androidx.mediarouter:mediarouter:1.8.1'
 	implementation 'androidx.recyclerview:recyclerview:1.4.0'
