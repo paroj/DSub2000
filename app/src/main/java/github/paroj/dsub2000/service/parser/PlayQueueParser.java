@@ -48,7 +48,10 @@ public class PlayQueueParser extends MusicDirectoryEntryParser {
 				String name = getElementName();
 				if("playQueue".equals(name)) {
 					currentId = get("current");
-					state.currentPlayingPosition = getInteger("position");
+					Integer position = getInteger("position");
+					if(position != null) {
+						state.currentPlayingPosition = position;
+					}
 					try {
 						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
 						dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));

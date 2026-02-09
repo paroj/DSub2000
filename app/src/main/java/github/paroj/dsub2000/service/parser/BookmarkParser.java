@@ -76,7 +76,10 @@ public class BookmarkParser extends MusicDirectoryEntryParser {
 					}
 
                 	bookmark.setComment(get("comment"));
-                	bookmark.setPosition(getInteger("position"));
+					Integer position = getInteger("position");
+					if(position != null) {
+						bookmark.setPosition(position);
+					}
                 	bookmark.setUsername(get("username"));
                 } else if ("entry".equals(name)) {
 					MusicDirectory.Entry entry = parseEntry(null);
