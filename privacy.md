@@ -10,8 +10,6 @@ By using DSub2000, you agree that your personal information will be handled as d
 
 DSub2000 does not collect any personally identifiable information.
 
-DSub2000 requests the permission `READ_PHONE_STATE`. This permission is used by DSub2000 solely to determine whether you're in a phone call/the phone is ringing, so that music playback can be paused. This permission also grants access to some personally identifiable information (your phone's IMEI number, your phone number and your network/carrier). This personally identifiable information is never accessed, used, stored or disclosed by DSub2000.
-
 ## Changes to the Policy
 
 If the Policy changes, the modification date below will be updated. The Policy may change from time to time, so please be sure to check back periodically.

@@ -26,20 +26,16 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.media.RemoteControlClient;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 
@@ -58,8 +54,6 @@ import github.paroj.dsub2000.util.Util;
 
 import static github.paroj.dsub2000.domain.PlayerState.PREPARING;
 
-import androidx.core.content.ContextCompat;
-
 /**
  * @author Sindre Mehus
  */
@@ -72,7 +66,6 @@ public class DownloadServiceLifecycleSupport {
 	private Looper eventLooper;
 	private Handler eventHandler;
 	private BroadcastReceiver ejectEventReceiver;
-	private PhoneStateListener phoneStateListener;
 	private boolean externalStorageAvailable= true;
 	private ReentrantLock lock = new ReentrantLock();
 	private final AtomicBoolean setup = new AtomicBoolean(false);
@@ -163,14 +156,6 @@ public class DownloadServiceLifecycleSupport {
             downloadService.registerReceiver(ejectEventReceiver, ejectFilter, RECEIVER_EXPORTED);
         } else {
 			downloadService.registerReceiver(ejectEventReceiver, ejectFilter);
-		}
-
-		// Pause temporarily on incoming phone calls.
-		phoneStateListener = new MyPhoneStateListener();
-
-		if (ContextCompat.checkSelfPermission(this.downloadService, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-			TelephonyManager telephonyManager = (TelephonyManager) downloadService.getSystemService(Context.TELEPHONY_SERVICE);
-			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		}
 
 		// Register the handler for outside intents.
@@ -274,9 +259,6 @@ public class DownloadServiceLifecycleSupport {
 		eventLooper.quit();
 		downloadService.unregisterReceiver(ejectEventReceiver);
 		downloadService.unregisterReceiver(intentReceiver);
-
-		TelephonyManager telephonyManager = (TelephonyManager) downloadService.getSystemService(Context.TELEPHONY_SERVICE);
-		telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 	}
 
 	public boolean isExternalStorageAvailable() {
@@ -470,39 +452,4 @@ public class DownloadServiceLifecycleSupport {
 		}
 	}
 
-	/**
-	 * Logic taken from packages/apps/Music.  Will pause when an incoming
-	 * call rings or if a call (incoming or outgoing) is connected.
-	 */
-	private class MyPhoneStateListener extends PhoneStateListener {
-		private boolean resumeAfterCall;
-
-		@Override
-		public void onCallStateChanged(final int state, String incomingNumber) {
-			eventHandler.post(new Runnable() {
-				@Override
-				public void run() {
-					switch (state) {
-						case TelephonyManager.CALL_STATE_RINGING:
-						case TelephonyManager.CALL_STATE_OFFHOOK:
-							if (downloadService.getPlayerState() == PlayerState.STARTED) {
-								resumeAfterCall = true;
-								downloadService.pause(true);
-							}
-							break;
-						case TelephonyManager.CALL_STATE_IDLE:
-							if (resumeAfterCall) {
-								resumeAfterCall = false;
-								if(downloadService.getPlayerState() == PlayerState.PAUSED_TEMP) {
-									downloadService.start();
-								}
-							}
-							break;
-						default:
-							break;
-					}
-				}
-			});
-		}
-	}
 }
