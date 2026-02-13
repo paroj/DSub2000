@@ -1365,7 +1365,9 @@ public final class Util {
 				} else if(focusChange == AudioManager.AUDIOFOCUS_LOSS && !downloadService.isRemoteEnabled()) {
 					Log.i(TAG, "Permanently lost focus");
 					focusListener = null;
-					downloadService.pause();
+					// Use temp pause to keep the notification visible so the
+					// foreground service is not stopped and the user can resume.
+					downloadService.pause(true);
 
 					if(audioFocusRequest != null && Build.VERSION.SDK_INT >= 26) {
 						audioManager.abandonAudioFocusRequest(audioFocusRequest);
