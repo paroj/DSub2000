@@ -104,8 +104,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	public static final int PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 	public static final int PERMISSIONS_REQUEST_LOCATION = 2;
 
-	public static final int PERMISSIONS_REQUEST_READ_PHONE_STATE = 3;
-	public static final int PERMISSIONS_REQUEST_POST_NOTIFICATIONS = 4;
+	public static final int PERMISSIONS_REQUEST_POST_NOTIFICATIONS = 3;
 
 	private final List<Runnable> afterServiceAvailable = new ArrayList<>();
 	private boolean drawerIdle = true;
@@ -190,9 +189,10 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			Util.getPreferences(this).registerOnSharedPreferenceChangeListener(preferencesListener);
 		}
 
-		// To be able to stop playback during calls, we need the phone state permission.
-		if (ContextCompat.checkSelfPermission(this, permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-			ActivityCompat.requestPermissions(this, new String[]{ permission.READ_PHONE_STATE }, PERMISSIONS_REQUEST_READ_PHONE_STATE);
+		// On Android versions below Q we need WRITE_EXTERNAL_STORAGE permission.
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q &&
+				ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+			ActivityCompat.requestPermissions(this, new String[]{ permission.WRITE_EXTERNAL_STORAGE }, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 		}
 
 		// On Android 13+ we need the POST_NOTIFICATIONS permission to show notifications.
@@ -258,6 +258,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 					Util.toast(this, R.string.permission_external_storage_failed);
 					finish();
 				}
+				break;
 			}
 			case PERMISSIONS_REQUEST_LOCATION: {
 				// If request is cancelled, the result arrays are empty.
@@ -266,19 +267,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 				} else {
 					Util.toast(this, R.string.permission_location_failed);
 				}
-			}
-
-			case PERMISSIONS_REQUEST_READ_PHONE_STATE: {
-				// If request is cancelled, the result arrays are empty.
-				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-				} else {
-					Util.toast(this, R.string.permission_phone_state_failed);
-				}
-
-				if (ContextCompat.checkSelfPermission(this, permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-					ActivityCompat.requestPermissions(this, new String[]{ permission.WRITE_EXTERNAL_STORAGE }, PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
-				}
+				break;
 			}
 		}
 	}
