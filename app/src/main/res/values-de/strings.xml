@@ -607,7 +607,8 @@
 	<string name="details.title.song">Mediumdetails</string>
 	<string name="details.used_space">Genutzter Platz</string>
 	<string name="details.url">URL</string>
-	<string name="details.track">Medium</string>
+    <string name="details.disc">Medium</string>
+	<string name="details.track">Titelnummer</string>
 	<string name="details.year">Jahr</string>
 	<string name="details.version">Version</string>
 	<string name="playlist.mine">Meine Wiedergabelisten</string>

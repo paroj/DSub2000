@@ -642,6 +642,7 @@
 	<string name="details.status">Status</string>
 	<string name="details.artist">Artist</string>
 	<string name="details.album">Album</string>
+    <string name="details.disc">Disc</string>
 	<string name="details.track">Track</string>
 	<string name="details.genre">Genre</string>
 	<string name="details.year">Year</string>
