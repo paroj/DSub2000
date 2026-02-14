@@ -1350,6 +1350,10 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 				details.add(song.getAlbum());
 			}
 		}
+        if(song.getDiscNumber() != null && song.getDiscNumber() != 0) {
+            headers.add(R.string.details_disc);
+            details.add(Integer.toString(song.getDiscNumber()));
+        }
 		if(song.getTrack() != null && song.getTrack() != 0) {
 			headers.add(R.string.details_track);
 			details.add(Integer.toString(song.getTrack()));
@@ -1395,9 +1399,6 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			headers.add(R.string.details_rating);
 			details.add(song.getRating() + " stars");
 		}
-
-		headers.add(R.string.details_starred);
-		details.add(Util.formatBoolean(context, song.isStarred()));
 
 		try {
 			Long[] dates = SongDBHandler.getHandler(context).getLastPlayed(song);
