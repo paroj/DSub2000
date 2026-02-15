@@ -647,6 +647,7 @@ public class ImageLoader {
 		private final String mUsername;
 		private final ImageView mView;
 		private Drawable mDrawable;
+		private Bitmap mBitmap;
 
 		private AvatarTask(Context context, ImageView view, String username) {
 			super(context);
@@ -661,6 +662,8 @@ public class ImageLoader {
 				MusicService musicService = MusicServiceFactory.getMusicService(mContext);
 				Bitmap bitmap = musicService.getAvatar(mUsername, avatarSizeDefault, mContext, null, this);
 				if(bitmap != null) {
+					mBitmap = bitmap;
+					avatar = bitmap;
 					cache.put(mUsername, bitmap);
 					// Make sure key is the most recently "used"
 					cache.get(mUsername);
@@ -680,6 +683,7 @@ public class ImageLoader {
 		protected void done(Void result) {
 			if(mDrawable != null) {
 				mView.setImageDrawable(mDrawable);
+				avatar = mBitmap;
 			} else {
 				mView.setImageResource(R.drawable.ic_social_person);
 			}
