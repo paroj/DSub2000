@@ -448,85 +448,84 @@ public class DownloadService extends Service {
 	public synchronized void download(List<MusicDirectory.Entry> songs, boolean save, boolean autoplay, boolean playNext, boolean shuffle) {
 		download(songs, save, autoplay, playNext, shuffle, 0, 0);
 	}
-	public synchronized void download(List<MusicDirectory.Entry> songs, boolean save, boolean autoplay, boolean playNext, boolean shuffle, int start, int position) {
-		setShufflePlayEnabled(false);
-		setArtistRadio(null);
-		int offset = 1;
-		boolean noNetwork = !Util.isOffline(this) && !Util.isNetworkConnected(this);
-		boolean warnNetwork = false;
-
+	public void download(List<MusicDirectory.Entry> songs, boolean save, boolean autoplay, boolean playNext, boolean shuffle, int start, int position) {
 		if (songs.isEmpty()) {
 			return;
-		} else if(isCurrentPlayingSingle()) {
-			clear();
 		}
 
-		if (playNext) {
-			if (autoplay && getCurrentPlayingIndex() >= 0) {
-				offset = 0;
-			}
-			for (MusicDirectory.Entry song : songs) {
-				if(song != null) {
-					DownloadFile downloadFile = new DownloadFile(this, song, save);
-					addToDownloadList(downloadFile, getCurrentPlayingIndex() + offset);
-					if(noNetwork && !warnNetwork) {
-						if(!downloadFile.isCompleteFileAvailable()) {
-							warnNetwork = true;
-						}
-					}
-					offset++;
-				}
-			}
-
-			if(remoteState == LOCAL || (remoteController != null && remoteController.isNextSupported())) {
-				setNextPlaying();
-			}
-		} else {
-			int size = size();
-			int index = getCurrentPlayingIndex();
-			for (MusicDirectory.Entry song : songs) {
-				if(song == null) {
-					continue;
-				}
-
+		boolean noNetwork = !Util.isOffline(this) && !Util.isNetworkConnected(this);
+		boolean warnNetwork = false;
+		List<DownloadFile> downloadFiles = new ArrayList<>();
+		for (MusicDirectory.Entry song : songs) {
+			if (song != null) {
 				DownloadFile downloadFile = new DownloadFile(this, song, save);
-				addToDownloadList(downloadFile, -1);
-				if(noNetwork && !warnNetwork) {
-					if(!downloadFile.isCompleteFileAvailable()) {
+				downloadFiles.add(downloadFile);
+				if (noNetwork && !warnNetwork) {
+					if (!downloadFile.isCompleteFileAvailable()) {
 						warnNetwork = true;
 					}
 				}
 			}
-			if(!autoplay && (size - 1) == index) {
-				setNextPlaying();
+		}
+
+		synchronized(this) {
+			setShufflePlayEnabled(false);
+			setArtistRadio(null);
+			int offset = 1;
+
+			if(isCurrentPlayingSingle()) {
+				clear();
 			}
-		}
-		revision++;
-		onSongsChanged();
-		updateRemotePlaylist();
 
-		if(shuffle) {
-			shuffle();
-		}
-		if(warnNetwork) {
-			Util.toast(this, R.string.select_album_no_network);
-		}
+			if (playNext) {
+				if (autoplay && getCurrentPlayingIndex() >= 0) {
+					offset = 0;
+				}
+				for (DownloadFile downloadFile : downloadFiles) {
+					addToDownloadList(downloadFile, getCurrentPlayingIndex() + offset);
+					offset++;
+				}
 
-		if (autoplay) {
-			play(start, true, position);
-		} else if(start != 0 || position != 0) {
-			play(start, false, position);
-		} else {
-			if (currentPlaying == null) {
-				currentPlaying = downloadList.get(0);
-				currentPlayingIndex = 0;
-				currentPlaying.setPlaying(true);
+				if(remoteState == LOCAL || (remoteController != null && remoteController.isNextSupported())) {
+					setNextPlaying();
+				}
 			} else {
-				currentPlayingIndex = downloadList.indexOf(currentPlaying);
+				int size = size();
+				int index = getCurrentPlayingIndex();
+				for (DownloadFile downloadFile : downloadFiles) {
+					addToDownloadList(downloadFile, -1);
+				}
+				if(!autoplay && (size - 1) == index) {
+					setNextPlaying();
+				}
 			}
-			checkDownloads();
+			revision++;
+			onSongsChanged();
+			updateRemotePlaylist();
+
+			if(shuffle) {
+				shuffle();
+			}
+			if(warnNetwork) {
+				Util.toast(this, R.string.select_album_no_network);
+			}
+
+			if (autoplay) {
+				play(start, true, position);
+			} else if(start != 0 || position != 0) {
+				play(start, false, position);
+			} else {
+				if (currentPlaying == null && !downloadList.isEmpty()) {
+					currentPlaying = downloadList.get(0);
+					currentPlayingIndex = 0;
+					currentPlaying.setPlaying(true);
+				} else {
+					currentPlayingIndex = downloadList.indexOf(currentPlaying);
+				}
+				checkDownloads();
+			}
+			lifecycleSupport.serializeDownloadQueue();
 		}
-		lifecycleSupport.serializeDownloadQueue();
 	}
 	private void addToDownloadList(DownloadFile file, int offset) {
 		if(offset == -1) {
@@ -535,21 +534,31 @@ public class DownloadService extends Service {
 			downloadList.add(offset, file);
 		}
 	}
-	public synchronized void downloadBackground(List<MusicDirectory.Entry> songs, boolean save) {
+	public void downloadBackground(List<MusicDirectory.Entry> songs, boolean save) {
+		List<DownloadFile> toAdd = new ArrayList<>();
+		List<DownloadFile> toUnpin = new ArrayList<>();
+
 		for (MusicDirectory.Entry song : songs) {
 			DownloadFile downloadFile = new DownloadFile(this, song, save);
-			if(!downloadFile.isWorkDone() || (downloadFile.shouldSave() && !downloadFile.isSaved())) {
+			if (!downloadFile.isWorkDone() || (downloadFile.shouldSave() && !downloadFile.isSaved())) {
 				// Only add to list if there is work to be done
-				backgroundDownloadList.add(downloadFile);
-			} else if(downloadFile.isSaved() && !save) {
+				toAdd.add(downloadFile);
+			} else if (downloadFile.isSaved() && !save) {
 				// Quickly unpin song instead of adding it to work to be done
-				downloadFile.unpin();
+				toUnpin.add(downloadFile);
 			}
 		}
-		revision++;
 
-		checkDownloads();
-		lifecycleSupport.serializeDownloadQueue();
+		for (DownloadFile downloadFile : toUnpin) {
+			downloadFile.unpin();
+		}
+
+		synchronized (this) {
+			backgroundDownloadList.addAll(toAdd);
+			revision++;
+			checkDownloads();
+			lifecycleSupport.serializeDownloadQueue();
+		}
 	}
 
 	private synchronized void updateRemotePlaylist() {
