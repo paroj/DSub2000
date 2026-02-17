@@ -94,7 +94,7 @@
 			android:title="@string/settings.hide_media_title"
 			android:summary="@string/settings.hide_media_summary"
 			android:key="hideMedia"
-			android:defaultValue="false"/>
+			android:defaultValue="true"/>
 
 		<CheckBoxPreference
 			android:title="@string/settings.screen_lit_title"
