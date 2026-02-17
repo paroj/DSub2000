@@ -241,6 +241,16 @@
 
         <provider android:name="github.paroj.dsub2000.provider.DSubSearchProvider"
                   android:authorities="@string/provider.search"/>
+
+		<provider
+			android:name="androidx.core.content.FileProvider"
+			android:authorities="${applicationId}.fileprovider"
+			android:exported="false"
+			android:grantUriPermissions="true">
+			<meta-data
+				android:name="android.support.FILE_PROVIDER_PATHS"
+				android:resource="@xml/file_paths" />
+		</provider>
 		<provider android:name="github.paroj.dsub2000.provider.PlaylistStubProvider"
 			android:authorities="@string/provider.playlist"
 			android:label="@string/button_bar.playlists"
