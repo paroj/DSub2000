@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="5.7.2" versioncode="215" releasedate="19/02/2026">
+		<change>correctly ask for notification permissions</change>
+		<change>get rid of pastebin and directly attach logs</change>
+		<change>fix storing equalizer settings</change>
+		<change>Fix back action in Settings</change>
+		<change>Add disc to song details and remove starred</change>
+		<change>default to hide media</change>
+		<change>fix some potential crashes and bugs</change>
+	</release>
 	<release version="5.7.1" versioncode="214" releasedate="08/02/2026">
 		<change>Fix track names / file names in offline mode</change>
 		<change>Use dark navigation bar for dark themes</change>
