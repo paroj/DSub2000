@@ -170,7 +170,7 @@ public class DownloadService extends Service {
 	private boolean downloadOngoing = false;
 	private float volume = 1.0f;
 	private long delayUpdateProgress = DEFAULT_DELAY_UPDATE_PROGRESS;
-	private boolean foregroundService = false;
+	private volatile boolean foregroundService = false;
 
 	private AudioEffectsController effectsController;
 	private RemoteControlState remoteState = LOCAL;
@@ -445,7 +445,7 @@ public class DownloadService extends Service {
 		clear();
 		download(Arrays.asList((MusicDirectory.Entry) station), false, true, false, false);
 	}
-	public synchronized void download(List<MusicDirectory.Entry> songs, boolean save, boolean autoplay, boolean playNext, boolean shuffle) {
+	public void download(List<MusicDirectory.Entry> songs, boolean save, boolean autoplay, boolean playNext, boolean shuffle) {
 		download(songs, save, autoplay, playNext, shuffle, 0, 0);
 	}
 	public void download(List<MusicDirectory.Entry> songs, boolean save, boolean autoplay, boolean playNext, boolean shuffle, int start, int position) {
@@ -1089,11 +1089,11 @@ public class DownloadService extends Service {
 		return size() == 1 || (currentPlaying != null && !currentPlaying.isSong());
 	}
 
-	public synchronized boolean isForeground() {
+	public boolean isForeground() {
 		return this.foregroundService;
 	}
 
-	public synchronized void setIsForeground(boolean foreground) {
+	public void setIsForeground(boolean foreground) {
 		this.foregroundService = foreground;
 	}
 
