@@ -449,7 +449,7 @@ public abstract class SectionAdapter<T> extends RecyclerView.Adapter<UpdateViewH
 
 				@Override
 				public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-					if (fragmentActivity.onOptionsItemSelected(item)) {
+					if (fragmentActivity.getCurrentFragment().onOptionsItemSelected(item)) {
 						currentActionMode.finish();
 						return true;
 					} else {
