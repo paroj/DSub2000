@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="5.7.3" versioncode="216" releasedate="15/03/2026">
+		<change>fix multi selection in playlists</change>
+		<change>fix some crashes and deadlocks</change>
+	</release>
 	<release version="5.7.2" versioncode="215" releasedate="19/02/2026">
 		<change>correctly ask for notification permissions</change>
 		<change>get rid of pastebin and directly attach logs</change>
