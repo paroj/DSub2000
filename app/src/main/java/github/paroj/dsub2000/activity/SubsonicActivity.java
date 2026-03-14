@@ -644,6 +644,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	}
 
 	private void populateTabs() {
+		drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 		drawerList.getMenu().clear();
 		drawerList.inflateMenu(R.menu.drawer_navigation);
 
@@ -700,10 +701,12 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			}
 		}
 		drawerHeaderToggle.setImageResource(R.drawable.main_select_server);
+		drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);
 
 		showingTabs = true;
 	}
 	private void populateServers() {
+		drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
 		drawerList.getMenu().clear();
 
 		int serverCount = Util.getServerCount(this);
@@ -716,6 +719,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		}
 		drawerList.getMenu().setGroupCheckable(MENU_GROUP_SERVER, true, true);
 		drawerHeaderToggle.setImageResource(R.drawable.main_select_tabs);
+		drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);
 
 		showingTabs = false;
 	}
