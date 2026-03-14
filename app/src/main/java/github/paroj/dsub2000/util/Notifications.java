@@ -626,8 +626,16 @@ public final class Notifications {
 	}
 
 	private static void startForeground(DownloadService downloadService, int notificationId, Notification notification) {
-		downloadService.startForeground(notificationId, notification);
-		downloadService.setIsForeground(true);
+		try {
+			downloadService.startForeground(notificationId, notification);
+			downloadService.setIsForeground(true);
+		} catch (Exception e) {
+			if (Build.VERSION.SDK_INT >= 31 && e instanceof android.app.ForegroundServiceStartNotAllowedException) {
+				Log.w(TAG, "ForegroundServiceStartNotAllowedException: " + e.getMessage());
+			} else {
+				throw e;
+			}
+		}
 	}
 
 	private static void stopForeground(DownloadService downloadService, boolean removeNotification) {
