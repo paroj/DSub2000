@@ -141,9 +141,9 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				if(slideUpPanel.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED && secondaryFragment == null) {
 					slideUpPanel.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 				} else if(onBackPressedSupport()) {
-					if(!Util.disableExitPrompt(currentFragment.requireContext()) && lastBackPressTime < (System.currentTimeMillis() - 4000)) {
+					if(!Util.disableExitPrompt(SubsonicFragmentActivity.this) && lastBackPressTime < (System.currentTimeMillis() - 4000)) {
 						lastBackPressTime = System.currentTimeMillis();
-						Util.toast(currentFragment.requireContext(), R.string.main_back_confirm);
+						Util.toast(SubsonicFragmentActivity.this, R.string.main_back_confirm);
 					} else {
 						finish();
 					}
