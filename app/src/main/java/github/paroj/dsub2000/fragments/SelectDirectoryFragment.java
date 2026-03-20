@@ -920,8 +920,8 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 				}
 			}
 		}
-		if (getDownloadService() != null) {
-			getDownloadService().delete(songs);
+		if (!songs.isEmpty()) {
+			deleteSongs(songs);
 		}
 	}
 
