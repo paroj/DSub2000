@@ -701,7 +701,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			}
 		}
 		drawerHeaderToggle.setImageResource(R.drawable.main_select_server);
-		drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);
+		drawerList.post(() -> drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO));
 
 		showingTabs = true;
 	}
@@ -719,7 +719,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		}
 		drawerList.getMenu().setGroupCheckable(MENU_GROUP_SERVER, true, true);
 		drawerHeaderToggle.setImageResource(R.drawable.main_select_tabs);
-		drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO);
+		drawerList.post(() -> drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO));
 
 		showingTabs = false;
 	}
