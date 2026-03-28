@@ -194,7 +194,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
             glowDrawable = new GradientDrawable();
             downloadLayout.setBackground(glowDrawable);
             albumArtImageView.setOnImageChangedListener(drawable -> {
-                if (drawable instanceof TransitionDrawable) {
+                if (drawable == null || drawable instanceof TransitionDrawable) {
                     return;
                 }
                 Bitmap bitmap = ImageUtil.getBitmapFromDrawable(drawable);
