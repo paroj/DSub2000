@@ -1039,7 +1039,7 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 				Iterator<Playlist> it = playlists.iterator();
 				while(it.hasNext()) {
 					Playlist playlist = it.next();
-					if(playlist.getPublic() == true && playlist.getId().indexOf(".m3u") == -1 && !UserUtil.getCurrentUsername(context).equals(playlist.getOwner())) {
+					if(Boolean.TRUE.equals(playlist.getPublic()) && playlist.getId().indexOf(".m3u") == -1 && !UserUtil.getCurrentUsername(context).equals(playlist.getOwner())) {
 						it.remove();
 					}
 				}
