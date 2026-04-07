@@ -41,6 +41,7 @@ public class Playlist implements Serializable {
 	private Date created;
 	private Date changed;
 	private Integer duration;
+	private String coverArt;
 
 	public Playlist() {
 
@@ -49,7 +50,7 @@ public class Playlist implements Serializable {
         this.id = id;
         this.name = name;
     }
-	public Playlist(String id, String name, String owner, String comment, String songCount, String pub, Date created, Date changed, Integer duration) {
+	public Playlist(String id, String name, String owner, String comment, String songCount, String pub, Date created, Date changed, Integer duration, String coverArt) {
         this.id = id;
         this.name = name;
 		this.owner = (owner == null) ? "" : owner;
@@ -59,6 +60,7 @@ public class Playlist implements Serializable {
 		this.created = created;
 		this.changed = changed;
 		this.duration = duration;
+		this.coverArt = coverArt;
     }
 
     public String getId() {
@@ -150,6 +152,13 @@ public class Playlist implements Serializable {
 	}
 	public void setDuration(Integer duration) {
 		this.duration = duration;
+	}
+
+	public String getCoverArt() {
+		return coverArt;
+	}
+	public void setCoverArt(String coverArt) {
+		this.coverArt = coverArt;
 	}
 
 	@Override

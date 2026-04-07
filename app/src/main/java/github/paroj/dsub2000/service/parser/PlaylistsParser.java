@@ -59,7 +59,8 @@ public class PlaylistsParser extends AbstractParser {
 					Date created = Util.parseDate(context, get("created"));
 					Date changed = Util.parseDate(context, get("changed"));
 					Integer duration = getInteger("duration");
-                    result.add(new Playlist(id, name, owner, comment, songCount, pub, created, changed, duration));
+					String coverArt = get("coverArt");
+                    result.add(new Playlist(id, name, owner, comment, songCount, pub, created, changed, duration, coverArt));
                 } else if ("error".equals(tag)) {
                     handleError();
                 }

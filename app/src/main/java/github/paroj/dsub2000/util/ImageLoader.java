@@ -346,7 +346,7 @@ public class ImageLoader {
 			entry.setTitle(playlist.getName());
 		}
 		entry.setId(id);
-		entry.setCoverArt(id);
+		entry.setCoverArt(playlist.getCoverArt() != null ? playlist.getCoverArt() : id);
 		// So this isn't treated as a artist
 		entry.setParent("");
 
