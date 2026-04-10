@@ -48,11 +48,15 @@ public abstract class ServerProxy implements Runnable, Closeable {
 	private Context context;
 
 	public ServerProxy(Context context) {
+		this(context, 0);
+	}
+
+	public ServerProxy(Context context, int port) {
 		// Create listening socket
 		try {
-			socket = new ServerSocket(0);
+			socket = new ServerSocket(port);
 			socket.setSoTimeout(5000);
-			port = socket.getLocalPort();
+			this.port = socket.getLocalPort();
 			this.context = context;
 		} catch (UnknownHostException e) { // impossible
 		} catch (IOException e) {
@@ -140,7 +144,7 @@ public abstract class ServerProxy implements Runnable, Closeable {
 		Log.i(TAG, "Proxy interrupted. Shutting down.");
 	}
 
-	abstract ProxyTask getTask(Socket client);
+	protected abstract ProxyTask getTask(Socket client);
 
 	protected abstract class ProxyTask implements Runnable {
 		protected Socket client;

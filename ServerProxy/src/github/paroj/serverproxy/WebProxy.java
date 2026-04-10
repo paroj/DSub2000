@@ -51,7 +51,7 @@ public class WebProxy extends ServerProxy {
 	}
 
 	@Override
-	ProxyTask getTask(Socket client) {
+	protected ProxyTask getTask(Socket client) {
 		return new StreamSiteTask(client);
 	}
 

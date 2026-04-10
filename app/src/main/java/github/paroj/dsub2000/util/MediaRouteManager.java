@@ -26,6 +26,7 @@ import java.util.List;
 import github.paroj.dsub2000.domain.RemoteControlState;
 import github.paroj.dsub2000.provider.DLNARouteProvider;
 import github.paroj.dsub2000.provider.JukeboxRouteProvider;
+import github.paroj.dsub2000.provider.RemoteClientRouteProvider;
 import github.paroj.dsub2000.service.DownloadService;
 import github.paroj.dsub2000.service.RemoteController;
 import github.paroj.dsub2000.util.compat.GoogleCompat;
@@ -129,6 +130,11 @@ public class MediaRouteManager extends MediaRouter.Callback {
 		router.addProvider(jukeboxProvider);
 		providers.add(jukeboxProvider);
 		onlineProviders.add(jukeboxProvider);
+
+		RemoteClientRouteProvider remoteClientProvider = new RemoteClientRouteProvider(downloadService);
+		router.addProvider(remoteClientProvider);
+		providers.add(remoteClientProvider);
+		onlineProviders.add(remoteClientProvider);
 	}
 	public void removeOnlineProviders() {
 		for(MediaRouteProvider provider: onlineProviders) {
@@ -139,6 +145,11 @@ public class MediaRouteManager extends MediaRouter.Callback {
 	private void addProviders() {
 		if(!Util.isOffline(downloadService)) {
 			addOnlineProviders();
+		} else {
+			// Add RemoteClientRouteProvider even in offline mode
+			RemoteClientRouteProvider remoteClientProvider = new RemoteClientRouteProvider(downloadService);
+			router.addProvider(remoteClientProvider);
+			providers.add(remoteClientProvider);
 		}
 
 		if(Util.getPreferences(downloadService).getBoolean(Constants.PREFERENCES_KEY_DLNA_CASTING_ENABLED, false)) {
@@ -150,6 +161,7 @@ public class MediaRouteManager extends MediaRouter.Callback {
 		if(UserUtil.canJukebox()) {
 			builder.addControlCategory(JukeboxRouteProvider.CATEGORY_JUKEBOX_ROUTE);
 		}
+		builder.addControlCategory(RemoteClientRouteProvider.CATEGORY_REMOTE_CLIENT_ROUTE);
 		if(castAvailable) {
 			builder.addControlCategory(GoogleCompat.getCastControlCategory());
 		}

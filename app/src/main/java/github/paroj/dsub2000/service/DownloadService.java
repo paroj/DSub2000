@@ -176,6 +176,7 @@ public class DownloadService extends Service {
 	private RemoteControlState remoteState = LOCAL;
 	private PositionCache positionCache;
 	private BufferProxy proxy;
+	private LocalControlServer localControlServer;
 
 	private Timer sleepTimer;
 	private int timerDuration;
@@ -311,6 +312,16 @@ public class DownloadService extends Service {
 		artistRadioBuffer = new ArtistRadioBuffer(this);
 		lifecycleSupport.onCreate();
 
+		// Start LocalControlServer to accept remote control commands
+		int serverPort = Integer.parseInt(prefs.getString(Constants.PREFERENCES_KEY_LOCAL_SERVER_PORT, "4040"));
+		localControlServer = new LocalControlServer(this, serverPort);
+		try {
+			localControlServer.start();
+			Log.i(TAG, "LocalControlServer started successfully on port " + serverPort);
+		} catch (Exception e) {
+			Log.e(TAG, "Failed to start LocalControlServer on port " + serverPort, e);
+		}
+
 		if(Build.VERSION.SDK_INT >= 26) {
 			Notifications.shutGoogleUpNotification(this);
 		}
@@ -380,6 +391,13 @@ public class DownloadService extends Service {
 		if (mRemoteControl != null) {
 			mRemoteControl.unregister(this);
 			mRemoteControl = null;
+		}
+
+		// Stop LocalControlServer
+		if (localControlServer != null) {
+			localControlServer.stop();
+			localControlServer = null;
+			Log.i(TAG, "LocalControlServer stopped");
 		}
 
 		if(bufferTask != null) {
@@ -1131,6 +1149,10 @@ public class DownloadService extends Service {
 	public synchronized void play(int index) {
 		play(index, true);
 	}
+	/** Start playback of {@code index} from {@code positionMs} milliseconds into the song. */
+	public synchronized void playAt(int index, int positionMs) {
+		play(index, true, positionMs);
+	}
 	public synchronized void play(DownloadFile downloadFile) {
 		play(downloadList.indexOf(downloadFile));
 	}
@@ -1827,6 +1849,11 @@ public class DownloadService extends Service {
 		switch(newState) {
 			case JUKEBOX_SERVER:
 				remoteController = new JukeboxController(this, handler);
+				break;
+			case REMOTE_CLIENT:
+				String host = Util.getPreferences(this).getString(Constants.PREFERENCES_KEY_REMOTE_HOST, "");
+				int port = Integer.parseInt(Util.getPreferences(this).getString(Constants.PREFERENCES_KEY_REMOTE_PORT, "4040"));
+				remoteController = new RemoteClientController(this, handler, host, port);
 				break;
 			case CHROMECAST: case DLNA:
 				if(ref == null) {

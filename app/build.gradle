@@ -73,6 +73,16 @@ android {
 		sourceCompatibility JavaVersion.VERSION_17
 		targetCompatibility JavaVersion.VERSION_17
 	}
+
+	applicationVariants.all { variant ->
+		variant.outputs.all { output ->
+			def buildType = variant.buildType.name
+			def flavor = variant.flavorName
+			def versionName = variant.versionName
+			def date = new Date().format('yyyyMMdd')
+			outputFileName = "DSub2000_${versionName}-${flavor}-${buildType}-RemoteControl-${date}.apk"
+		}
+	}
 }
 
 dependencies {

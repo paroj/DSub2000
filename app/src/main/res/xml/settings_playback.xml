@@ -137,6 +137,31 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		android:title="Remote Control"
+		android:key="remoteControlSettings">
+
+		<EditTextPreference
+			android:title="Local Server Port"
+			android:summary="Port for accepting remote control connections (requires app restart)"
+			android:key="localControlServerPort"
+			android:defaultValue="4040"
+			android:inputType="number"/>
+
+		<EditTextPreference
+			android:title="Remote Client Host"
+			android:summary="IP address or hostname of remote DSub2000 instance"
+			android:key="remoteClientHost"
+			android:defaultValue=""/>
+
+		<EditTextPreference
+			android:title="Remote Client Port"
+			android:summary="Port of remote DSub2000 instance"
+			android:key="remoteClientPort"
+			android:defaultValue="4040"
+			android:inputType="number"/>
+	</PreferenceCategory>
+
+	<PreferenceCategory
 		android:title="@string/settings.other_title"
 		android:key="otherSettings">
 
