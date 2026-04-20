@@ -292,7 +292,7 @@ public final class Notifications {
 		rv.setTextViewText(R.id.notification_artist, artist);
 		rv.setTextViewText(R.id.notification_album, album);
 
-		boolean persistent = Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_PERSISTENT_NOTIFICATION, false);
+		boolean persistent = Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_PERSISTENT_NOTIFICATION, true);
 		if(persistent) {
 			if(expanded) {
 				rv.setImageViewResource(R.id.control_pause, playing ? R.drawable.notification_media_pause : R.drawable.notification_media_start);
