@@ -1550,7 +1550,7 @@ public class DownloadService extends Service {
 		if (show) {
 			Notifications.showPlayingNotification(this, this, handler, currentPlaying.getSong(), usingMediaStyleNotification);
 		} else if (pause) {
-			if (prefs.getBoolean(Constants.PREFERENCES_KEY_PERSISTENT_NOTIFICATION, false)) {
+			if (prefs.getBoolean(Constants.PREFERENCES_KEY_PERSISTENT_NOTIFICATION, true)) {
 				Notifications.showPlayingNotification(this, this, handler, currentPlaying.getSong(), usingMediaStyleNotification);
 			} else {
 				Notifications.hidePlayingNotification(this, this, handler);
