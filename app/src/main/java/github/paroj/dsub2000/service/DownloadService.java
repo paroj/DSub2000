@@ -82,6 +82,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+// AudioPlayer abstraction: legacy MediaPlayer is used for local files via
+// MediaPlayerAudio; HTTP streams (Internet radios with codecs MediaPlayer
+// handles unreliably, e.g. Ogg Vorbis/Opus) go through ExoPlayerAudio.
 import android.media.PlaybackParams;
 import android.media.audiofx.AudioEffect;
 import android.net.wifi.WifiManager;
@@ -130,8 +133,8 @@ public class DownloadService extends Service {
 
 	private final IBinder binder = new SimpleServiceBinder<>(this);
 	private Looper mediaPlayerLooper;
-	private MediaPlayer mediaPlayer;
-	private MediaPlayer nextMediaPlayer;
+	private AudioPlayer mediaPlayer;
+	private AudioPlayer nextMediaPlayer;
 	private int audioSessionId;
 	private boolean nextSetup = false;
 	private final List<DownloadFile> downloadList = new ArrayList<DownloadFile>();
@@ -207,7 +210,9 @@ public class DownloadService extends Service {
 				Looper.prepare();
 
 				mBastpUtil = new BastpUtil();
-				mediaPlayer = new MediaPlayer();
+				// Initial player is MediaPlayer-backed; bufferAndPlay() swaps in the
+				// stream-aware backend when starting an Internet radio.
+				mediaPlayer = new MediaPlayerAudio();
 				mediaPlayer.setWakeMode(DownloadService.this, PowerManager.PARTIAL_WAKE_LOCK);
 
 				// We want to change audio session id's between upgrading Android versions.  Upgrading to Android 7.0 is broken (probably updated session id format)
@@ -238,9 +243,9 @@ public class DownloadService extends Service {
 					}
 				}
 
-				mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+				mediaPlayer.setOnErrorListener(new AudioPlayer.OnErrorListener() {
 					@Override
-					public boolean onError(MediaPlayer mediaPlayer, int what, int more) {
+					public boolean onError(AudioPlayer player, int what, int more) {
 						handleError(new Exception("MediaPlayer error: " + what + " (" + more + ")"));
 						return false;
 					}
@@ -1195,7 +1200,7 @@ public class DownloadService extends Service {
 			// Next time the cachedPosition is updated, use that as position 0
 			subtractNextPosition = System.currentTimeMillis();
 		}
-		MediaPlayer tmp = mediaPlayer;
+		AudioPlayer tmp = mediaPlayer;
 		mediaPlayer = nextMediaPlayer;
 		nextMediaPlayer = tmp;
 		setCurrentPlaying(nextPlaying, true);
@@ -1960,9 +1965,45 @@ public class DownloadService extends Service {
 		}
 	}
 
+	/**
+	 * If {@code stream} is true, ensure the active player is the ExoPlayer-based
+	 * {@link ExoPlayerAudio} (needed for Ogg/Vorbis/Opus over HTTP, where the
+	 * legacy MediaPlayer is unreliable). Otherwise ensure it is
+	 * {@link MediaPlayerAudio} (so that equalizer / replay-gain / gapless paths
+	 * keep working). Releases the previous player when swapping.
+	 */
+	private AudioPlayer ensurePlayerForStream(AudioPlayer current, boolean stream) {
+		boolean wantExo = stream;
+		boolean haveExo = current instanceof ExoPlayerAudio;
+		if (wantExo == haveExo) {
+			return current;
+		}
+		try {
+			if (current != null) {
+				current.setOnErrorListener(null);
+				current.setOnPreparedListener(null);
+				current.setOnCompletionListener(null);
+				current.setOnBufferingUpdateListener(null);
+				current.release();
+			}
+		} catch (Throwable t) {
+			Log.w(TAG, "Failed to release previous player while swapping backends", t);
+		}
+		AudioPlayer fresh = wantExo ? new ExoPlayerAudio(this) : new MediaPlayerAudio();
+		fresh.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
+		return fresh;
+	}
+
 	private synchronized void doPlay(final DownloadFile downloadFile, final int position, final boolean start) {
 		try {
 			subtractPosition = 0;
+			// Choose the right backend before configuring the player. For HTTP
+			// streams (Internet radios) we use ExoPlayerAudio because the legacy
+			// android.media.MediaPlayer chokes on Ogg/Vorbis/Opus over HTTP on
+			// many devices; for everything else we keep MediaPlayerAudio so that
+			// existing equalizer / replay-gain / gapless paths keep working
+			// unchanged.
+			mediaPlayer = ensurePlayerForStream(mediaPlayer, downloadFile.isStream());
 			mediaPlayer.setOnCompletionListener(null);
 			mediaPlayer.setOnPreparedListener(null);
 			mediaPlayer.setOnErrorListener(null);
@@ -2003,8 +2044,8 @@ public class DownloadService extends Service {
 			mediaPlayer.setDataSource(dataSource);
 			setPlayerState(PREPARING);
 
-			mediaPlayer.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
-				public void onBufferingUpdate(MediaPlayer mp, int percent) {
+			mediaPlayer.setOnBufferingUpdateListener(new AudioPlayer.OnBufferingUpdateListener() {
+				public void onBufferingUpdate(AudioPlayer mp, int percent) {
 					Log.i(TAG, "Buffered " + percent + "%");
 					if (percent == 100) {
 						mediaPlayer.setOnBufferingUpdateListener(null);
@@ -2012,22 +2053,22 @@ public class DownloadService extends Service {
 				}
 			});
 
-			mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-				public void onPrepared(MediaPlayer mediaPlayer) {
+			mediaPlayer.setOnPreparedListener(new AudioPlayer.OnPreparedListener() {
+				public void onPrepared(AudioPlayer player) {
 					try {
 						setPlayerState(PREPARED);
 
 						synchronized (DownloadService.this) {
 							if (position != 0) {
 								Log.i(TAG, "Restarting player from position " + position);
-								mediaPlayer.seekTo(position);
+								player.seekTo(position);
 							}
 							cachedPosition = position;
 
-							applyReplayGain(mediaPlayer, downloadFile);
+							applyReplayGain(player, downloadFile);
 
 							if (start || autoPlayStart) {
-								mediaPlayer.start();
+								player.start();
 								applyPlaybackParamsMain();
 								setPlayerState(STARTED);
 
@@ -2070,7 +2111,10 @@ public class DownloadService extends Service {
 				return;
 			}
 
-			nextMediaPlayer = new MediaPlayer();
+			// Gapless prefetch only applies to local files (queued tracks); use the
+			// MediaPlayer-backed adapter so setNextMediaPlayer() is honored on the
+			// current player.
+			nextMediaPlayer = new MediaPlayerAudio();
 			nextMediaPlayer.setWakeMode(DownloadService.this, PowerManager.PARTIAL_WAKE_LOCK);
 			try {
 				nextMediaPlayer.setAudioSessionId(audioSessionId);
@@ -2080,8 +2124,8 @@ public class DownloadService extends Service {
 			nextMediaPlayer.setDataSource(file.getPath());
 			setNextPlayerState(PREPARING);
 
-			nextMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-				public void onPrepared(MediaPlayer mp) {
+			nextMediaPlayer.setOnPreparedListener(new AudioPlayer.OnPreparedListener() {
+				public void onPrepared(AudioPlayer mp) {
 					// Changed to different while preparing so ignore
 					if(nextMediaPlayer != mp) {
 						return;
@@ -2102,8 +2146,8 @@ public class DownloadService extends Service {
 				}
 			});
 
-			nextMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-				public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+			nextMediaPlayer.setOnErrorListener(new AudioPlayer.OnErrorListener() {
+				public boolean onError(AudioPlayer player, int what, int extra) {
 					Log.w(TAG, "Error on playing next " + "(" + what + ", " + extra + "): " + downloadFile);
 					return true;
 				}
@@ -2117,8 +2161,8 @@ public class DownloadService extends Service {
 
 	private void setupHandlers(final DownloadFile downloadFile, final boolean isPartial, final boolean isPlaying) {
 		final int duration = downloadFile.getSong().getDuration() == null ? 0 : downloadFile.getSong().getDuration() * 1000;
-		mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-			public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+		mediaPlayer.setOnErrorListener(new AudioPlayer.OnErrorListener() {
+			public boolean onError(AudioPlayer player, int what, int extra) {
 				Log.w(TAG, "Error on playing file " + "(" + what + ", " + extra + "): " + downloadFile);
 				int pos = getPlayerPosition();
 				reset();
@@ -2140,9 +2184,9 @@ public class DownloadService extends Service {
 			}
 		});
 
-		mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+		mediaPlayer.setOnCompletionListener(new AudioPlayer.OnCompletionListener() {
 			@Override
-			public void onCompletion(MediaPlayer mediaPlayer) {
+			public void onCompletion(AudioPlayer player) {
 				setPlayerStateCompleted();
 
 				int pos = getPlayerPosition();
@@ -2686,7 +2730,7 @@ public class DownloadService extends Service {
 		}
 	}
 
-	private void applyReplayGain(MediaPlayer mediaPlayer, DownloadFile downloadFile) {
+	private void applyReplayGain(AudioPlayer mediaPlayer, DownloadFile downloadFile) {
 		if(currentPlaying == null) {
 			return;
 		}
@@ -2810,7 +2854,7 @@ public class DownloadService extends Service {
 		}
 	}
 
-	private synchronized void applyPlaybackParams(MediaPlayer mediaPlayer) {
+	private synchronized void applyPlaybackParams(AudioPlayer mediaPlayer) {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			float playbackSpeed = getPlaybackSpeed();
 
