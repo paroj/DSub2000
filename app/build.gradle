@@ -104,4 +104,10 @@ dependencies {
 	debugImplementation 'org.slf4j:slf4j-api:2.0.17'  // For jupnp logging in debug builds
 	debugImplementation 'uk.uuid.slf4j:slf4j-android:2.0.17-0'
 	implementation 'androidx.palette:palette:1.0.0'
+	// Media3/ExoPlayer for streaming radios with codecs that android.media.MediaPlayer
+	// handles unreliably over HTTP (Ogg Vorbis, Opus, ...). Used for stream playback only;
+	// local files keep using android.media.MediaPlayer via the AudioPlayer abstraction.
+	implementation 'androidx.media3:media3-exoplayer:1.4.1'
+	implementation 'androidx.media3:media3-common:1.4.1'
+	implementation 'androidx.media3:media3-extractor:1.4.1'
 }
