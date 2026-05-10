@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+	<release version="5.7.4" versioncode="217" releasedate="13/05/2026">
+		<change>fix AVRCP media browsing for Android 16</change>
+		<change>Use server-provided coverArt ID for playlists</change>
+		<change>fix some crashes and deadlocks</change>
+	</release>
 	<release version="5.7.3" versioncode="216" releasedate="15/03/2026">
 		<change>fix multi selection in playlists</change>
 		<change>fix some crashes and deadlocks</change>
