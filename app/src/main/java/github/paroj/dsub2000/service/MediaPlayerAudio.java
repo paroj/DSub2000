@@ -5,8 +5,10 @@
 package github.paroj.dsub2000.service;
 
 import android.content.Context;
+import android.media.AudioDeviceInfo;
 import android.media.MediaPlayer;
 import android.media.PlaybackParams;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -19,6 +21,8 @@ import java.io.IOException;
  * paths in {@link DownloadService}.
  */
 public class MediaPlayerAudio implements AudioPlayer {
+
+    private static final String TAG = MediaPlayerAudio.class.getSimpleName();
 
     private final MediaPlayer mp = new MediaPlayer();
 
@@ -90,6 +94,16 @@ public class MediaPlayerAudio implements AudioPlayer {
 
     @Override @RequiresApi(23)
     public void setPlaybackParams(PlaybackParams params) { mp.setPlaybackParams(params); }
+
+    @Override @RequiresApi(28)
+    public boolean setPreferredDevice(AudioDeviceInfo device) {
+        try {
+            return mp.setPreferredDevice(device);
+        } catch (Throwable t) {
+            Log.w(TAG, "setPreferredDevice failed", t);
+            return false;
+        }
+    }
 
     @Override
     public void setNextMediaPlayer(AudioPlayer next) {

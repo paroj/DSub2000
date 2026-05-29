@@ -405,6 +405,8 @@
 	<string name="settings.persistent_summary">Show the notification even after pausing.  Press the stop button to clear it away.</string>
 	<string name="settings.gapless_playback">Gapless Playback</string>
 	<string name="settings.gapless_playback_summary">If you are seeing strange bugs during playback, turning this off may help.</string>
+	<string name="settings.usb_dac_exclusive_title">Route to USB DAC</string>
+	<string name="settings.usb_dac_exclusive_summary">Send playback to a connected USB DAC when present. Applies on the next track. Android 9+.</string>
 	<string name="settings.chat_refresh">Chat Refresh Rate (Secs)</string>
 	<string name="settings.chat_enabled">Chat Enabled</string>
 	<string name="settings.chat_enabled_summary">Whether or not to display the chat listing in the pull out drawer</string>

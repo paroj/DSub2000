@@ -80,6 +80,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 // AudioPlayer abstraction: legacy MediaPlayer is used for local files via
@@ -2042,6 +2043,24 @@ public class DownloadService extends Service {
 			}
 
 			mediaPlayer.setDataSource(dataSource);
+
+			// Optional USB DAC routing (issue #141). Apply before prepareAsync so
+			// the player picks up the device on the upcoming prepare. Hot-plug
+			// mid-track is not handled here; the next track will pick up the new
+			// device. TODO: register AudioDeviceCallback to re-route mid-track.
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+				AudioDeviceInfo usbDevice = UsbDacHelper.findUsbAudioDevice(this);
+				if (usbDevice != null) {
+					mediaPlayer.setPreferredDevice(usbDevice);
+					if (!downloadFile.isStream()) {
+						Integer rate = UsbDacHelper.readSampleRate(dataSource);
+						if (rate != null) {
+							Log.i(TAG, "USB DAC routing enabled; source sample rate " + rate + " Hz");
+						}
+					}
+				}
+			}
+
 			setPlayerState(PREPARING);
 
 			mediaPlayer.setOnBufferingUpdateListener(new AudioPlayer.OnBufferingUpdateListener() {
