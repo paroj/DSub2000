@@ -170,5 +170,11 @@
 			android:summary="@string/settings.start_on_headphones_summary"
 			android:key="startOnHeadphones"
 			android:defaultValue="false"/>
+
+		<CheckBoxPreference
+			android:title="@string/settings.usb_dac_exclusive_title"
+			android:summary="@string/settings.usb_dac_exclusive_summary"
+			android:key="usbDacExclusiveMode"
+			android:defaultValue="false"/>
 	</PreferenceCategory>
 </PreferenceScreen>

@@ -5,6 +5,7 @@
 package github.paroj.dsub2000.service;
 
 import android.content.Context;
+import android.media.AudioDeviceInfo;
 import android.media.PlaybackParams;
 
 import androidx.annotation.RequiresApi;
@@ -74,6 +75,17 @@ public interface AudioPlayer {
      * stream-oriented backend) may treat this as a no-op.
      */
     void setNextMediaPlayer(AudioPlayer next);
+
+    /**
+     * Route playback to the given output device (e.g. a connected USB DAC). Must
+     * be called before {@link #prepareAsync()} to take effect on the next track.
+     * Default no-op for backends that don't support routing.
+     *
+     * @return true if the call was applied; false if unsupported on this backend
+     *         or on this Android version.
+     */
+    @RequiresApi(28)
+    default boolean setPreferredDevice(AudioDeviceInfo device) { return false; }
 
     interface OnPreparedListener {
         void onPrepared(AudioPlayer player);

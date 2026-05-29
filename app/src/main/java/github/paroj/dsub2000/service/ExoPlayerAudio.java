@@ -5,10 +5,12 @@
 package github.paroj.dsub2000.service;
 
 import android.content.Context;
+import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.PlaybackParams;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.OptIn;
 import androidx.annotation.RequiresApi;
@@ -32,6 +34,8 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
  */
 @OptIn(markerClass = UnstableApi.class)
 public class ExoPlayerAudio implements AudioPlayer {
+
+    private static final String TAG = ExoPlayerAudio.class.getSimpleName();
 
     private final ExoPlayer player;
     private final Handler mainHandler;
@@ -254,5 +258,16 @@ public class ExoPlayerAudio implements AudioPlayer {
     @Override
     public void setNextMediaPlayer(AudioPlayer next) {
         // Live HTTP streams have no end of file; gapless does not apply. No-op.
+    }
+
+    @Override @RequiresApi(28)
+    public boolean setPreferredDevice(AudioDeviceInfo device) {
+        try {
+            onPlayerThread(() -> player.setPreferredAudioDevice(device));
+            return true;
+        } catch (Throwable t) {
+            Log.w(TAG, "setPreferredAudioDevice failed", t);
+            return false;
+        }
     }
 }
