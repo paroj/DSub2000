@@ -23,6 +23,7 @@
 
 		<ListPreference
 			android:title="@string/settings.temp_loss_title"
+			android:summary="@string/settings.temp_loss_summary"
 			android:key="tempLoss"
 			android:defaultValue="1"
 			android:entryValues="@array/tempLossValues"
