@@ -31,8 +31,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -218,13 +225,25 @@ public class RESTMusicService implements MusicService {
 	}
 
     @Override
-    public Indexes getIndexes(String musicFolderId, boolean refresh, Context context, ProgressListener progressListener) throws Exception {
+    public Indexes getIndexes(final String musicFolderId, final boolean refresh, final Context context, final ProgressListener progressListener) throws Exception {
+        if(musicFolderId == null && REQUEST_FOLDER_OVERRIDE.get() == null) {
+            List<String> folderIds = Util.getSelectedMusicFolderIds(context, getInstance(context));
+            if(folderIds.size() > 1) {
+                return fanOutByFolder(folderIds, new Callable<Indexes>() {
+                    @Override public Indexes call() throws Exception {
+                        return getIndexes(REQUEST_FOLDER_OVERRIDE.get(), refresh, context, progressListener);
+                    }
+                }, INDEXES_MERGER);
+            }
+        }
+
         List<String> parameterNames = new ArrayList<String>();
         List<Object> parameterValues = new ArrayList<Object>();
 
-	if (musicFolderId != null) {
+        String effectiveFolderId = musicFolderId != null ? musicFolderId : REQUEST_FOLDER_OVERRIDE.get();
+        if (effectiveFolderId != null) {
             parameterNames.add("musicFolderId");
-            parameterValues.add(musicFolderId);
+            parameterValues.add(effectiveFolderId);
         }
 
         Reader reader = getReader(context, progressListener, Util.isTagBrowsing(context, getInstance(context)) ? "getArtists" : "getIndexes", parameterNames, parameterValues);
@@ -302,7 +321,17 @@ public class RESTMusicService implements MusicService {
 	}
 
 	@Override
-    public SearchResult search(SearchCritera critera, Context context, ProgressListener progressListener) throws Exception {
+    public SearchResult search(final SearchCritera critera, final Context context, final ProgressListener progressListener) throws Exception {
+        if(REQUEST_FOLDER_OVERRIDE.get() == null) {
+            List<String> folderIds = Util.getSelectedMusicFolderIds(context, getInstance(context));
+            if(folderIds.size() > 1) {
+                return fanOutByFolder(folderIds, new Callable<SearchResult>() {
+                    @Override public SearchResult call() throws Exception {
+                        return search(critera, context, progressListener);
+                    }
+                }, SEARCH_MERGER);
+            }
+        }
         try {
             return searchNew(critera, context, progressListener);
         } catch (ServerTooOldException x) {
@@ -331,10 +360,16 @@ public class RESTMusicService implements MusicService {
     private SearchResult searchNew(SearchCritera critera, Context context, ProgressListener progressListener) throws Exception {
         checkServerVersion(context, "1.4", null);
 
-        List<String> parameterNames = Arrays.asList("query", "artistCount", "albumCount", "songCount");
-        List<Object> parameterValues = Arrays.<Object>asList(critera.getQuery(), critera.getArtistCount(), critera.getAlbumCount(), critera.getSongCount());
+        int instance = getInstance(context);
+        List<String> parameterNames = new ArrayList<>(Arrays.asList("query", "artistCount", "albumCount", "songCount"));
+        List<Object> parameterValues = new ArrayList<Object>(Arrays.<Object>asList(critera.getQuery(), critera.getArtistCount(), critera.getAlbumCount(), critera.getSongCount()));
 
-		int instance = getInstance(context);
+        String folderId = resolveRequestFolderId(context, instance);
+        if(folderId != null) {
+            parameterNames.add("musicFolderId");
+            parameterValues.add(folderId);
+        }
+
 		String method;
 		if(ServerInfo.isMadsonic(context, instance) && ServerInfo.checkServerVersion(context, "2.0", instance)) {
 			if(Util.isTagBrowsing(context, instance)) {
@@ -550,7 +585,19 @@ public class RESTMusicService implements MusicService {
     }
 
     @Override
-    public MusicDirectory getAlbumList(String type, int size, int offset, boolean refresh, Context context, ProgressListener progressListener) throws Exception {
+    public MusicDirectory getAlbumList(final String type, final int size, final int offset, final boolean refresh, final Context context, final ProgressListener progressListener) throws Exception {
+		int instance = getInstance(context);
+		if(REQUEST_FOLDER_OVERRIDE.get() == null && Util.getAlbumListsPerFolder(context, instance)) {
+			List<String> folderIds = Util.getSelectedMusicFolderIds(context, instance);
+			if(folderIds.size() > 1) {
+				return fanOutByFolder(folderIds, new Callable<MusicDirectory>() {
+					@Override public MusicDirectory call() throws Exception {
+						return getAlbumList(type, size, offset, refresh, context, progressListener);
+					}
+				}, ENTRIES_MERGER);
+			}
+		}
+
 		List<String> names = new ArrayList<String>();
 		List<Object> values = new ArrayList<Object>();
 
@@ -562,9 +609,8 @@ public class RESTMusicService implements MusicService {
 		values.add(offset);
 
 		// Add folder if it was set and is non null
-		int instance = getInstance(context);
 		if(Util.getAlbumListsPerFolder(context, instance)) {
-			String folderId = Util.getSelectedMusicFolderId(context, instance);
+			String folderId = resolveRequestFolderId(context, instance);
 			if(folderId != null) {
 				names.add("musicFolderId");
 				values.add(folderId);
@@ -591,8 +637,20 @@ public class RESTMusicService implements MusicService {
     }
 
 	@Override
-	public MusicDirectory getAlbumList(String type, String extra, int size, int offset, boolean refresh, Context context, ProgressListener progressListener) throws Exception {
+	public MusicDirectory getAlbumList(final String type, final String extra, final int size, final int offset, final boolean refresh, final Context context, final ProgressListener progressListener) throws Exception {
 		checkServerVersion(context, "1.10.1", "This type of album list is not supported");
+
+		int instance = getInstance(context);
+		if(REQUEST_FOLDER_OVERRIDE.get() == null && Util.getAlbumListsPerFolder(context, instance)) {
+			List<String> folderIds = Util.getSelectedMusicFolderIds(context, instance);
+			if(folderIds.size() > 1) {
+				return fanOutByFolder(folderIds, new Callable<MusicDirectory>() {
+					@Override public MusicDirectory call() throws Exception {
+						return getAlbumList(type, extra, size, offset, refresh, context, progressListener);
+					}
+				}, ENTRIES_MERGER);
+			}
+		}
 
 		List<String> names = new ArrayList<String>();
 		List<Object> values = new ArrayList<Object>();
@@ -603,7 +661,6 @@ public class RESTMusicService implements MusicService {
 		values.add(size);
 		values.add(offset);
 
-		int instance = getInstance(context);
 		if("genres".equals(type)) {
 			names.add("type");
 			values.add("byGenre");
@@ -630,7 +687,7 @@ public class RESTMusicService implements MusicService {
 
 		// Add folder if it was set and is non null
 		if(Util.getAlbumListsPerFolder(context, instance)) {
-			String folderId = Util.getSelectedMusicFolderId(context, instance);
+			String folderId = resolveRequestFolderId(context, instance);
 			if(folderId != null) {
 				names.add("musicFolderId");
 				values.add(folderId);
@@ -732,14 +789,25 @@ public class RESTMusicService implements MusicService {
 	}
 
 	@Override
-    public MusicDirectory getStarredList(Context context, ProgressListener progressListener) throws Exception {
+    public MusicDirectory getStarredList(final Context context, final ProgressListener progressListener) throws Exception {
+		int instance = getInstance(context);
+		if(REQUEST_FOLDER_OVERRIDE.get() == null && Util.getAlbumListsPerFolder(context, instance)) {
+			List<String> folderIds = Util.getSelectedMusicFolderIds(context, instance);
+			if(folderIds.size() > 1) {
+				return fanOutByFolder(folderIds, new Callable<MusicDirectory>() {
+					@Override public MusicDirectory call() throws Exception {
+						return getStarredList(context, progressListener);
+					}
+				}, ENTRIES_MERGER);
+			}
+		}
+
 		List<String> names = new ArrayList<String>();
 		List<Object> values = new ArrayList<Object>();
 
 		// Add folder if it was set and is non null
-		int instance = getInstance(context);
 		if(Util.getAlbumListsPerFolder(context, instance)) {
-			String folderId = Util.getSelectedMusicFolderId(context, instance);
+			String folderId = resolveRequestFolderId(context, instance);
 			if(folderId != null) {
 				names.add("musicFolderId");
 				values.add(folderId);
@@ -766,7 +834,19 @@ public class RESTMusicService implements MusicService {
     }
 
     @Override
-    public MusicDirectory getRandomSongs(int size, Context context, ProgressListener progressListener) throws Exception {
+    public MusicDirectory getRandomSongs(final int size, final Context context, final ProgressListener progressListener) throws Exception {
+        int instance = getInstance(context);
+        if(REQUEST_FOLDER_OVERRIDE.get() == null && Util.getAlbumListsPerFolder(context, instance)) {
+            List<String> folderIds = Util.getSelectedMusicFolderIds(context, instance);
+            if(folderIds.size() > 1) {
+                return fanOutByFolder(folderIds, new Callable<MusicDirectory>() {
+                    @Override public MusicDirectory call() throws Exception {
+                        return getRandomSongs(size, context, progressListener);
+                    }
+                }, ENTRIES_MERGER);
+            }
+        }
+
         List<String> names = new ArrayList<String>();
         List<Object> values = new ArrayList<Object>();
 
@@ -774,9 +854,8 @@ public class RESTMusicService implements MusicService {
         values.add(size);
 
         // Add folder if it was set and is non null
-        int instance = getInstance(context);
         if(Util.getAlbumListsPerFolder(context, instance)) {
-            String folderId = Util.getSelectedMusicFolderId(context, instance);
+            String folderId = resolveRequestFolderId(context, instance);
             if(folderId != null) {
                 names.add("musicFolderId");
                 values.add(folderId);
@@ -1220,8 +1299,20 @@ public class RESTMusicService implements MusicService {
 	}
 
 	@Override
-	public MusicDirectory getSongsByGenre(String genre, int count, int offset, Context context, ProgressListener progressListener) throws Exception {
+	public MusicDirectory getSongsByGenre(final String genre, final int count, final int offset, final Context context, final ProgressListener progressListener) throws Exception {
 		checkServerVersion(context, "1.9", "Genres not supported.");
+
+		int instance = getInstance(context);
+		if(REQUEST_FOLDER_OVERRIDE.get() == null && Util.getAlbumListsPerFolder(context, instance)) {
+			List<String> folderIds = Util.getSelectedMusicFolderIds(context, instance);
+			if(folderIds.size() > 1) {
+				return fanOutByFolder(folderIds, new Callable<MusicDirectory>() {
+					@Override public MusicDirectory call() throws Exception {
+						return getSongsByGenre(genre, count, offset, context, progressListener);
+					}
+				}, ENTRIES_MERGER);
+			}
+		}
 
 		List<String> parameterNames = new ArrayList<String>();
 		List<Object> parameterValues = new ArrayList<Object>();
@@ -1234,9 +1325,8 @@ public class RESTMusicService implements MusicService {
 		parameterValues.add(offset);
 
 		// Add folder if it was set and is non null
-		int instance = getInstance(context);
 		if(Util.getAlbumListsPerFolder(context, instance)) {
-			String folderId = Util.getSelectedMusicFolderId(context, instance);
+			String folderId = resolveRequestFolderId(context, instance);
 			if(folderId != null) {
 				parameterNames.add("musicFolderId");
 				parameterValues.add(folderId);
@@ -2087,4 +2177,112 @@ public class RESTMusicService implements MusicService {
 	public HostnameVerifier getInsecureHostNameVerifier() {
 		return selfSignedHostnameVerifier;
 	}
+
+	// Library filter (multi-folder) fan-out support.
+	// When the user has selected >1 music folder, request methods that internally read the
+	// selected folder via Util.getSelectedMusicFolderId go through resolveRequestFolderId,
+	// which honours a ThreadLocal override set by fanOut* helpers below.
+	private static final ThreadLocal<String> REQUEST_FOLDER_OVERRIDE = new ThreadLocal<>();
+	private static final int FANOUT_MAX_PARALLEL = 4;
+
+	private String resolveRequestFolderId(Context context, int instance) {
+		String override = REQUEST_FOLDER_OVERRIDE.get();
+		if(override != null) {
+			return override;
+		}
+		return Util.getSelectedMusicFolderId(context, instance);
+	}
+
+	private interface Merger<T> {
+		void merge(T accumulator, T next);
+	}
+
+	private <T> T fanOutByFolder(List<String> folderIds, Callable<T> call, Merger<T> merger) throws Exception {
+		ExecutorService executor = Executors.newFixedThreadPool(Math.min(folderIds.size(), FANOUT_MAX_PARALLEL));
+		try {
+			List<Future<T>> futures = new ArrayList<>(folderIds.size());
+			for(final String folderId : folderIds) {
+				futures.add(executor.submit(new Callable<T>() {
+					@Override
+					public T call() throws Exception {
+						REQUEST_FOLDER_OVERRIDE.set(folderId);
+						try {
+							return call.call();
+						} finally {
+							REQUEST_FOLDER_OVERRIDE.remove();
+						}
+					}
+				}));
+			}
+
+			T accumulator = null;
+			for(Future<T> future : futures) {
+				T result;
+				try {
+					result = future.get();
+				} catch(ExecutionException e) {
+					Throwable cause = e.getCause();
+					if(cause instanceof Exception) {
+						throw (Exception) cause;
+					}
+					throw e;
+				}
+				if(accumulator == null) {
+					accumulator = result;
+				} else if(result != null) {
+					merger.merge(accumulator, result);
+				}
+			}
+			return accumulator;
+		} finally {
+			executor.shutdownNow();
+		}
+	}
+
+	private static final Merger<Indexes> INDEXES_MERGER = new Merger<Indexes>() {
+		@Override
+		public void merge(Indexes acc, Indexes next) {
+			mergeById(acc.getArtists(), next.getArtists());
+			mergeById(acc.getShortcuts(), next.getShortcuts());
+			mergeEntriesById(acc.getEntries(), next.getEntries());
+		}
+	};
+
+	private static void mergeById(List<Artist> into, List<Artist> from) {
+		if(into == null || from == null) return;
+		Set<String> seen = new HashSet<>();
+		for(Artist a : into) seen.add(a.getId());
+		for(Artist a : from) {
+			if(seen.add(a.getId())) into.add(a);
+		}
+	}
+
+	private static void mergeEntriesById(List<MusicDirectory.Entry> into, List<MusicDirectory.Entry> from) {
+		if(into == null || from == null) return;
+		Set<String> seen = new HashSet<>();
+		for(MusicDirectory.Entry e : into) seen.add(e.getId());
+		for(MusicDirectory.Entry e : from) {
+			if(seen.add(e.getId())) into.add(e);
+		}
+	}
+
+	private static final Merger<MusicDirectory> ENTRIES_MERGER = new Merger<MusicDirectory>() {
+		@Override
+		public void merge(MusicDirectory acc, MusicDirectory next) {
+			Set<String> seen = new HashSet<>();
+			for(MusicDirectory.Entry e : acc.getChildren()) seen.add(e.getId());
+			for(MusicDirectory.Entry e : next.getChildren()) {
+				if(seen.add(e.getId())) acc.addChild(e);
+			}
+		}
+	};
+
+	private static final Merger<SearchResult> SEARCH_MERGER = new Merger<SearchResult>() {
+		@Override
+		public void merge(SearchResult acc, SearchResult next) {
+			mergeById(acc.getArtists(), next.getArtists());
+			mergeEntriesById(acc.getAlbums(), next.getAlbums());
+			mergeEntriesById(acc.getSongs(), next.getSongs());
+		}
+	};
 }

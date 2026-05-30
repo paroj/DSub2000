@@ -48,6 +48,9 @@
 		android:id="@+id/drawer_bottom"
 		android:checkableBehavior="single">
 
+		<item android:id="@+id/drawer_library_filter"
+			  android:title="@string/menu.library_filter"/>
+
 		<item android:id="@+id/drawer_offline"
 			  android:title="@string/button_bar.offline"/>
 

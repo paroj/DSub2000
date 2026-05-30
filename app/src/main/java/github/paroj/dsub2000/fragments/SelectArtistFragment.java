@@ -33,7 +33,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectArtistFragment extends SelectRecyclerFragment<Serializable> implements ArtistAdapter.OnMusicFolderChanged {
+public class SelectArtistFragment extends SelectRecyclerFragment<Serializable> implements ArtistAdapter.OnMusicFoldersChanged {
 	private static final String TAG = SelectArtistFragment.class.getSimpleName();
     private SelectArtistViewModel viewModel;
 	private List<MusicFolder> musicFolders = null;
@@ -251,12 +251,17 @@ public class SelectArtistFragment extends SelectRecyclerFragment<Serializable> i
 	}
 
 	@Override
-	public void onMusicFolderChanged(MusicFolder selectedFolder) {
-		String startMusicFolderId = Util.getSelectedMusicFolderId(context);
-		String musicFolderId = selectedFolder == null ? null : selectedFolder.getId();
+	public void onMusicFoldersChanged(List<MusicFolder> selectedFolders) {
+		List<String> previous = Util.getSelectedMusicFolderIds(context);
+		List<String> next = new ArrayList<>();
+		if(selectedFolders != null) {
+			for(MusicFolder folder : selectedFolders) {
+				next.add(folder.getId());
+			}
+		}
 
-		if(!Util.equals(startMusicFolderId, musicFolderId)) {
-			Util.setSelectedMusicFolderId(context, musicFolderId);
+		if(!previous.equals(next)) {
+			Util.setSelectedMusicFolderIds(context, next);
 			context.invalidate();
 		}
 	}

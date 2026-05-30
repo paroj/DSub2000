@@ -382,7 +382,7 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			public boolean onNavigationItemSelected(final MenuItem menuItem) {
 				if(showingTabs) {
 					// Settings are on a different selectable track
-					if (menuItem.getItemId() != R.id.drawer_settings && menuItem.getItemId() != R.id.drawer_admin && menuItem.getItemId() != R.id.drawer_offline) {
+					if (menuItem.getItemId() != R.id.drawer_settings && menuItem.getItemId() != R.id.drawer_admin && menuItem.getItemId() != R.id.drawer_offline && menuItem.getItemId() != R.id.drawer_library_filter) {
 						menuItem.setChecked(true);
 						lastSelectedPosition = menuItem.getItemId();
 					}
@@ -430,6 +430,9 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 							return true;
 						case R.id.drawer_downloading:
 							drawerItemSelected("Download");
+							return true;
+						case R.id.drawer_library_filter:
+							showLibraryFilterDialog();
 							return true;
 						case R.id.drawer_offline:
 							toggleOffline();
@@ -692,6 +695,29 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		}
 		if(!adminEnabled) {
 			setDrawerItemVisible(R.id.drawer_admin, false);
+		}
+
+		// Library filter only makes sense online and when the server has ≥ 2 music folders.
+		setDrawerItemVisible(R.id.drawer_library_filter, false);
+		if(!Util.isOffline(this)) {
+			new SilentBackgroundTask<java.util.List<github.paroj.dsub2000.domain.MusicFolder>>(this) {
+				@Override
+				protected java.util.List<github.paroj.dsub2000.domain.MusicFolder> doInBackground() throws Throwable {
+					return MusicServiceFactory.getMusicService(SubsonicActivity.this).getMusicFolders(false, SubsonicActivity.this, null);
+				}
+
+				@Override
+				protected void done(java.util.List<github.paroj.dsub2000.domain.MusicFolder> folders) {
+					if(folders != null && folders.size() > 1) {
+						setDrawerItemVisible(R.id.drawer_library_filter, true);
+					}
+				}
+
+				@Override
+				protected void error(Throwable error) {
+					// Silently leave hidden if folders can't be loaded.
+				}
+			}.execute();
 		}
 
 		if(lastSelectedPosition != 0) {
@@ -1136,6 +1162,46 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			drawerHeader.setClickable(true);
 			drawerHeaderToggle.setVisibility(View.VISIBLE);
 		}
+	}
+
+	private void showLibraryFilterDialog() {
+		drawer.closeDrawers();
+		if(Util.isOffline(this)) {
+			return;
+		}
+
+		new SilentBackgroundTask<java.util.List<github.paroj.dsub2000.domain.MusicFolder>>(this) {
+			@Override
+			protected java.util.List<github.paroj.dsub2000.domain.MusicFolder> doInBackground() throws Throwable {
+				MusicService musicService = MusicServiceFactory.getMusicService(SubsonicActivity.this);
+				return musicService.getMusicFolders(false, SubsonicActivity.this, null);
+			}
+
+			@Override
+			protected void done(java.util.List<github.paroj.dsub2000.domain.MusicFolder> folders) {
+				if(folders == null || folders.size() <= 1) {
+					return;
+				}
+				github.paroj.dsub2000.adapter.ArtistAdapter.showLibraryFilterDialog(SubsonicActivity.this, folders,
+					new github.paroj.dsub2000.adapter.ArtistAdapter.OnMusicFoldersChanged() {
+						@Override
+						public void onMusicFoldersChanged(java.util.List<github.paroj.dsub2000.domain.MusicFolder> selected) {
+							java.util.List<String> ids = new java.util.ArrayList<>();
+							for(github.paroj.dsub2000.domain.MusicFolder f : selected) {
+								ids.add(f.getId());
+							}
+							Util.setSelectedMusicFolderIds(SubsonicActivity.this, ids);
+							invalidate();
+						}
+					});
+			}
+
+			@Override
+			protected void error(Throwable error) {
+				Log.w(TAG, "Failed to load music folders", error);
+				Util.toast(SubsonicActivity.this, getErrorMessage(error));
+			}
+		}.execute();
 	}
 
 	public void toggleOffline() {

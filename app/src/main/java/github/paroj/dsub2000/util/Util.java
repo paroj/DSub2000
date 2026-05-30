@@ -241,19 +241,55 @@ public final class Util {
     }
 
     public static void setSelectedMusicFolderId(Context context, String musicFolderId) {
-        int instance = getActiveServer(context);
-        SharedPreferences prefs = getPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(Constants.PREFERENCES_KEY_MUSIC_FOLDER_ID + instance, musicFolderId);
-        editor.commit();
+        setSelectedMusicFolderIds(context, musicFolderId == null ? new ArrayList<String>() : new ArrayList<>(Arrays.asList(musicFolderId)));
     }
 
     public static String getSelectedMusicFolderId(Context context) {
         return getSelectedMusicFolderId(context, getActiveServer(context));
     }
 	public static String getSelectedMusicFolderId(Context context, int instance) {
+		List<String> ids = getSelectedMusicFolderIds(context, instance);
+		return ids.size() == 1 ? ids.get(0) : null;
+	}
+
+	public static List<String> getSelectedMusicFolderIds(Context context) {
+		return getSelectedMusicFolderIds(context, getActiveServer(context));
+	}
+	public static List<String> getSelectedMusicFolderIds(Context context, int instance) {
 		SharedPreferences prefs = getPreferences(context);
-		return prefs.getString(Constants.PREFERENCES_KEY_MUSIC_FOLDER_ID + instance, null);
+		String joined = prefs.getString(Constants.PREFERENCES_KEY_MUSIC_FOLDER_IDS + instance, null);
+		if(joined == null) {
+			// Migrate legacy single-folder key
+			String legacy = prefs.getString(Constants.PREFERENCES_KEY_MUSIC_FOLDER_ID + instance, null);
+			if(legacy == null) {
+				return new ArrayList<>();
+			}
+			List<String> migrated = new ArrayList<>();
+			migrated.add(legacy);
+			return migrated;
+		}
+		if(joined.isEmpty()) {
+			return new ArrayList<>();
+		}
+		return new ArrayList<>(Arrays.asList(joined.split(",")));
+	}
+	public static void setSelectedMusicFolderIds(Context context, List<String> musicFolderIds) {
+		int instance = getActiveServer(context);
+		SharedPreferences prefs = getPreferences(context);
+		SharedPreferences.Editor editor = prefs.edit();
+		if(musicFolderIds == null || musicFolderIds.isEmpty()) {
+			editor.putString(Constants.PREFERENCES_KEY_MUSIC_FOLDER_IDS + instance, "");
+			editor.putString(Constants.PREFERENCES_KEY_MUSIC_FOLDER_ID + instance, null);
+		} else {
+			StringBuilder sb = new StringBuilder();
+			for(int i = 0; i < musicFolderIds.size(); i++) {
+				if(i > 0) sb.append(',');
+				sb.append(musicFolderIds.get(i));
+			}
+			editor.putString(Constants.PREFERENCES_KEY_MUSIC_FOLDER_IDS + instance, sb.toString());
+			editor.putString(Constants.PREFERENCES_KEY_MUSIC_FOLDER_ID + instance, musicFolderIds.size() == 1 ? musicFolderIds.get(0) : null);
+		}
+		editor.commit();
 	}
 
 	public static boolean getAlbumListsPerFolder(Context context) {
