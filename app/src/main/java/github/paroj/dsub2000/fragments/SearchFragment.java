@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.MenuItem;
 import android.net.Uri;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.adapter.ArtistAdapter;
 import github.paroj.dsub2000.adapter.EntryGridAdapter;
@@ -194,6 +195,7 @@ public class SearchFragment extends SubsonicFragment implements SectionAdapter.O
 			return;
 		}
 		currentQuery = query;
+		setEmpty(false);
 
 		BackgroundTask<SearchResult> task = new TabBackgroundTask<SearchResult>(this) {
 			@Override
@@ -206,7 +208,14 @@ public class SearchFragment extends SubsonicFragment implements SectionAdapter.O
 			@Override
 			protected void done(SearchResult result) {
 				searchResult = result;
-				recyclerView.setAdapter(adapter = new SearchAdapter(context, searchResult, getImageLoader(), largeAlbums, SearchFragment.this));
+				if (result == null || (!result.hasArtists() && !result.hasAlbums() && !result.hasSongs())) {
+					adapter = null;
+					recyclerView.setAdapter(null);
+					setEmpty(true);
+				} else {
+					setEmpty(false);
+					recyclerView.setAdapter(adapter = new SearchAdapter(context, searchResult, getImageLoader(), largeAlbums, SearchFragment.this));
+				}
 				if (autoplay) {
 					autoplay(query, artist, album, title);
 				}
@@ -222,6 +231,18 @@ public class SearchFragment extends SubsonicFragment implements SectionAdapter.O
 
 	protected String getCurrentQuery() {
 		return currentQuery;
+	}
+
+	@Override
+	public void setEmpty(boolean empty) {
+		super.setEmpty(empty);
+
+		if (empty && rootView != null) {
+			TextView text = (TextView) rootView.findViewById(R.id.tab_progress_message);
+			if (text != null) {
+				text.setText(R.string.search_no_match);
+			}
+		}
 	}
 
 	private void onArtistSelected(Artist artist, boolean autoplay) {
