@@ -2288,6 +2288,14 @@ public class DownloadService extends Service {
 		}
 	}
 
+	public float getVolume() {
+		return volume;
+	}
+
+	public Handler getHandler() {
+		return handler;
+	}
+
 	public void reapplyVolume() {
 		applyReplayGain(mediaPlayer, currentPlaying);
 	}

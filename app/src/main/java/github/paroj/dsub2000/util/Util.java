@@ -43,6 +43,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -118,6 +120,12 @@ public final class Util {
 	private static AudioFocusRequest audioFocusRequest;
 	private static boolean pauseFocus = false;
 	private static boolean lowerFocus = false;
+	private static Handler mainHandler;
+	private static Runnable volumeFadeStep;
+	private static final float DUCK_VOLUME = 0.1f;
+	private static final int FADE_OUT_DURATION_MS = 250;
+	private static final int FADE_IN_DURATION_MS = 400;
+	private static final int FADE_STEP_MS = 16;
 
     // Used by hexEncode()
     private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
@@ -1329,10 +1337,18 @@ public final class Util {
 						.setOnAudioFocusChangeListener(getAudioFocusChangeListener(context, audioManager))
 						.setWillPauseWhenDucked(true)
 						.build();
-				audioManager.requestAudioFocus(audioFocusRequest);
+				int result = audioManager.requestAudioFocus(audioFocusRequest);
+				if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+					Log.w(TAG, "Audio focus request not granted: " + result);
+					audioFocusRequest = null;
+				}
 			}
 		} else if (Build.VERSION.SDK_INT >= 8 && focusListener == null) {
-    		audioManager.requestAudioFocus(focusListener = getAudioFocusChangeListener(context, audioManager), AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+    		int result = audioManager.requestAudioFocus(focusListener = getAudioFocusChangeListener(context, audioManager), AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+			if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+				Log.w(TAG, "Audio focus request not granted: " + result);
+				focusListener = null;
+			}
     	}
     }
 
@@ -1345,10 +1361,17 @@ public final class Util {
 						Log.i(TAG, "Temporary loss of focus");
 						SharedPreferences prefs = getPreferences(context);
 						int lossPref = Integer.parseInt(prefs.getString(Constants.PREFERENCES_KEY_TEMP_LOSS, "1"));
-						if(lossPref == 2 || (lossPref == 1 && focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK)) {
+						if(lossPref == 2) {
 							lowerFocus = true;
-							downloadService.setVolume(0.1f);
-						} else if(lossPref == 0 || (lossPref == 1 && focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT)) {
+							fadeVolume(downloadService, DUCK_VOLUME, FADE_OUT_DURATION_MS, null);
+						} else if(lossPref == 1) {
+							// Smooth ducking for both CAN_DUCK (to 10%) and TRANSIENT (to 0%).
+							// Avoids the pause/resume round-trip whose race left audio silently
+							// playing after GAIN. Track stays running so GAIN can just fade back in.
+							lowerFocus = true;
+							float target = (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) ? DUCK_VOLUME : 0f;
+							fadeVolume(downloadService, target, FADE_OUT_DURATION_MS, null);
+						} else if(lossPref == 0) {
 							pauseFocus = true;
 							downloadService.pause(true);
 						}
@@ -1360,7 +1383,7 @@ public final class Util {
 					}
 					if(lowerFocus) {
 						lowerFocus = false;
-						downloadService.setVolume(1.0f);
+						fadeVolume(downloadService, 1.0f, FADE_IN_DURATION_MS, null);
 					}
 				} else if(focusChange == AudioManager.AUDIOFOCUS_LOSS && !downloadService.isRemoteEnabled()) {
 					Log.i(TAG, "Permanently lost focus");
@@ -1378,6 +1401,39 @@ public final class Util {
 				}
 			}
 		};
+	}
+
+	private static void fadeVolume(final DownloadService downloadService, final float target, final int durationMs, final Runnable onComplete) {
+		if(mainHandler == null) {
+			mainHandler = new Handler(Looper.getMainLooper());
+		}
+		mainHandler.post(new Runnable() {
+			@Override
+			public void run() {
+				// Cancel any in-flight fade so back-to-back focus events don't stack up.
+				if(volumeFadeStep != null) {
+					mainHandler.removeCallbacks(volumeFadeStep);
+					volumeFadeStep = null;
+				}
+				final float start = downloadService.getVolume();
+				final long startTime = android.os.SystemClock.uptimeMillis();
+				volumeFadeStep = new Runnable() {
+					@Override
+					public void run() {
+						long elapsed = android.os.SystemClock.uptimeMillis() - startTime;
+						float t = Math.min(1f, durationMs > 0 ? (float) elapsed / durationMs : 1f);
+						downloadService.setVolume(start + (target - start) * t);
+						if(t < 1f) {
+							mainHandler.postDelayed(this, FADE_STEP_MS);
+						} else {
+							volumeFadeStep = null;
+							if(onComplete != null) onComplete.run();
+						}
+					}
+				};
+				volumeFadeStep.run();
+			}
+		});
 	}
 
 	public static void abandonAudioFocus(Context context) {
