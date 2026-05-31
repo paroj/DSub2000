@@ -47,6 +47,7 @@ import github.paroj.dsub2000.activity.SubsonicActivity;
 import github.paroj.dsub2000.activity.SubsonicFragmentActivity;
 import github.paroj.dsub2000.domain.Bookmark;
 import github.paroj.dsub2000.domain.MusicDirectory;
+import github.paroj.dsub2000.domain.PlayerState;
 import github.paroj.dsub2000.domain.MusicDirectory.Entry;
 import github.paroj.dsub2000.domain.Playlist;
 import github.paroj.dsub2000.domain.SearchCritera;
@@ -481,6 +482,17 @@ public class RemoteControlClientLP extends RemoteControlClientBase {
 	private class EventCallback extends MediaSessionCompat.Callback {
 		@Override
 		public void onPlay() {
+			// Suppress only the synthetic play command Android delivers right after a
+			// Bluetooth/headset connect. Explicit user taps (notification, lockscreen, Auto)
+			// arrive outside that short window and behave as before.
+			PlayerState state = downloadService.getPlayerState();
+			if (state != PlayerState.PAUSED_TEMP && downloadService.isLikelyBluetoothAutoResume()) {
+				SharedPreferences prefs = Util.getPreferences(downloadService);
+				if (!prefs.getBoolean(Constants.PREFERENCES_KEY_RESUME_ON_BLUETOOTH, false)) {
+					Log.i(TAG, "Ignoring MediaSession onPlay (state=" + state + ") — Bluetooth auto-resume");
+					return;
+				}
+			}
 			downloadService.start();
 		}
 

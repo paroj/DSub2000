@@ -246,7 +246,11 @@ public class DownloadServiceLifecycleSupport {
 					} else if(intent.getExtras() != null) {
 						final KeyEvent event = (KeyEvent) intent.getExtras().get(Intent.EXTRA_KEY_EVENT);
 						if (event != null) {
-							handleKeyEvent(event);
+							// Notification action PendingIntents set a custom action string ("KEYCODE_MEDIA_*").
+							// MediaButtonIntentReceiver forwards system MEDIA_BUTTON broadcasts with no action.
+							// Only the latter can be a synthetic Bluetooth-connect "play".
+							boolean fromMediaButton = (action == null);
+							handleKeyEvent(event, fromMediaButton);
 						}
 					}
 				}
@@ -388,6 +392,12 @@ public class DownloadServiceLifecycleSupport {
 	}
 
 	public void handleKeyEvent(KeyEvent event) {
+		// Default to trusted (notification taps, in-app calls) — only the system MEDIA_BUTTON path
+		// passes false explicitly. Callers from RemoteControlClientLP.onMediaButtonEvent pass true.
+		handleKeyEvent(event, false);
+	}
+
+	public void handleKeyEvent(KeyEvent event, boolean fromMediaButton) {
 		if(event.getAction() == KeyEvent.ACTION_DOWN && event.getRepeatCount() > 0) {
 			switch (event.getKeyCode()) {
 				case RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS:
@@ -440,7 +450,17 @@ public class DownloadServiceLifecycleSupport {
 				case RemoteControlClient.FLAG_KEY_MEDIA_PLAY:
 				case KeyEvent.KEYCODE_MEDIA_PLAY:
 					if(downloadService.getPlayerState() != PlayerState.STARTED) {
-						downloadService.start();
+						// Suppress only the synthetic MEDIA_PLAY that arrives via the system
+						// MEDIA_BUTTON path right after a Bluetooth/headset connect.
+						PlayerState state = downloadService.getPlayerState();
+						boolean btAuto = fromMediaButton && state != PlayerState.PAUSED_TEMP
+								&& downloadService.isLikelyBluetoothAutoResume()
+								&& !Util.getPreferences(downloadService).getBoolean(Constants.PREFERENCES_KEY_RESUME_ON_BLUETOOTH, false);
+						if (btAuto) {
+							Log.i(TAG, "Ignoring MEDIA_PLAY key (state=" + state + ") — Bluetooth auto-resume");
+						} else {
+							downloadService.start();
+						}
 					}
 					break;
 				case RemoteControlClient.FLAG_KEY_MEDIA_PAUSE:

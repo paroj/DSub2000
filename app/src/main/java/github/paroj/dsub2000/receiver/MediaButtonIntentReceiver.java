@@ -36,16 +36,20 @@ public class MediaButtonIntentReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         KeyEvent event = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-		if(DownloadService.getInstance() == null && event != null && (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_STOP ||
-			event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE || event.getKeyCode() == KeyEvent.KEYCODE_HEADSETHOOK)) {
-			Log.w(TAG, "Ignore keycode event because downloadService is off");
+
+		if (event == null) {
+			// Android delivers a MEDIA_BUTTON broadcast with no key event when a Bluetooth
+			// device connects to the last active media app. Don't auto-resume from here —
+			// the user did not press anything.
+			Log.i(TAG, "Ignoring MEDIA_BUTTON broadcast with no key event");
 			return;
 		}
 
-		if (event == null) {
-			// we only get here, if DownloadService was dead, so we can assume it was not playing 
-			Log.i(TAG, "Got null MEDIA_BUTTON key event, assuming play button pressed");
-			event = new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MEDIA_PLAY);
+		if(DownloadService.getInstance() == null && (event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_STOP ||
+			event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE || event.getKeyCode() == KeyEvent.KEYCODE_HEADSETHOOK ||
+			event.getKeyCode() == KeyEvent.KEYCODE_MEDIA_PLAY)) {
+			Log.w(TAG, "Ignore keycode event because downloadService is off");
+			return;
 		}
 
         Log.i(TAG, "Got MEDIA_BUTTON key event: " + event);

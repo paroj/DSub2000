@@ -393,6 +393,8 @@
 	<string name="settings.temp_loss_pause_lower">Pause, lower volume when requested</string>
 	<string name="settings.temp_loss_lower">Always lower volume</string>
 	<string name="settings.temp_loss_nothing">Do Nothing</string>
+	<string name="settings.resume_on_bluetooth_title">Resume on Bluetooth connect</string>
+	<string name="settings.resume_on_bluetooth_summary">Automatically resume playback when a Bluetooth device connects, even if you explicitly paused or stopped</string>
 	<string name="settings.keep_played_count_title">Keep played songs</string>
 	<string name="settings.keep_played_count_none">Remove all played songs</string>
 	<string name="settings.keep_played_count_one">Keep last played song</string>
