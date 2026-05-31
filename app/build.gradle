@@ -19,6 +19,7 @@ android {
 		resValue 'string', 'provider.podcast', applicationId + ".podcasts.provider"
 		resValue 'string', 'provider.starred', applicationId + ".starred.provider"
 		resValue 'string', 'provider.recently_added', applicationId + ".mostrecent.provider"
+		resValue 'string', 'provider.library', applicationId + ".library.provider"
 		signingConfig signingConfigs.debug
 		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 	}

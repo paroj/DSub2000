@@ -928,6 +928,8 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 				ContentResolver.addPeriodicSync(account, Constants.SYNC_ACCOUNT_STARRED_AUTHORITY, new Bundle(), 60L * syncInterval);
 				ContentResolver.setSyncAutomatically(account, Constants.SYNC_ACCOUNT_MOST_RECENT_AUTHORITY, (syncEnabled && prefs.getBoolean(Constants.PREFERENCES_KEY_SYNC_MOST_RECENT, false)));
 				ContentResolver.addPeriodicSync(account, Constants.SYNC_ACCOUNT_MOST_RECENT_AUTHORITY, new Bundle(), 60L * syncInterval);
+				ContentResolver.setSyncAutomatically(account, Constants.SYNC_ACCOUNT_LIBRARY_AUTHORITY, (syncEnabled && prefs.getBoolean(Constants.PREFERENCES_KEY_SYNC_LIBRARY, false)));
+				ContentResolver.addPeriodicSync(account, Constants.SYNC_ACCOUNT_LIBRARY_AUTHORITY, new Bundle(), 60L * syncInterval);
 				return null;
 			}
 

@@ -140,6 +140,7 @@ public final class Constants {
 	public static final String PREFERENCES_KEY_SYNC_NOTIFICATION = "syncNotification";
 	public static final String PREFERENCES_KEY_SYNC_STARRED = "syncStarred";
 	public static final String PREFERENCES_KEY_SYNC_MOST_RECENT = "syncMostRecent";
+	public static final String PREFERENCES_KEY_SYNC_LIBRARY = "syncLibrary";
 	public static final String PREFERENCES_KEY_PAUSE_DISCONNECT = "pauseOnDisconnect";
 	public static final String PREFERENCES_KEY_HIDE_WIDGET = "hideWidget";
 	public static final String PREFERENCES_KEY_PODCASTS_ENABLED = "podcastsEnabled";
@@ -234,6 +235,7 @@ public final class Constants {
 	public static final String SYNC_ACCOUNT_PODCAST_AUTHORITY = BuildConfig.APPLICATION_ID + ".podcasts.provider";
 	public static final String SYNC_ACCOUNT_STARRED_AUTHORITY = BuildConfig.APPLICATION_ID + ".starred.provider";
 	public static final String SYNC_ACCOUNT_MOST_RECENT_AUTHORITY = BuildConfig.APPLICATION_ID + ".mostrecent.provider";
+	public static final String SYNC_ACCOUNT_LIBRARY_AUTHORITY = BuildConfig.APPLICATION_ID + ".library.provider";
 
 	public static final String TASKER_EXTRA_BUNDLE = "com.twofortyfouram.locale.intent.extra.BUNDLE";
 

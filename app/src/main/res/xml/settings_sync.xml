@@ -46,5 +46,11 @@
 			android:summary="@string/settings.sync_most_recent_summary"
 			android:key="syncMostRecent"
 			android:defaultValue="false"/>
+
+		<CheckBoxPreference
+			android:title="@string/settings.sync_library"
+			android:summary="@string/settings.sync_library_summary"
+			android:key="syncLibrary"
+			android:defaultValue="false"/>
 	</PreferenceCategory>
 </PreferenceScreen>
