@@ -172,6 +172,17 @@
 			<meta-data android:name="android.content.SyncAdapter"
 					   android:resource="@xml/mostrecent_syncadapter" />
 		</service>
+		<service android:name="github.paroj.dsub2000.service.sync.LibrarySyncService"
+			     android:foregroundServiceType="dataSync|mediaPlayback"
+				 android:exported="true"
+				 android:process=":sync">
+
+			<intent-filter>
+				<action android:name="android.content.SyncAdapter"/>
+			</intent-filter>
+			<meta-data android:name="android.content.SyncAdapter"
+					   android:resource="@xml/library_syncadapter" />
+		</service>
 
 		<service android:name="github.paroj.dsub2000.service.HeadphoneListenerService"
 			android:foregroundServiceType="mediaPlayback"
@@ -275,6 +286,11 @@
 		<provider android:name="github.paroj.dsub2000.provider.MostRecentStubProvider"
 				  android:authorities="@string/provider.recently_added"
 				  android:label="@string/main.albums_newest"
+				  android:exported="false"
+				  android:syncable="true"/>
+		<provider android:name="github.paroj.dsub2000.provider.LibraryStubProvider"
+				  android:authorities="@string/provider.library"
+				  android:label="@string/settings.sync_library"
 				  android:exported="false"
 				  android:syncable="true"/>
 

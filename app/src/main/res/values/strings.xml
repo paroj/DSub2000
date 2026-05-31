@@ -236,6 +236,7 @@
 	<string name="sync.new_playlists">New songs in playlists</string>
 	<string name="sync.new_albums">New albums available</string>
 	<string name="sync.new_starred">New starred songs available</string>
+	<string name="sync.new_library">New library tracks cached</string>
     
 	<string name="starring_content_starred">Starred \"%s\"</string>
 	<string name="starring_content_unstarred">Unstarred \"%s\"</string>
@@ -444,6 +445,8 @@
 	<string name="settings.sync_most_recent_summary">Automatically cache newly added albums</string>
 	<string name="settings.sync_starred">Sync Starred</string>
 	<string name="settings.sync_starred_summary">Automatically cache songs, albums, and artists which are starred</string>
+	<string name="settings.sync_library">Cache Entire Library</string>
+	<string name="settings.sync_library_summary">Automatically cache every song in the library and keep the cache in sync with the server. Uses significant storage and bandwidth.</string>
 	<string name="settings.sync_notification">Show Sync Notification</string>
 	<string name="settings.sync_notification_summary">Show a notification after new media has been synced</string>
 	<string name="settings.menu_options.title">Optional Menu Options</string>

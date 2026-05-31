@@ -99,6 +99,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 	private CheckBoxPreference syncNotification;
 	private CheckBoxPreference syncStarred;
 	private CheckBoxPreference syncMostRecent;
+	private CheckBoxPreference syncLibrary;
 	private CheckBoxPreference replayGain;
 	private ListPreference replayGainType;
 	private Preference replayGainBump;
@@ -282,6 +283,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 		syncNotification = (CheckBoxPreference) this.findPreference(Constants.PREFERENCES_KEY_SYNC_NOTIFICATION);
 		syncStarred = (CheckBoxPreference) this.findPreference(Constants.PREFERENCES_KEY_SYNC_STARRED);
 		syncMostRecent = (CheckBoxPreference) this.findPreference(Constants.PREFERENCES_KEY_SYNC_MOST_RECENT);
+		syncLibrary = (CheckBoxPreference) this.findPreference(Constants.PREFERENCES_KEY_SYNC_LIBRARY);
 		replayGain = (CheckBoxPreference) this.findPreference(Constants.PREFERENCES_KEY_REPLAY_GAIN);
 		replayGainType = (ListPreference) this.findPreference(Constants.PREFERENCES_KEY_REPLAY_GAIN_TYPE);
 		replayGainBump = this.findPreference(Constants.PREFERENCES_KEY_REPLAY_GAIN_BUMP);
@@ -488,6 +490,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 					syncNotification.setEnabled(true);
 					syncStarred.setEnabled(true);
 					syncMostRecent.setEnabled(true);
+					syncLibrary.setEnabled(true);
 				}
 			} else {
 				if(syncInterval.isEnabled()) {
@@ -496,6 +499,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 					syncNotification.setEnabled(false);
 					syncStarred.setEnabled(false);
 					syncMostRecent.setEnabled(false);
+					syncLibrary.setEnabled(false);
 				}
 			}
 		}

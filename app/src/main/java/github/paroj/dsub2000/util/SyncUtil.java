@@ -174,6 +174,21 @@ public final class SyncUtil {
 		return "sync-most_recent-" + (Util.getRestUrl(context, null, instance, false)).hashCode() + ".ser";
 	}
 
+	// Entire library
+	public static ArrayList<String> getSyncedLibrary(Context context, int instance) {
+		ArrayList<String> list = FileUtil.deserializeCompressed(context, getLibrarySyncFile(context, instance), ArrayList.class);
+		if(list == null) {
+			list = new ArrayList<String>();
+		}
+		return list;
+	}
+	public static void setSyncedLibrary(ArrayList<String> syncedList, Context context, int instance) {
+		FileUtil.serializeCompressed(context, syncedList, SyncUtil.getLibrarySyncFile(context, instance));
+	}
+	public static String getLibrarySyncFile(Context context, int instance) {
+		return "sync-library-" + (Util.getRestUrl(context, null, instance, false)).hashCode() + ".ser";
+	}
+
 	public static String joinNames(List<String> names) {
 		StringBuilder builder = new StringBuilder();
 		for (String val : names) {
