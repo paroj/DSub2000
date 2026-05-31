@@ -145,6 +145,7 @@ public final class Constants {
 	public static final String PREFERENCES_KEY_BOOKMARKS_ENABLED = "bookmarksEnabled";
 	public static final String PREFERENCES_KEY_INTERNET_RADIO_ENABLED = "internetRadioEnabled";
 	public static final String PREFERENCES_KEY_CUSTOM_SORT_ENABLED = "customSortEnabled";
+	public static final String PREFERENCES_KEY_REVERSE_PODCAST_SORT = "reversePodcastSort";
 	public static final String PREFERENCES_KEY_MENU_PLAY_NOW = "showPlayNow";
 	public static final String PREFERENCES_KEY_MENU_PLAY_SHUFFLED = "showPlayShuffled";
 	public static final String PREFERENCES_KEY_MENU_PLAY_NEXT = "showPlayNext";

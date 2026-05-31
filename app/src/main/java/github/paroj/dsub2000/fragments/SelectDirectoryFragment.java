@@ -71,6 +71,7 @@ import github.paroj.dsub2000.viewmodel.SelectDirectoryViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -278,6 +279,12 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 						menu.removeItem(R.id.menu_download_all);
 					}
 				}
+
+				MenuItem reverseItem = menu.findItem(R.id.menu_reverse_sort);
+				if(reverseItem != null) {
+					reverseItem.setChecked(Util.getPreferences(context)
+						.getBoolean(Constants.PREFERENCES_KEY_REVERSE_PODCAST_SORT, false));
+				}
 			}
 		}
 
@@ -306,6 +313,16 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 				return true;
 			case R.id.menu_radio:
 				startArtistRadio(id);
+				return true;
+			case R.id.menu_reverse_sort:
+				SharedPreferences prefs = Util.getPreferences(context);
+				boolean newValue = !prefs.getBoolean(Constants.PREFERENCES_KEY_REVERSE_PODCAST_SORT, false);
+				prefs.edit().putBoolean(Constants.PREFERENCES_KEY_REVERSE_PODCAST_SORT, newValue).apply();
+				item.setChecked(newValue);
+				Collections.reverse(entries);
+				if(entryGridAdapter != null) {
+					entryGridAdapter.notifyDataSetChanged();
+				}
 				return true;
 		}
 
@@ -706,6 +723,11 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 
 		if(validData) {
 			recyclerView.setVisibility(View.VISIBLE);
+		}
+
+		if(podcastId != null && !entries.isEmpty()
+				&& Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_REVERSE_PODCAST_SORT, false)) {
+			Collections.reverse(entries);
 		}
 
 		if(albumListType == null || albumListType.startsWith("starred")) {
