@@ -55,7 +55,11 @@ public abstract class BackgroundTask<T> implements ProgressListener {
 
 	private static final int DEFAULT_CONCURRENCY = 8;
 	private static final Collection<Thread> threads = Collections.synchronizedCollection(new ArrayList<Thread>());
-	protected static final BlockingQueue<BackgroundTask.Task> queue = new LinkedBlockingQueue<BackgroundTask.Task>(10);
+	// Unbounded queue: a bounded queue combined with queue.offer() in
+	// LoadingTask / SilentBackgroundTask silently dropped tasks when full,
+	// which caused the "Loading. Please Wait..." dialog to hang forever once
+	// the queue filled with pending DownloadTasks (issue #136).
+	protected static final BlockingQueue<BackgroundTask.Task> queue = new LinkedBlockingQueue<BackgroundTask.Task>();
 	private static Handler handler = null;
 	private static AtomicInteger currentlyRunning = new AtomicInteger(0);
 	static {
