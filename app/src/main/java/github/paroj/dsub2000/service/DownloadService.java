@@ -2288,6 +2288,15 @@ public class DownloadService extends Service {
 		setNextPlayerState(IDLE);
 	}
 
+	private static boolean allLocallyAvailable(List<DownloadFile> files) {
+		for (DownloadFile d : files) {
+			if (!d.isCompleteFileAvailable()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public synchronized void checkDownloads() {
 		if (!Util.isExternalStoragePresent() || !lifecycleSupport.isExternalStorageAvailable()) {
 			return;
@@ -2303,18 +2312,20 @@ public class DownloadService extends Service {
 			checkArtistRadio();
 		}
 
-		// If all files are local (like when permanently caching an already cached file) do not check if device is offline
-		boolean skipNetworkCheck = true;
-		for (DownloadFile d: downloadList) {
-			skipNetworkCheck &= d.isCompleteFileAvailable();
-		}
-		for (DownloadFile d: backgroundDownloadList) {
-			skipNetworkCheck &= d.isCompleteFileAvailable();
-		}
-
-		if (!skipNetworkCheck && !Util.isAllowedToDownload(this)) {
-			Util.toast(this, R.string.select_album_no_network);
-			return;
+		// If the device is allowed to download we don't need to walk the
+		// queues at all. Only when downloads are forbidden do we need to
+		// check whether every queued file is already cached locally — and
+		// even then we can short-circuit on the first missing file. This
+		// matters when backgroundDownloadList holds 10k+ entries (issue
+		// #136): the previous unconditional full-list scan stat'd every
+		// file on every checkDownloads() call.
+		if (!Util.isAllowedToDownload(this)) {
+			boolean skipNetworkCheck = allLocallyAvailable(downloadList)
+					&& allLocallyAvailable(backgroundDownloadList);
+			if (!skipNetworkCheck) {
+				Util.toast(this, R.string.select_album_no_network);
+				return;
+			}
 		}
 
 		if (downloadList.isEmpty() && backgroundDownloadList.isEmpty()) {
