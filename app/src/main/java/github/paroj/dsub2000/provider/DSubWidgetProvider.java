@@ -141,6 +141,7 @@ public class DSubWidgetProvider extends AppWidgetProvider {
      */
     private boolean hasInstances(Context context) {
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        if (manager == null) return false;
         int[] appWidgetIds = manager.getAppWidgetIds(new ComponentName(context, getClass()));
         return (appWidgetIds.length > 0);
     }
