@@ -306,6 +306,15 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 
 	@Override
 	public void onStateUpdate(DownloadFile downloadFile, PlayerState playerState) {
+		// Collapse the interpolation into the stored position before the playing
+		// flag changes. Otherwise time spent paused would count into the estimate,
+		// and the first real position after resuming would look like a seek.
+		if(hasPosition) {
+			long now = SystemClock.elapsedRealtime();
+			lastKnownPosition = estimatePosition(now);
+			lastKnownAt = now;
+		}
+
 		playing = playerState == PlayerState.STARTED;
 	}
 
