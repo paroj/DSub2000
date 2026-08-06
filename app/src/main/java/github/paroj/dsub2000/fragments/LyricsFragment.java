@@ -326,16 +326,15 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 	private void load(final String id, final String artist, final String title) {
 		final int generation = ++loadGeneration;
 
-		BackgroundTask<Void> task = new TabBackgroundTask<Void>(this) {
+		BackgroundTask<LoadResult> task = new TabBackgroundTask<LoadResult>(this) {
 			@Override
-			protected Void doInBackground() throws Throwable {
+			protected LoadResult doInBackground() throws Throwable {
 				MusicService musicService = MusicServiceFactory.getMusicService(context);
-				ArrayList<StructuredLyrics> versions = null;
-				Lyrics plain = null;
+				LoadResult result = new LoadResult();
 
 				if(id != null) {
 					try {
-						versions = usableVersions(musicService.getLyricsBySongId(id, context, this));
+						result.versions = usableVersions(musicService.getLyricsBySongId(id, context, this));
 					} catch(Exception e) {
 						// Server does not support the songLyrics extension, or the
 						// lookup failed. Fall back to the legacy endpoint below.
@@ -343,27 +342,27 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 					}
 				}
 
-				int selected = selectVersion(versions);
-				if(selected < 0) {
-					plain = musicService.getLyrics(artist, title, context, this);
+				result.selected = selectVersion(result.versions);
+				if(result.selected < 0) {
+					result.plain = musicService.getLyrics(artist, title, context, this);
 				}
 
-				if(generation == loadGeneration) {
-					lyricsVersions = versions;
-					selectedVersion = selected;
-					structuredLyrics = versionAt(selected);
-					lyrics = plain;
-				}
-
-				return null;
+				return result;
 			}
 
 			@Override
-			protected void done(Void result) {
-				// Skipping tracks quickly can finish loads out of order.
+			protected void done(LoadResult result) {
+				// Skipping tracks quickly can finish loads out of order. Loads run
+				// concurrently, so the fields are only assigned here on the main
+				// thread, where the generation check and the assignment are atomic.
 				if(generation != loadGeneration) {
 					return;
 				}
+
+				lyricsVersions = result.versions;
+				selectedVersion = result.selected;
+				structuredLyrics = versionAt(result.selected);
+				lyrics = result.plain;
 
 				setLyrics();
 				updateActiveLine(true);
@@ -373,6 +372,12 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 			}
 		};
 		task.execute();
+	}
+
+	private static class LoadResult {
+		private ArrayList<StructuredLyrics> versions;
+		private int selected = -1;
+		private Lyrics plain;
 	}
 
 	private ArrayList<StructuredLyrics> usableVersions(List<StructuredLyrics> candidates) {
