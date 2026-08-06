@@ -271,6 +271,11 @@
 	<string name="song_details.downloading">Downloading</string>
 
     <string name="lyrics.nomatch">No lyrics found</string>
+    <string name="lyrics.select_version">Lyrics version</string>
+    <string name="lyrics.version_format">%1$s (%2$s)</string>
+    <string name="lyrics.synced">synced</string>
+    <string name="lyrics.unsynced">plain</string>
+    <string name="lyrics.unknown_language">Unknown language</string>
 
     <string name="error.label">Error</string>
 
