@@ -512,9 +512,13 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 						seekToLine(line);
 					}
 				});
-				lineList.setAdapter(adapter);
 			} else {
 				adapter.setLyrics(structuredLyrics.getLines(), structuredLyrics.isSynced());
+			}
+			// The view can be recreated while the fragment instance and its adapter
+			// survive, so a non-null adapter is not necessarily attached to this list.
+			if(lineList.getAdapter() != adapter) {
+				lineList.setAdapter(adapter);
 			}
 
 			// These are different lyrics, so the old scroll position is meaningless.
