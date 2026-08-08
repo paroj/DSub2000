@@ -58,6 +58,7 @@ import github.paroj.dsub2000.service.MusicServiceFactory;
 import github.paroj.dsub2000.util.BackgroundTask;
 import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.TabBackgroundTask;
+import github.paroj.dsub2000.util.Util;
 
 /**
  * Displays song lyrics.
@@ -259,6 +260,12 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 	@Override
 	public void onSongChanged(DownloadFile currentPlaying, int currentPlayingIndex, boolean shouldFastForward) {
 		if(currentPlaying == null) {
+			return;
+		}
+
+		// Lyrics can be opened for any song, not just the one playing, so whether
+		// they stay anchored to that song or move with the queue is a preference.
+		if(!Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_LYRICS_FOLLOW_QUEUE, true)) {
 			return;
 		}
 
