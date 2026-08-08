@@ -145,6 +145,7 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 
 		refreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_layout);
 		refreshLayout.setOnRefreshListener(this);
+		setupScrollList(lineList);
 
 		layoutManager = getLinearLayoutManager();
 		lineList.setLayoutManager(layoutManager);
@@ -560,6 +561,13 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 			textView.setText(null);
 			lineList.setVisibility(View.GONE);
 			scrollView.setVisibility(View.VISIBLE);
+		}
+
+		// setupScrollList only re-enables pull to refresh from the line list's
+		// scroll events; when the plain text view is showing instead, the gate
+		// must not stay closed at wherever the list was last left.
+		if(scrollView.getVisibility() == View.VISIBLE && context.isTouchscreen()) {
+			refreshLayout.setEnabled(true);
 		}
 	}
 
