@@ -17,6 +17,7 @@
 package github.paroj.dsub2000.service.parser;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -45,6 +46,7 @@ import github.paroj.dsub2000.util.ProgressListener;
  * inspected -- attribute access is only valid on START_TAG.
  */
 public class LyricsListParser extends AbstractParser {
+	private static final String TAG = LyricsListParser.class.getSimpleName();
 
 	public LyricsListParser(Context context, int instance) {
 		super(context, instance);
@@ -71,13 +73,13 @@ public class LyricsListParser extends AbstractParser {
 					current.setDisplayArtist(get("displayArtist"));
 					current.setDisplayTitle(get("displayTitle"));
 					current.setLang(get("lang"));
-					current.setOffset(getLong("offset"));
+					current.setOffset(getLongSafe("offset"));
 					current.setSynced(getBoolean("synced"));
 				} else if ("line".equals(name)) {
 					current = addLine(current, currentLine);
 
 					currentLine = new LyricsLine();
-					currentLine.setStart(getLong("start"));
+					currentLine.setStart(getLongSafe("start"));
 				} else if ("error".equals(name)) {
 					handleError();
 				}
@@ -97,6 +99,19 @@ public class LyricsListParser extends AbstractParser {
 
 		validate();
 		return lyricsList;
+	}
+
+	/**
+	 * Like getLong, but a malformed value reads as absent instead of failing the
+	 * parse: one bad timestamp should not cost the whole set of lyrics.
+	 */
+	private Long getLongSafe(String name) {
+		try {
+			return getLong(name);
+		} catch(NumberFormatException e) {
+			Log.w(TAG, "Ignoring malformed " + name + " attribute", e);
+			return null;
+		}
 	}
 
 	private StructuredLyrics addLine(StructuredLyrics current, LyricsLine line) {
