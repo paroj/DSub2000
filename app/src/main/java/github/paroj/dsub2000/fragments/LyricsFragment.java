@@ -105,6 +105,7 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 
 	private boolean autoScroll = true;
 	private boolean userScrolling = false;
+	private boolean started = false;
 	private boolean playing = false;
 	private boolean hasPosition = false;
 	private long lastKnownPosition = 0L;
@@ -194,10 +195,17 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 	@Override
 	public void onStart() {
 		super.onStart();
+		started = true;
 
 		context.runWhenServiceAvailable(new Runnable() {
 			@Override
 			public void run() {
+				// The service can come up only after the fragment has stopped
+				// again; a listener registered then would never be removed.
+				if(!started) {
+					return;
+				}
+
 				DownloadService downloadService = getDownloadService();
 				if(downloadService == null) {
 					return;
@@ -219,6 +227,7 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 	@Override
 	public void onStop() {
 		super.onStop();
+		started = false;
 
 		DownloadService downloadService = getDownloadService();
 		if(downloadService != null) {
