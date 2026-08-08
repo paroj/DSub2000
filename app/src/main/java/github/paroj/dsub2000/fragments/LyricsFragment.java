@@ -43,6 +43,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
 
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.adapter.LyricsAdapter;
@@ -461,13 +462,20 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 			return false;
 		}
 
-		String device = Locale.getDefault().getLanguage();
-		if(device == null || device.length() == 0) {
-			return false;
+		// The server may use either ISO 639-1 ("en") or 639-2/3 ("eng"), so
+		// compare against both forms exactly; prefix matching would make a
+		// device set to "es" claim Estonian ("est").
+		Locale device = Locale.getDefault();
+		if(lang.equalsIgnoreCase(device.getLanguage())) {
+			return true;
 		}
 
-		// The server may use either ISO 639-1 ("en") or 639-2/3 ("eng").
-		return lang.toLowerCase(Locale.US).startsWith(device.toLowerCase(Locale.US));
+		try {
+			return lang.equalsIgnoreCase(device.getISO3Language());
+		} catch(MissingResourceException e) {
+			// The device language has no three letter form to compare against.
+			return false;
+		}
 	}
 
 	private boolean hasKnownLanguage(String lang) {
