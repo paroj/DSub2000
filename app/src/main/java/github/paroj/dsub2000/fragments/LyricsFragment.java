@@ -675,7 +675,9 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 		}
 		adapter.setActiveLine(active);
 
-		if(!autoScroll || active < 0 || !canCenter(active)) {
+		// Never scroll while the user's gesture is still in progress; when it
+		// ends, the scroll session decides whether following is still on.
+		if(!autoScroll || userScrolling || active < 0 || !canCenter(active)) {
 			return;
 		}
 
@@ -764,6 +766,11 @@ public final class LyricsFragment extends SubsonicFragment implements DownloadSe
 
 		int active = adapter.getActiveLine();
 		if(active < 0) {
+			// Nothing is highlighted yet, so there is no line to measure the
+			// scroll against; treat any deliberate scroll as parking the list.
+			// Otherwise reading ahead during an intro would be yanked back to
+			// the first line the moment it lights up.
+			autoScroll = false;
 			return;
 		}
 
