@@ -1,4 +1,6 @@
-package github.paroj.dsub2000.service;
+package github.paroj.dsub2000;
+
+import github.paroj.dsub2000.service.RESTMusicService;
 
 import junit.framework.TestCase;
 

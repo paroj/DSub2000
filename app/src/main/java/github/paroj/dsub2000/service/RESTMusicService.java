@@ -119,53 +119,58 @@ public class RESTMusicService implements MusicService {
 	private Integer instance;
 	private boolean hasInstalledGoogleSSL = false;
 
-        public RESTMusicService() {
-    		HttpsURLConnection.setDefaultSSLSocketFactory(new LegacyTlsFilteringSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory()));
-
-    		TrustManager[] trustAllCerts = new TrustManager[]{
-    			new X509TrustManager() {
-    				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-    					return null;
-    				}
-    				public void checkClientTrusted(
-    						java.security.cert.X509Certificate[] certs, String authType) {
-    				}
-    				public void checkServerTrusted(
-    						java.security.cert.X509Certificate[] certs, String authType) {
-    				}
-    			}
-    		};
-    		try {
-    			SSLContext insecureSslContext = SSLContext.getInstance("TLS");
-    			insecureSslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-    			insecureSslSocketFactory = new LegacyTlsFilteringSocketFactory(insecureSslContext.getSocketFactory());
-    		} catch (Exception e) {
-    		}
-
-    		selfSignedHostnameVerifier = new HostnameVerifier() {
-    			public boolean verify(String hostname, SSLSession session) {
-    				return true;
-    			}
-    		};
+    public RESTMusicService() {
+        TrustManager[] trustAllCerts = new TrustManager[] {
+            new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new java.security.cert.X509Certificate[0];
+                }
+                public void checkClientTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+                public void checkServerTrusted(
+                        java.security.cert.X509Certificate[] certs, String authType) {
+                }
+            }
+        };
+        try {
+            SSLContext insecureSslContext = SSLContext.getInstance("TLS");
+            insecureSslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+            insecureSslSocketFactory = createLegacyTlsFilteringSocketFactory(insecureSslContext.getSocketFactory());
+        } catch (Exception e) {
         }
 
-    	static String[] filterLegacyTlsProtocols(String[] enabledProtocols) {
-    		if (enabledProtocols == null) {
-    			throw new IllegalStateException("No TLS protocols are enabled");
-    		}
+        selfSignedHostnameVerifier = new HostnameVerifier() {
+            public boolean verify(String hostname, SSLSession session) {
+                return true;
+            }
+        };
+    }
 
-    		List<String> filteredProtocols = new ArrayList<String>(enabledProtocols.length);
-    		for (String protocol : enabledProtocols) {
-    			if (!isLegacyTlsProtocol(protocol)) {
-    				filteredProtocols.add(protocol);
-    			}
-    		}
+    public static String[] filterLegacyTlsProtocols(String[] enabledProtocols) {
+        if (enabledProtocols == null) {
+            throw new IllegalStateException("No TLS protocols are enabled");
+        }
 
-    		if (filteredProtocols.isEmpty()) {
-    			throw new IllegalStateException("No acceptable TLS protocols remain enabled");
-    		}
-    		return filteredProtocols.toArray(new String[filteredProtocols.size()]);
-    	}
+        List<String> filteredProtocols = new ArrayList<String>(enabledProtocols.length);
+        for (String protocol : enabledProtocols) {
+            if (protocol != null && !isLegacyTlsProtocol(protocol)) {
+                filteredProtocols.add(protocol);
+            }
+        }
+
+        if (filteredProtocols.isEmpty()) {
+            throw new IllegalStateException("No acceptable TLS protocols remain enabled");
+        }
+        return filteredProtocols.toArray(new String[filteredProtocols.size()]);
+    }
+
+    private static SSLSocketFactory createLegacyTlsFilteringSocketFactory(SSLSocketFactory socketFactory) {
+        if (socketFactory instanceof LegacyTlsFilteringSocketFactory) {
+            return socketFactory;
+        }
+        return new LegacyTlsFilteringSocketFactory(socketFactory);
+    }
 
     	private static boolean isLegacyTlsProtocol(String protocol) {
     		return protocol != null && (protocol.startsWith("SSL")
@@ -236,7 +241,9 @@ public class RESTMusicService implements MusicService {
     					socket.close();
     				} catch (IOException ignored) {
     				}
-    				throw e;
+    				SSLException sslException = new SSLException("Failed to configure TLS socket");
+    				sslException.initCause(e);
+    				throw sslException;
     			}
     		}
     	}
@@ -2057,11 +2064,15 @@ public class RESTMusicService implements MusicService {
 			}
 		}
 
-		if(Util.isAllowInsecureEnabled(context, getInstance(context)) && (connection instanceof HttpsURLConnection)) {
-			// if we allow insecure connections, disable ssl checks
+		if(connection instanceof HttpsURLConnection) {
 			HttpsURLConnection sslConnection = (HttpsURLConnection) connection;
-			sslConnection.setSSLSocketFactory(insecureSslSocketFactory);
-			sslConnection.setHostnameVerifier(selfSignedHostnameVerifier);
+			if(Util.isAllowInsecureEnabled(context, getInstance(context))) {
+				// if we allow insecure connections, disable ssl checks
+				sslConnection.setSSLSocketFactory(insecureSslSocketFactory);
+				sslConnection.setHostnameVerifier(selfSignedHostnameVerifier);
+			} else {
+				sslConnection.setSSLSocketFactory(createLegacyTlsFilteringSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory()));
+			}
 		}
 
 		SharedPreferences prefs = Util.getPreferences(context);
