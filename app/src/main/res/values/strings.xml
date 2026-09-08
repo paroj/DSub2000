@@ -598,6 +598,9 @@
 
 	<string name="select_artist.folder">Select folder</string>
     <string name="select_artist.all_folders">All folders</string>
+    <string name="select_artist.n_folders">%d libraries</string>
+    <string name="menu.library_filter">Library filter</string>
+    <string name="library_filter.dialog_title">Filter libraries</string>
 
     <string name="equalizer.label">Equalizer</string>
     <string name="equalizer.enabled">Enabled</string>

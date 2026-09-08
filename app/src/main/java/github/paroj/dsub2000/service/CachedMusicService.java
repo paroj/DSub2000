@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -81,7 +82,27 @@ public class CachedMusicService implements MusicService {
 	private final TimeLimitedCache<List<PodcastChannel>> cachedPodcastChannels = new TimeLimitedCache<List<PodcastChannel>>(10 * 3600, TimeUnit.SECONDS);
     private String restUrl;
 	private String musicFolderId;
+	private String musicFolderIdsKey;
 	private boolean isTagBrowsing = false;
+
+	/**
+	 * Stable per-server cache key for the currently selected set of music folders.
+	 * Empty list ("all folders") → null. One folder → that id (matches the legacy single-folder key).
+	 * Multiple folders → sorted ids joined with ",".
+	 */
+	private static String normalizeFolderIdsKey(List<String> folderIds) {
+		if(folderIds == null || folderIds.isEmpty()) {
+			return null;
+		}
+		List<String> sorted = new ArrayList<String>(folderIds);
+		Collections.sort(sorted);
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < sorted.size(); i++) {
+			if(i > 0) sb.append(',');
+			sb.append(sorted.get(i));
+		}
+		return sb.toString();
+	}
 
     public CachedMusicService(RESTMusicService musicService) {
         this.musicService = musicService;
@@ -148,14 +169,20 @@ public class CachedMusicService implements MusicService {
             cachedIndexes.clear();
             cachedMusicFolders.clear();
         }
+        // When the caller passes null but the user has selected multiple folders, the cache
+        // key is the joined ids set (matches the fan-out result produced by RESTMusicService).
+        String cacheKey = musicFolderId;
+        if(cacheKey == null) {
+            cacheKey = musicFolderIdsKey;
+        }
         Indexes result = null;
-		if(Util.equals(musicFolderId, this.musicFolderId)) {
+		if(Util.equals(cacheKey, this.musicFolderIdsKey)) {
 			result = cachedIndexes.get();
 		}
 
         if (result == null) {
 			String name = Util.isTagBrowsing(context, musicService.getInstance(context)) ? "artists" : "indexes";
-			name = getCacheName(context, name, musicFolderId);
+			name = getCacheName(context, name, cacheKey);
 			if(!refresh) {
 				result = FileUtil.deserialize(context, name, Indexes.class);
 			}
@@ -165,7 +192,7 @@ public class CachedMusicService implements MusicService {
             	FileUtil.serialize(context, result, name);
         	}
 
-			if(Util.equals(musicFolderId, this.musicFolderId)) {
+			if(Util.equals(cacheKey, this.musicFolderIdsKey)) {
 				cachedIndexes.set(result);
 			}
         }
@@ -1625,7 +1652,7 @@ public class CachedMusicService implements MusicService {
 		Indexes indexes;
 
 		IndexesUpdater(Context context, String name) {
-			super(context, name, Util.getSelectedMusicFolderId(context, musicService.getInstance(context)));
+			super(context, name, normalizeFolderIdsKey(Util.getSelectedMusicFolderIds(context, musicService.getInstance(context))));
 		}
 
 		@Override
@@ -1670,9 +1697,11 @@ public class CachedMusicService implements MusicService {
         }
 
 		String newMusicFolderId = Util.getSelectedMusicFolderId(context, instance);
-		if(!Util.equals(newMusicFolderId, musicFolderId)) {
+		String newMusicFolderIdsKey = normalizeFolderIdsKey(Util.getSelectedMusicFolderIds(context, instance));
+		if(!Util.equals(newMusicFolderIdsKey, musicFolderIdsKey)) {
 			cachedIndexes.clear();
 			musicFolderId = newMusicFolderId;
+			musicFolderIdsKey = newMusicFolderIdsKey;
 		}
     }
 
