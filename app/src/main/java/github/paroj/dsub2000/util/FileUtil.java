@@ -275,15 +275,40 @@ public class FileUtil {
 		} else {
 			File albumDir = getAlbumDirectory(context, entry);
 			File artFile;
-			File albumFile = getAlbumArtFile(albumDir);
-			File hexFile = getHexAlbumArtFile(context, albumDir);
-			if (albumDir.exists()) {
-				if (hexFile.exists()) {
-					hexFile.renameTo(albumFile);
+
+			boolean songSpecific = false;
+			if (entry != null && !entry.isDirectory()) {
+				String artist = entry.getArtist();
+				if (artist != null && !artist.trim().isEmpty()) {
+					String safeArtist = fileSystemSafe(artist);
+					File parentFile = albumDir.getParentFile();
+					if (parentFile != null) {
+						String parentArtist = parentFile.getName();
+						if (parentArtist != null && !parentArtist.trim().isEmpty() && !safeArtist.equalsIgnoreCase(parentArtist)) {
+							songSpecific = true;
+						}
+					}
 				}
-				artFile = albumFile;
+			}
+
+			if (songSpecific && albumDir.exists()) {
+				File songFile = getSongFile(context, entry);
+				String songPath = songFile.getPath();
+				int index = songPath.lastIndexOf('.');
+				String coverPath = (index == -1 ? songPath : songPath.substring(0, index)) + ".jpg";
+				coverPath = coverPath.replace(".complete", "").replace(".partial", "");
+				artFile = new File(coverPath);
 			} else {
-				artFile = hexFile;
+				File albumFile = getAlbumArtFile(albumDir);
+				File hexFile = getHexAlbumArtFile(context, albumDir);
+				if (albumDir.exists()) {
+					if (hexFile.exists()) {
+						hexFile.renameTo(albumFile);
+					}
+					artFile = albumFile;
+				} else {
+					artFile = hexFile;
+				}
 			}
 			return artFile;
 		}
@@ -605,6 +630,17 @@ public class FileUtil {
 	}
 	public static boolean recursiveDelete(File dir, MediaStoreService mediaStore) {
 		if (dir != null && dir.exists()) {
+			if (dir.isFile() && isMusicFile(dir)) {
+				String path = dir.getPath();
+				int index = path.lastIndexOf('.');
+				if (index != -1) {
+					String coverPath = path.substring(0, index).replace(".complete", "").replace(".partial", "") + ".jpg";
+					File coverFile = new File(coverPath);
+					if (coverFile.exists()) {
+						coverFile.delete();
+					}
+				}
+			}
 			File[] list = dir.listFiles();
 			if(list != null) {
 				for(File file: list) {
