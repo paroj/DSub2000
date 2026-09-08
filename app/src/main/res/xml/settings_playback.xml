@@ -37,6 +37,12 @@
 			android:entries="@array/disconnectPauseNames"/>
 
 		<CheckBoxPreference
+			android:title="@string/settings.resume_on_bluetooth_title"
+			android:summary="@string/settings.resume_on_bluetooth_summary"
+			android:key="resumeOnBluetooth"
+			android:defaultValue="false"/>
+
+		<CheckBoxPreference
 			android:title="@string/settings.persistent_title"
 			android:summary="@string/settings.persistent_summary"
 			android:key="persistentNotification"

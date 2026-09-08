@@ -165,6 +165,9 @@ public class DownloadService extends Service {
 	private final CopyOnWriteArrayList<OnSongChangedListener> onSongChangedListeners = new CopyOnWriteArrayList<>();
 	private long revision;
 	private static DownloadService instance;
+	private android.media.AudioDeviceCallback audioDeviceCallback;
+	private volatile long lastAudioRouteAddTime;
+	private static final long BT_AUTORESUME_WINDOW_MS = 3000;
 	private String suggestedPlaylistName;
 	private String suggestedPlaylistId;
 	private PowerManager.WakeLock wakeLock;
@@ -317,9 +320,39 @@ public class DownloadService extends Service {
 		artistRadioBuffer = new ArtistRadioBuffer(this);
 		lifecycleSupport.onCreate();
 
+		registerAudioRouteCallback();
+
 		if(Build.VERSION.SDK_INT >= 26) {
 			Notifications.shutGoogleUpNotification(this);
 		}
+	}
+
+	private void registerAudioRouteCallback() {
+		// Mark when a new audio output device appears (e.g. Bluetooth A2DP, wired headset).
+		// Used to recognise the synthetic play command Android delivers right after a
+		// Bluetooth connect (see isLikelyBluetoothAutoResume).
+		final AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		audioDeviceCallback = new android.media.AudioDeviceCallback() {
+			@Override
+			public void onAudioDevicesAdded(android.media.AudioDeviceInfo[] addedDevices) {
+				for (android.media.AudioDeviceInfo d : addedDevices) {
+					int type = d.getType();
+					if (type == android.media.AudioDeviceInfo.TYPE_BLUETOOTH_A2DP
+							|| type == android.media.AudioDeviceInfo.TYPE_BLUETOOTH_SCO
+							|| type == android.media.AudioDeviceInfo.TYPE_WIRED_HEADSET
+							|| type == android.media.AudioDeviceInfo.TYPE_WIRED_HEADPHONES
+							|| type == android.media.AudioDeviceInfo.TYPE_USB_HEADSET) {
+						lastAudioRouteAddTime = System.currentTimeMillis();
+						break;
+					}
+				}
+			}
+		};
+		audioManager.registerAudioDeviceCallback(audioDeviceCallback, null);
+	}
+
+	public boolean isLikelyBluetoothAutoResume() {
+		return (System.currentTimeMillis() - lastAudioRouteAddTime) < BT_AUTORESUME_WINDOW_MS;
 	}
 
 	@Override
@@ -359,6 +392,12 @@ public class DownloadService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		instance = null;
+
+		if (audioDeviceCallback != null) {
+			AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+			audioManager.unregisterAudioDeviceCallback(audioDeviceCallback);
+			audioDeviceCallback = null;
+		}
 
 		if(currentPlaying != null) currentPlaying.setPlaying(false);
 		if(sleepTimer != null){
@@ -2998,7 +3037,9 @@ public class DownloadService extends Service {
 	}
 
 	public void handleKeyEvent(KeyEvent keyEvent) {
-		lifecycleSupport.handleKeyEvent(keyEvent);
+		// Called from RemoteControlClientLP.onMediaButtonEvent — this is the system MEDIA_BUTTON
+		// path (incl. Bluetooth synthetic play), so mark as untrusted.
+		lifecycleSupport.handleKeyEvent(keyEvent, true);
 	}
 
 	public void addOnSongChangedListener(OnSongChangedListener listener) {
