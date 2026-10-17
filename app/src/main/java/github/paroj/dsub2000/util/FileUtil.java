@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -122,6 +121,22 @@ public class FileUtil {
         return getSongFile(context, song, null);
     }
     public static File getSongFile(Context context, MusicDirectory.Entry song, String stage) {
+		// Offline entries store their original absolute filesystem path as their ID.
+		// Prefer that path instead of reconstructing a filename from metadata.
+		if (Util.isOffline(context)
+				&& stage == null
+				&& song.getId() != null) {
+
+			File original = new File(song.getId());
+			File musicRoot = getMusicDirectory(context);
+
+			if (original.isFile()
+					&& original.toPath().normalize()
+						.startsWith(musicRoot.toPath().normalize())) {
+				return original;
+			}
+		}
+
         File dir = getAlbumDirectory(context, song);
 
         Integer trackNumber = song.getTrack();
@@ -858,7 +873,7 @@ public class FileUtil {
 			Log.w(TAG, "Failed to upin " + saveFile + " to " + completeFile);
 		} else {
 			try {
-				new MediaStoreService(context).renameInMediaStore(completeFile, saveFile);
+				new MediaStoreService(context).renameInMediaStore(saveFile, completeFile);
 			} catch(Exception e) {
 				Log.w(TAG, "Failed to write to media store");
 			}
@@ -1135,7 +1150,6 @@ public class FileUtil {
 		}
 	}
 
-	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
 	public static <T extends Serializable> T deserializeCompressed(Context context, String fileName, Class<T> tClass) {
 		Input in = null;
 		try {

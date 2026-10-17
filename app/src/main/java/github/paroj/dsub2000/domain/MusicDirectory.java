@@ -18,10 +18,8 @@
  */
 package github.paroj.dsub2000.domain;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.media.MediaMetadataRetriever;
-import android.os.Build;
 import android.util.Log;
 
 import java.io.ByteArrayInputStream;
@@ -278,7 +276,6 @@ public class MusicDirectory implements Serializable {
 			this.linkedArtist = artist;
 		}
 		
-		@TargetApi(Build.VERSION_CODES.GINGERBREAD_MR1)
 		public void loadMetadata(File file) {
 			MediaMetadataRetriever metadata = null;
 			try {
@@ -297,6 +294,30 @@ public class MusicDirectory implements Serializable {
 				} catch(Exception e) {
 					Log.w(TAG, "Non numbers in disc field!");
 				}
+				String trackNumber = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CD_TRACK_NUMBER);
+				if(trackNumber != null) {
+					int trackSlashIndex = trackNumber.indexOf("/");
+					if(trackSlashIndex > 0) {
+						trackNumber = trackNumber.substring(0, trackSlashIndex);
+					}
+					try {
+						setTrack(Integer.parseInt(trackNumber));
+					} catch(Exception e) {
+						Log.w(TAG, "Non numbers in track field!");
+					}
+				}
+				String year = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_YEAR);
+				if(year != null) {
+					try {
+						setYear(Integer.parseInt(year.substring(0, 4)));
+					} catch(Exception e) {
+						Log.w(TAG, "Non numbers in year field!");
+					}
+				}
+				String genre = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
+				if(genre != null) {
+					setGenre(genre);
+				}
 				String bitrate = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE);
 				setBitRate(Integer.parseInt((bitrate != null) ? bitrate : "0") / 1000);
 				String length = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
@@ -308,6 +329,10 @@ public class MusicDirectory implements Serializable {
 				String album = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUM);
 				if(album != null) {
 					setAlbum(album);
+				}
+				String title = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+				if(title != null) {
+					setTitle(title);
 				}
 			} catch(Exception e) {
 				Log.i(TAG, "Device doesn't properly support MediaMetadataRetreiver", e);

@@ -22,8 +22,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import androidx.appcompat.app.AlertDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,7 +33,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.TransitionDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -60,7 +59,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
+import com.google.android.material.slider.Slider;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 import com.shehabic.droppy.DroppyClickCallbackInterface;
@@ -89,6 +88,7 @@ import github.paroj.dsub2000.view.FadeOutAnimation;
 import github.paroj.dsub2000.view.FastScroller;
 import github.paroj.dsub2000.view.RecyclingImageView;
 import github.paroj.dsub2000.view.UpdateView;
+import github.paroj.dsub2000.util.Sliders;
 import github.paroj.dsub2000.util.Util;
 
 import static github.paroj.dsub2000.domain.MusicDirectory.Entry;
@@ -118,7 +118,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	private TextView positionTextView;
 	private TextView durationTextView;
 	private TextView statusTextView;
-	private SeekBar progressBar;
+	private Slider progressBar;
 	private AutoRepeatButton previousButton;
 	private AutoRepeatButton nextButton;
 	private AutoRepeatButton rewindButton;
@@ -242,7 +242,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		positionTextView = (TextView)rootView.findViewById(R.id.download_position);
 		durationTextView = (TextView)rootView.findViewById(R.id.download_duration);
 		statusTextView = (TextView)rootView.findViewById(R.id.download_status);
-		progressBar = (SeekBar)rootView.findViewById(R.id.download_progress_bar);
+		progressBar = (Slider)rootView.findViewById(R.id.download_progress_bar);
 		previousButton = (AutoRepeatButton)rootView.findViewById(R.id.download_previous);
 		nextButton = (AutoRepeatButton)rootView.findViewById(R.id.download_next);
 		rewindButton = (AutoRepeatButton) rootView.findViewById(R.id.download_rewind);
@@ -473,11 +473,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			}
 		});
 
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-		    setPlaybackSpeed();
-		} else {
-			playbackSpeedButton.setVisibility(View.GONE);
-		}
+		setPlaybackSpeed();
 
 		toggleListButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -503,13 +499,14 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			}
 		});
 
-		progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+		progressBar.addOnSliderTouchListener(new Slider.OnSliderTouchListener() {
 			@Override
-			public void onStopTrackingTouch(final SeekBar seekBar) {
+			public void onStopTrackingTouch(final Slider slider) {
+				final int seekTo = Sliders.getProgress(slider);
 				new SilentBackgroundTask<Void>(context) {
 					@Override
 					protected Void doInBackground() throws Throwable {
-						getDownloadService().seekTo(progressBar.getProgress());
+						getDownloadService().seekTo(seekTo);
 						return null;
 					}
 
@@ -521,16 +518,14 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			}
 
 			@Override
-			public void onStartTrackingTouch(final SeekBar seekBar) {
+			public void onStartTrackingTouch(final Slider slider) {
 				seekInProgress = true;
 			}
-
-			@Override
-			public void onProgressChanged(final SeekBar seekBar, final int position, final boolean fromUser) {
-				if (fromUser) {
-					positionTextView.setText(Util.formatDuration(position / 1000));
-					setControlsVisible(true);
-				}
+		});
+		progressBar.addOnChangeListener((slider, value, fromUser) -> {
+			if (fromUser) {
+				positionTextView.setText(Util.formatDuration(Math.round(value) / 1000));
+				setControlsVisible(true);
 			}
 		});
 
@@ -695,16 +690,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				Util.startActivityWithoutTransition(context, intent);
 				return true;
-			case R.id.menu_lyrics: {
-				SubsonicFragment fragment = new LyricsFragment();
-				Bundle args = new Bundle();
-				args.putString(Constants.INTENT_EXTRA_NAME_ARTIST, song.getSong().getArtist());
-				args.putString(Constants.INTENT_EXTRA_NAME_TITLE, song.getSong().getTitle());
-				fragment.setArguments(args);
-
-				replaceFragment(fragment);
-				return true;
-			}
 			case R.id.menu_remove_all:
 				Util.confirmDialog(context, R.string.download_menu_remove_all, "", new DialogInterface.OnClickListener() {
 					@Override
@@ -976,7 +961,6 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	}
 
 	// Scroll to current playing/downloading.
-	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	private void scrollToCurrent() {
 		if (getDownloadService() == null || songListAdapter == null) {
 			scrollWhenLoaded = true;
@@ -1016,34 +1000,21 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		lengthBox.setText(Util.formatDuration(length));
 
 		// Setup length slider
-		final SeekBar lengthBar = (SeekBar) dialogView.findViewById(R.id.timer_length_bar);
-		lengthBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-				if (fromUser) {
-					int length = getMinutes(progress);
-					lengthBox.setText(Util.formatDuration(length));
-					seekBar.setProgress(progress);
-				}
-			}
-
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-			}
-
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
+		final Slider lengthBar = (Slider) dialogView.findViewById(R.id.timer_length_bar);
+		lengthBar.addOnChangeListener((slider, value, fromUser) -> {
+			if (fromUser) {
+				lengthBox.setText(Util.formatDuration(getMinutes(Math.round(value))));
 			}
 		});
-		lengthBar.setProgress(length - 1);
+		Sliders.setProgress(lengthBar, length - 1);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		AlertDialog.Builder builder = new MaterialAlertDialogBuilder(context);
 		builder.setTitle(R.string.menu_set_timer)
 				.setView(dialogView)
 				.setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int id) {
-						int length = getMinutes(lengthBar.getProgress());
+						int length = getMinutes(Sliders.getProgress(lengthBar));
 
 						SharedPreferences.Editor editor = prefs.edit();
 						editor.putString(Constants.PREFERENCES_KEY_SLEEP_TIMER_DURATION, Integer.toString(length));
@@ -1126,7 +1097,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 
 			@Override
 			protected void done(Void result) {
-				progressBar.setProgress(seekTo);
+				Sliders.setProgress(progressBar, seekTo);
 			}
 		}.execute();
 	}
@@ -1145,7 +1116,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 		View dialogView = context.getLayoutInflater().inflate(R.layout.create_bookmark, null);
 		final EditText commentBox = (EditText)dialogView.findViewById(R.id.comment_text);
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		AlertDialog.Builder builder = new MaterialAlertDialogBuilder(context);
 		builder.setTitle(R.string.download_save_bookmark_title)
 				.setView(dialogView)
 				.setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
@@ -1438,15 +1409,15 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 			} else {
 				durationTextView.setText("-:--");
 			}
-			progressBar.setMax(millisTotal == 0 ? 100 : millisTotal); // Work-around for apparent bug.
+			Sliders.setMax(progressBar, millisTotal == 0 ? 100 : millisTotal); // Work-around for apparent bug.
 			if(!seekInProgress) {
-				progressBar.setProgress(millisPlayed);
+				Sliders.setProgress(progressBar, millisPlayed);
 			}
 			progressBar.setEnabled(isSeekable);
 		} else {
 			positionTextView.setText("0:00");
 			durationTextView.setText("-:--");
-			progressBar.setProgress(0);
+			Sliders.setProgress(progressBar, 0);
 			progressBar.setEnabled(false);
 		}
 
@@ -1635,8 +1606,8 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
         speed.setOnSeekBarChangeListener(context, new DroppyClickCallbackInterface() {
             @Override
             public void call(View v, int id) {
-                SeekBar playbackSpeedBar = (SeekBar) v;
-                int playbackSpeed = playbackSpeedBar.getProgress() +5 ;
+                Slider playbackSpeedBar = (Slider) v;
+                int playbackSpeed = Sliders.getProgress(playbackSpeedBar) +5 ;
                 setPlaybackSpeed(playbackSpeed/10f);
             }
         },R.id.playback_speed_bar,R.id.playback_speed_label,playbackSpeed);
