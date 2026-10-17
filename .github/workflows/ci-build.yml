@@ -1,10 +1,8 @@
 name: CI Build
 on: 
   push:
-    branches: [edge]
+    branches: [coverart-fix]
     tags: ["*"]
-  pull_request:
-    branches: [edge]
   workflow_dispatch:
 
 jobs:

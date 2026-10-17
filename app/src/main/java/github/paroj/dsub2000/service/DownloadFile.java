@@ -273,6 +273,12 @@ public class DownloadFile implements BufferFile {
 		
 		// Delete all possible versions of the file
 		File parent = partialFile.getParentFile();
+		if (FileUtil.isSongSpecificArt(context, song)) {
+			File coverFile = FileUtil.getSongArtFile(context, song);
+			Util.delete(coverFile);
+			File hexFile = FileUtil.getHexSongArtFile(context, coverFile);
+			Util.delete(hexFile);
+		}
         Util.delete(partialFile);
         Util.delete(completeFile);
         Util.delete(saveFile);

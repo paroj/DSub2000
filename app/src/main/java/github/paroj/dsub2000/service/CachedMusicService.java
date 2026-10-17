@@ -1299,8 +1299,7 @@ public class CachedMusicService implements MusicService {
 			// Anything remaining has been removed from server
 			MediaStoreService store = new MediaStoreService(context);
 			for(Entry entry: oldList) {
-				File file = FileUtil.getEntryFile(context, entry);
-				FileUtil.recursiveDelete(file, store);
+				FileUtil.recursiveDelete(context, entry, store);
 			}
 		}
 	}
