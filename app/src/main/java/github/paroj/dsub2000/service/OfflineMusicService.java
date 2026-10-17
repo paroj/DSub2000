@@ -197,6 +197,12 @@ public class OfflineMusicService implements MusicService {
 		entry.setSuffix(FileUtil.getExtension(file.getName().replace(".complete", "")));
 
 		File albumArt = FileUtil.getAlbumArtFile(context, entry);
+		if (!albumArt.exists() && !entry.isDirectory()) {
+			File albumFile = FileUtil.getAlbumArtFile(FileUtil.getAlbumDirectory(context, entry));
+			if (albumFile.exists()) {
+				albumArt = albumFile;
+			}
+		}
 		if (albumArt.exists()) {
 			entry.setCoverArt(albumArt.getPath());
 		}

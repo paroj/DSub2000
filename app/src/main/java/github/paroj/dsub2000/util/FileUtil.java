@@ -276,28 +276,17 @@ public class FileUtil {
 			File albumDir = getAlbumDirectory(context, entry);
 			File artFile;
 
-			boolean songSpecific = false;
-			if (entry != null && !entry.isDirectory()) {
-				String artist = entry.getArtist();
-				if (artist != null && !artist.trim().isEmpty()) {
-					String safeArtist = fileSystemSafe(artist);
-					File parentFile = albumDir.getParentFile();
-					if (parentFile != null) {
-						String parentArtist = parentFile.getName();
-						if (parentArtist != null && !parentArtist.trim().isEmpty() && !safeArtist.equalsIgnoreCase(parentArtist)) {
-							songSpecific = true;
-						}
+			if (isSongSpecificArt(entry, albumDir)) {
+				File songArtFile = getSongArtFile(context, entry);
+				File hexFile = getHexSongArtFile(context, songArtFile);
+				if (albumDir.exists()) {
+					if (hexFile.exists()) {
+						hexFile.renameTo(songArtFile);
 					}
+					artFile = songArtFile;
+				} else {
+					artFile = hexFile;
 				}
-			}
-
-			if (songSpecific && albumDir.exists()) {
-				File songFile = getSongFile(context, entry);
-				String songPath = songFile.getPath();
-				int index = songPath.lastIndexOf('.');
-				String coverPath = (index == -1 ? songPath : songPath.substring(0, index)) + ".jpg";
-				coverPath = coverPath.replace(".complete", "").replace(".partial", "");
-				artFile = new File(coverPath);
 			} else {
 				File albumFile = getAlbumArtFile(albumDir);
 				File hexFile = getHexAlbumArtFile(context, albumDir);
@@ -314,6 +303,61 @@ public class FileUtil {
 		}
     }
 
+	public static boolean isSongSpecificArt(MusicDirectory.Entry entry, File albumDir) {
+		if (entry != null && !entry.isDirectory() && albumDir != null) {
+			String artist = entry.getArtist();
+			if (artist != null && !artist.trim().isEmpty()) {
+				String safeArtist = fileSystemSafe(artist);
+				File parentFile = albumDir.getParentFile();
+				if (parentFile != null) {
+					String parentArtist = parentFile.getName();
+					if (parentArtist != null && !parentArtist.trim().isEmpty() && !safeArtist.equalsIgnoreCase(parentArtist)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public static boolean isSongSpecificArt(Context context, MusicDirectory.Entry entry) {
+		if (entry == null || entry.isDirectory()) {
+			return false;
+		}
+		File albumDir = getAlbumDirectory(context, entry);
+		return isSongSpecificArt(entry, albumDir);
+	}
+
+	public static File getSongArtFile(Context context, MusicDirectory.Entry song) {
+		File songFile = getSongFile(context, song);
+		return getSongArtFile(songFile);
+	}
+
+	public static File getSongArtFile(File songFile) {
+		String songPath = songFile.getPath();
+		int index = songPath.lastIndexOf('.');
+		String coverPath = (index == -1 ? songPath : songPath.substring(0, index)) + ".jpg";
+		return new File(coverPath);
+	}
+
+	public static File getHexSongArtFile(Context context, File songArtFile) {
+		return new File(getAlbumArtDirectory(context), Util.md5Hex(songArtFile.getPath()) + ".jpeg");
+	}
+
+	public static File getSidecarFile(File musicFile) {
+		if (musicFile == null) {
+			return null;
+		}
+		String name = musicFile.getName();
+		String base = getBaseName(name);
+		if (base.endsWith(".complete")) {
+			base = base.substring(0, base.length() - ".complete".length());
+		} else if (base.endsWith(".partial")) {
+			base = base.substring(0, base.length() - ".partial".length());
+		}
+		return new File(musicFile.getParentFile(), base + ".jpg");
+	}
+
     public static File getAlbumArtFile(File albumDir) {
         return new File(albumDir, Constants.ALBUM_ART_FILE);
     }
@@ -323,6 +367,13 @@ public class FileUtil {
 
     public static Bitmap getAlbumArtBitmap(Context context, MusicDirectory.Entry entry, int size) {
         File albumArtFile = getAlbumArtFile(context, entry);
+        if (!albumArtFile.exists() && entry != null && !entry.isDirectory()) {
+            File albumDir = getAlbumDirectory(context, entry);
+            File albumFile = getAlbumArtFile(albumDir);
+            if (albumFile.exists()) {
+                albumArtFile = albumFile;
+            }
+        }
         if (albumArtFile.exists()) {
 			final BitmapFactory.Options opt = new BitmapFactory.Options();
 			opt.inJustDecodeBounds = true;
@@ -625,21 +676,90 @@ public class FileUtil {
 		return recursiveDelete(artDirectory);
 	}
 
+	public static boolean deleteSong(Context context, MusicDirectory.Entry song, MediaStoreService mediaStore) {
+		if (song == null) {
+			return false;
+		}
+		boolean ok = true;
+		File saveFile = getSongFile(context, song);
+		File completeFile = getSongFile(context, song, "complete");
+		File partialFile = getSongFile(context, song, "partial");
+
+		if (isSongSpecificArt(context, song)) {
+			File coverFile = getSongArtFile(context, song);
+			if (coverFile.exists()) {
+				if (!coverFile.delete()) {
+					ok = false;
+				}
+			}
+			File hexFile = getHexSongArtFile(context, coverFile);
+			if (hexFile.exists()) {
+				hexFile.delete();
+			}
+		}
+
+		if (saveFile.exists()) {
+			if (!saveFile.delete()) {
+				ok = false;
+			} else if (mediaStore != null) {
+				mediaStore.deleteFromMediaStore(saveFile);
+			}
+		}
+		if (completeFile.exists()) {
+			if (!completeFile.delete()) {
+				ok = false;
+			} else if (mediaStore != null) {
+				mediaStore.deleteFromMediaStore(completeFile);
+			}
+		}
+		if (partialFile.exists()) {
+			if (!partialFile.delete()) {
+				ok = false;
+			} else if (mediaStore != null) {
+				mediaStore.deleteFromMediaStore(partialFile);
+			}
+		}
+
+		File parent = saveFile.getParentFile();
+		if (parent != null) {
+			deleteEmptyDir(parent);
+		}
+		return ok;
+	}
+
+	public static boolean recursiveDelete(Context context, MusicDirectory.Entry entry, MediaStoreService mediaStore) {
+		if (entry == null) {
+			return false;
+		}
+		if (entry.isDirectory()) {
+			File dir = getAlbumDirectory(context, entry);
+			return recursiveDelete(dir, mediaStore);
+		} else {
+			return deleteSong(context, entry, mediaStore);
+		}
+	}
+
 	public static boolean recursiveDelete(File dir) {
 		return recursiveDelete(dir, null);
 	}
 	public static boolean recursiveDelete(File dir, MediaStoreService mediaStore) {
 		if (dir != null && dir.exists()) {
-			if (dir.isFile() && isMusicFile(dir)) {
-				String path = dir.getPath();
-				int index = path.lastIndexOf('.');
-				if (index != -1) {
-					String coverPath = path.substring(0, index).replace(".complete", "").replace(".partial", "") + ".jpg";
-					File coverFile = new File(coverPath);
-					if (coverFile.exists()) {
-						coverFile.delete();
+			if (dir.isFile()) {
+				if (isMusicFile(dir)) {
+					File coverFile = getSidecarFile(dir);
+					if (coverFile != null && coverFile.exists() && !coverFile.getName().equals(Constants.ALBUM_ART_FILE)) {
+						if (!coverFile.delete()) {
+							return false;
+						}
 					}
 				}
+				if (!dir.delete()) {
+					return false;
+				} else if (mediaStore != null) {
+					mediaStore.deleteFromMediaStore(dir);
+				}
+				deleteEmptyDir(dir.getParentFile());
+				return true;
 			}
 			File[] list = dir.listFiles();
 			if(list != null) {
@@ -662,6 +782,36 @@ public class FileUtil {
 		return false;
 	}
 
+	public static boolean hasOtherSongVersions(File file) {
+		File parent = file.getParentFile();
+		if (parent == null) {
+			return false;
+		}
+		String name = file.getName();
+		String ext = getExtension(name);
+		String base = getBaseName(name);
+		if (base.endsWith(".complete")) {
+			base = base.substring(0, base.length() - ".complete".length());
+		} else if (base.endsWith(".partial")) {
+			base = base.substring(0, base.length() - ".partial".length());
+		}
+
+		File saveFile = new File(parent, base + "." + ext);
+		File completeFile = new File(parent, base + ".complete." + ext);
+		File partialFile = new File(parent, base + ".partial." + ext);
+
+		if (!saveFile.equals(file) && saveFile.exists()) {
+			return true;
+		}
+		if (!completeFile.equals(file) && completeFile.exists()) {
+			return true;
+		}
+		if (!partialFile.equals(file) && partialFile.exists()) {
+			return true;
+		}
+		return false;
+	}
+
 	public static void deleteEmptyDir(File dir) {
 		try {
 			File[] children = dir.listFiles();
@@ -669,14 +819,24 @@ public class FileUtil {
 				return;
 			}
 
-			// No songs left in the folder
-			if (children.length == 1 && children[0].getPath().equals(FileUtil.getAlbumArtFile(dir).getPath())) {
-				Util.delete(children[0]);
+			// If no media files or subdirectories remain, clean up remaining art files
+			boolean hasMediaOrDir = false;
+			for (File child : children) {
+				if (child.isDirectory() || isMediaFile(child)) {
+					hasMediaOrDir = true;
+					break;
+				}
+			}
+
+			if (!hasMediaOrDir) {
+				for (File child : children) {
+					Util.delete(child);
+				}
 				children = dir.listFiles();
 			}
 
 			// Delete empty directory
-			if (children.length == 0) {
+			if (children == null || children.length == 0) {
 				Util.delete(dir);
 			}
 		} catch(Exception e) {

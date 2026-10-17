@@ -107,6 +107,12 @@ public class CacheCleaner {
                     if (Util.delete(file)) {
                         bytesDeleted += size;
 						mediaStore.deleteFromMediaStore(file);
+						File coverFile = FileUtil.getSidecarFile(file);
+						if (coverFile != null && coverFile.exists() && !coverFile.getName().equals(Constants.ALBUM_ART_FILE)) {
+							if (!FileUtil.hasOtherSongVersions(file)) {
+								Util.delete(coverFile);
+							}
+						}
                     }
                 }
             }
