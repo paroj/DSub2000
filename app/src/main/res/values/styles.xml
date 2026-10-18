@@ -12,6 +12,14 @@
 		<item name="android:insetRight">0dp</item>
 	</style>
 
+	<!-- Material 3 header for the platform preference framework; applied through
+	     android:preferenceCategoryStyle in themes.xml. The framework's
+	     Preference.Material.Category style is private, so the layout item is repeated. -->
+	<style name="Preference.DSub2000.Category" parent="">
+		<item name="android:layout">@layout/preference_category_m3</item>
+		<item name="android:selectable">false</item>
+	</style>
+
 	<style name="TextAppearance.DSub2000.BarTitle" parent="TextAppearance.Material3.TitleLarge">
 		<item name="android:textColor">?android:attr/textColorPrimary</item>
 	</style>
