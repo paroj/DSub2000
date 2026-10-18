@@ -5,13 +5,13 @@
 	android:layout_height="wrap_content"
 	android:layout_gravity="center">
 
-	<Button
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/location_internal"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/settings.cache_location_internal"/>
 
-	<Button
+	<com.google.android.material.button.MaterialButton
 		android:id="@+id/location_external"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

@@ -5,6 +5,13 @@
 		<item name="tickVisible">false</item>
 	</style>
 
+	<!-- Narrow text button, so several fit in one row on small screens. -->
+	<style name="Widget.DSub2000.Button.Compact" parent="Widget.Material3.Button.TextButton">
+		<item name="android:minWidth">0dp</item>
+		<item name="android:insetLeft">0dp</item>
+		<item name="android:insetRight">0dp</item>
+	</style>
+
 	<style name="TextAppearance.DSub2000.BarTitle" parent="TextAppearance.Material3.TitleLarge">
 		<item name="android:textColor">?android:attr/textColorPrimary</item>
 	</style>
