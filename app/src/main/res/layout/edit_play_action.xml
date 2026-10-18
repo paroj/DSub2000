@@ -44,13 +44,22 @@
 			android:longClickable="true"
 			android:enabled="false"/>
 
-		<EditText
-			android:id="@+id/edit_start_year"
-			android:layout_width="match_parent"
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/edit_start_year_layout"
+			style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:inputType="number"
-			android:hint="@string/shuffle.startYear"
-			android:enabled="false"/>
+			android:layout_weight="1"
+			android:layout_marginLeft="4dp"
+			android:enabled="false">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/edit_start_year"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="number"
+				android:enabled="false"/>
+		</com.google.android.material.textfield.TextInputLayout>
 	</LinearLayout>
 
 	<LinearLayout
@@ -73,13 +82,22 @@
 			android:longClickable="true"
 			android:enabled="false"/>
 
-		<EditText
-			android:id="@+id/edit_end_year"
-			android:layout_width="match_parent"
+		<com.google.android.material.textfield.TextInputLayout
+			android:id="@+id/edit_end_year_layout"
+			style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
-			android:inputType="number"
-			android:hint="@string/shuffle.endYear"
-			android:enabled="false"/>
+			android:layout_weight="1"
+			android:layout_marginLeft="4dp"
+			android:enabled="false">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/edit_end_year"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="number"
+				android:enabled="false"/>
+		</com.google.android.material.textfield.TextInputLayout>
 	</LinearLayout>
 
 	<LinearLayout

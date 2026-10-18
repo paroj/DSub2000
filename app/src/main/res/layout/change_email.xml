@@ -13,17 +13,24 @@
 			android:id="@+id/new_email_label"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_gravity="center_vertical"
 			android:layout_marginLeft="4dp"
 			android:textSize="20dp"
 			android:text="@string/admin.change_email_label"
 			android:textColor="?android:textColorPrimary"/>
-		<EditText
-			android:id="@+id/new_email"
-			android:inputType="textEmailAddress"
-			android:layout_width="fill_parent"
+		<com.google.android.material.textfield.TextInputLayout
+			style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+			android:layout_width="0dp"
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
-			android:layout_marginLeft="4dp" />
+			android:layout_marginLeft="4dp">
+
+			<com.google.android.material.textfield.TextInputEditText
+				android:id="@+id/new_email"
+				android:inputType="textEmailAddress"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"/>
+		</com.google.android.material.textfield.TextInputLayout>
 	</LinearLayout>
 
 </LinearLayout>

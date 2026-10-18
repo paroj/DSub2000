@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import com.google.android.material.materialswitch.MaterialSwitch;
+import com.google.android.material.textfield.TextInputLayout;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -50,8 +51,10 @@ import github.paroj.dsub2000.util.Util;
 public class EditPlayActionActivity extends SubsonicActivity {
 	private MaterialSwitch shuffleCheckbox;
 	private MaterialSwitch startYearCheckbox;
+	private TextInputLayout startYearLayout;
 	private EditText startYearBox;
 	private MaterialSwitch endYearCheckbox;
+	private TextInputLayout endYearLayout;
 	private EditText endYearBox;
 	private Button genreButton;
 	private Spinner offlineSpinner;
@@ -77,21 +80,23 @@ public class EditPlayActionActivity extends SubsonicActivity {
 		});
 
 		startYearCheckbox = (MaterialSwitch) findViewById(R.id.edit_start_year_checkbox);
+		startYearLayout = findViewById(R.id.edit_start_year_layout);
 		startYearBox = (EditText) findViewById(R.id.edit_start_year);
-		// Disable/enable number box if checked
+		// Disable/enable number box if checked; TextInputLayout forwards this to its field
 		startYearCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton view, boolean isChecked) {
-				startYearBox.setEnabled(isChecked);
+				startYearLayout.setEnabled(isChecked);
 			}
 		});
 		
 		endYearCheckbox = (MaterialSwitch) findViewById(R.id.edit_end_year_checkbox);
+		endYearLayout = findViewById(R.id.edit_end_year_layout);
 		endYearBox = (EditText) findViewById(R.id.edit_end_year);
 		endYearCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton view, boolean isChecked) {
-				endYearBox.setEnabled(isChecked);
+				endYearLayout.setEnabled(isChecked);
 			}
 		});
 
