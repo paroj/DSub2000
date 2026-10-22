@@ -92,10 +92,9 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 public class RESTMusicService implements MusicService {
 
@@ -111,8 +110,8 @@ public class RESTMusicService implements MusicService {
     private static final int HTTP_REQUEST_MAX_ATTEMPTS = 5;
     private static final long REDIRECTION_CHECK_INTERVAL_MILLIS = 60L * 60L * 1000L;
 
-	private SSLSocketFactory insecureSslSocketFactory;
-	private HostnameVerifier selfSignedHostnameVerifier;
+	private SSLSocketFactory platformSslSocketFactory = createLegacyTlsFilteringSocketFactory((SSLSocketFactory) SSLSocketFactory.getDefault());
+	private HostnameVerifier platformHostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
     private long redirectionLastChecked;
     private int redirectionNetworkType = -1;
     private String redirectFrom;
@@ -121,31 +120,19 @@ public class RESTMusicService implements MusicService {
 	private boolean hasInstalledGoogleSSL = false;
 
     public RESTMusicService() {
-        TrustManager[] trustAllCerts = new TrustManager[] {
-            new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return new java.security.cert.X509Certificate[0];
-                }
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] certs, String authType) {
-                }
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] certs, String authType) {
-                }
-            }
-        };
         try {
-            SSLContext insecureSslContext = SSLContext.getInstance("TLS");
-            insecureSslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            insecureSslSocketFactory = createLegacyTlsFilteringSocketFactory(insecureSslContext.getSocketFactory());
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init((java.security.KeyStore) null);
+            TrustManager[] platformTrustManagers = trustManagerFactory.getTrustManagers();
+
+            SSLContext platformSslContext = SSLContext.getInstance("TLS");
+            platformSslContext.init(null, platformTrustManagers, null);
+            platformSslSocketFactory = createLegacyTlsFilteringSocketFactory(platformSslContext.getSocketFactory());
         } catch (Exception e) {
+            Log.w(TAG, "Failed to initialize platform TLS context; using the platform default socket factory", e);
         }
 
-        selfSignedHostnameVerifier = new HostnameVerifier() {
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        };
+        platformHostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
     }
 
     public static String[] filterLegacyTlsProtocols(String[] enabledProtocols) {
@@ -2076,14 +2063,10 @@ public class RESTMusicService implements MusicService {
 		}
 
 		if(connection instanceof HttpsURLConnection) {
+			// The preference still permits HTTP URLs, but HTTPS always uses platform certificate and hostname validation.
 			HttpsURLConnection sslConnection = (HttpsURLConnection) connection;
-			if(Util.isAllowInsecureEnabled(context, getInstance(context))) {
-				// if we allow insecure connections, disable ssl checks
-				sslConnection.setSSLSocketFactory(insecureSslSocketFactory);
-				sslConnection.setHostnameVerifier(selfSignedHostnameVerifier);
-			} else {
-				sslConnection.setSSLSocketFactory(createLegacyTlsFilteringSocketFactory(HttpsURLConnection.getDefaultSSLSocketFactory()));
-			}
+			sslConnection.setSSLSocketFactory(platformSslSocketFactory);
+			sslConnection.setHostnameVerifier(platformHostnameVerifier);
 		}
 
 		SharedPreferences prefs = Util.getPreferences(context);
@@ -2197,9 +2180,9 @@ public class RESTMusicService implements MusicService {
 	}
 
 	public SSLSocketFactory getInsecureSSLSocketFactory() {
-		return insecureSslSocketFactory;
+		return platformSslSocketFactory;
 	}
 	public HostnameVerifier getInsecureHostNameVerifier() {
-		return selfSignedHostnameVerifier;
+		return platformHostnameVerifier;
 	}
 }
