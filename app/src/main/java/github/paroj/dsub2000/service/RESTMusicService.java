@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -982,6 +983,19 @@ public class RESTMusicService implements MusicService {
         }
     }
 
+    /**
+     * Whether the server answered with an error document instead of the requested
+     * binary. Some servers (for example Navidrome) use {@code application/xml}
+     * rather than {@code text/xml}, and errors may also come as HTML from a proxy.
+     */
+    private static boolean isErrorContentType(String contentType) {
+        if (contentType == null) {
+            return false;
+        }
+        String mime = contentType.toLowerCase(Locale.ROOT);
+        return mime.contains("xml") || mime.startsWith("text/html");
+    }
+
     @Override
     public HttpURLConnection getDownloadInputStream(Context context, MusicDirectory.Entry song, long offset, int maxBitrate, SilentBackgroundTask task) throws Exception {
         String url = getRestUrl(context, "stream");
@@ -1024,11 +1038,16 @@ public class RESTMusicService implements MusicService {
 
 		// If content type is XML, an error occurred.  Get it.
 		String contentType = connection.getContentType();
-		if (contentType != null && (contentType.startsWith("text/xml") || contentType.startsWith("text/html"))) {
+		if (isErrorContentType(contentType)) {
 			InputStream in = getInputStreamFromConnection(connection);
 
 			try {
 				new ErrorParser(context, getInstance(context)).parse(new InputStreamReader(in, Constants.UTF_8));
+				// A successful stream response is audio. An XML/HTML body is an error
+				// page even when it carries no parsable <error> element; never let the
+				// caller cache it as if it were the track. A generic exception also
+				// counts as a failed download instead of retrying forever.
+				throw new Exception("Server returned " + contentType + " instead of audio");
 			} finally {
 				Util.close(in);
 			}
@@ -1885,8 +1904,9 @@ public class RESTMusicService implements MusicService {
 			in = getInputStreamFromConnection(connection);
 
 			String contentType = connection.getContentType();
-			if (contentType != null && (contentType.startsWith("text/xml") || contentType.startsWith("text/html"))) {
+			if (isErrorContentType(contentType)) {
 				new ErrorParser(context, getInstance(context)).parse(new InputStreamReader(in, Constants.UTF_8));
+				throw new IOException("Server returned " + contentType + " instead of an image");
 			}
 
 			byte[] bytes = Util.toByteArray(in);
