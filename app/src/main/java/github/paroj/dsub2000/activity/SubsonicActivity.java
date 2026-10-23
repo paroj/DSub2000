@@ -606,6 +606,10 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			if(swipeTarget != null) {
 				// The bar itself stays coloured below and beside the buttons, so only its content is lifted.
 				swipeTarget.setPadding(swipeTargetPadding.left + bars.left, swipeTargetPadding.top, swipeTargetPadding.right + bars.right, swipeTargetPadding.bottom + bars.bottom);
+				// The collapsed bar is swapped for the taller now playing toolbar, which also paints the
+				// status bar, once the panel is expanded. Keep room for it in both states so that the
+				// content below the bar does not have to be re-laid out at the end of the slide.
+				swipeTarget.setMinimumHeight(nowPlayingToolbarHeight + bars.top + bars.bottom);
 				if(panel instanceof SlidingUpPanelLayout) {
 					((SlidingUpPanelLayout) panel).setPanelHeight(panelHeight + bars.bottom);
 				}
