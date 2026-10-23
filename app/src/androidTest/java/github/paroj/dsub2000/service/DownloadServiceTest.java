@@ -14,6 +14,7 @@ import github.paroj.dsub2000.domain.PlayerState;
 import java.util.LinkedList;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.util.Log;
 
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -39,6 +40,14 @@ public class DownloadServiceTest {
 	public void setUp() throws Exception {
 		activity = activityRule.getActivity();
 		downloadService = activity.getDownloadService();
+
+		// The restored queue is loaded on a background thread. Clearing before that
+		// finishes lets the old queue start playing and compete with the test.
+		long deadline = SystemClock.elapsedRealtime() + 30000;
+		while (!downloadService.isInitialized() && SystemClock.elapsedRealtime() < deadline) {
+			Thread.sleep(50);
+		}
+
 		downloadService.clear();
 	}
 
@@ -219,23 +228,20 @@ public class DownloadServiceTest {
 	@Test
 	public void testTogglePlayPauseWithPlayList() throws InterruptedException {
 		// Download two songs
+		List<MusicDirectory.Entry> songs = this.createMusicSongs(2);
+		deleteCachedFiles(songs);
 		downloadService.getDownloads().clear();
-		downloadService.download(this.createMusicSongs(2), false, false, false,
+		downloadService.download(songs, false, false, false,
 				false, 0, 0);
 
-		Log.w("testPreviousWithPlayList", "Start waiting downloads");
-		Thread.sleep(5000);
-		Log.w("testPreviousWithPlayList", "Stop waiting downloads");
-
-		PlayerState oldPlayState = downloadService.getPlayerState();
+		// Downloading without autoplay leaves the player idle. Toggling starts the
+		// current track, which may still have to buffer and prepare.
+		assertEquals(IDLE, downloadService.getPlayerState());
 		downloadService.togglePlayPause();
-		Thread.sleep(500);
-		assertEquals(STARTED, downloadService.getPlayerState());
+		awaitPlayerState(STARTED, 60000);
 		downloadService.togglePlayPause();
 		// The paused state is published by the player's own event shortly after the command.
-		Thread.sleep(500);
-		PlayerState newPlayState = downloadService.getPlayerState();
-		assertEquals(PAUSED, newPlayState);
+		awaitPlayerState(PAUSED, 10000);
 	}
 
 	/**
@@ -246,16 +252,15 @@ public class DownloadServiceTest {
 	@Test
 	public void testAutoplay() throws InterruptedException, Exception {
 		// Download one songs
+		List<MusicDirectory.Entry> songs = this.createMusicSongs(1);
+		deleteCachedFiles(songs);
 		downloadService.getDownloads().clear();
-		downloadService.download(this.createMusicSongs(1), false, true, false,
+		downloadService.download(songs, false, true, false,
 				false, 0, 0);
 
-		Log.w("testPreviousWithPlayList", "Start waiting downloads");
-		Thread.sleep(10000);
-		Log.w("testPreviousWithPlayList", "Stop waiting downloads");
-
-		PlayerState playerState = downloadService.getPlayerState();
-		assertEquals(STARTED, playerState);
+		// Starting a remote track involves downloading enough of it to buffer,
+		// preparing the decoder and then actually starting playback.
+		awaitPlayerState(STARTED, 60000);
 	}
 
 	/**
@@ -292,6 +297,31 @@ public class DownloadServiceTest {
 			afterDownloadAction = downloadList.size();
 		}
 		assertEquals(beforeDownloadAction + 1, afterDownloadAction);
+	}
+
+	/**
+	 * Waits for the player to reach the expected state. Remote tracks need to be
+	 * buffered and prepared first, so a fixed sleep is not reliable.
+	 */
+	private void awaitPlayerState(PlayerState expected, long timeoutMillis) throws InterruptedException {
+		long deadline = SystemClock.elapsedRealtime() + timeoutMillis;
+		PlayerState state = downloadService.getPlayerState();
+		while (state != expected && SystemClock.elapsedRealtime() < deadline) {
+			Thread.sleep(100);
+			state = downloadService.getPlayerState();
+		}
+		assertEquals(expected, state);
+	}
+
+	/**
+	 * Removes cached copies so a previous run (or a server error that was saved as
+	 * audio) cannot make the player use a stale or unreadable file.
+	 */
+	private void deleteCachedFiles(List<MusicDirectory.Entry> songs) {
+		Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+		for (MusicDirectory.Entry song : songs) {
+			new DownloadFile(context, song, false).delete();
+		}
 	}
 
 	/**
