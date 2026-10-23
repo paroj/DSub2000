@@ -16,15 +16,18 @@
 package github.paroj.dsub2000.adapter;
 
 import android.content.Context;
-import androidx.appcompat.widget.PopupMenu;
+import android.content.DialogInterface;
+import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.domain.Artist;
@@ -41,17 +44,17 @@ public class ArtistAdapter extends SectionAdapter<Serializable> implements FastS
 	public static int VIEW_TYPE_ARTIST = 4;
 
 	private List<MusicFolder> musicFolders;
-	private OnMusicFolderChanged onMusicFolderChanged;
+	private OnMusicFoldersChanged onMusicFoldersChanged;
 
 	public ArtistAdapter(Context context, List<Serializable> artists, OnItemClickedListener listener) {
 		this(context, artists, null, listener, null);
 	}
 
-	public ArtistAdapter(Context context, List<Serializable> artists, List<MusicFolder> musicFolders, OnItemClickedListener onItemClickedListener, OnMusicFolderChanged onMusicFolderChanged) {
+	public ArtistAdapter(Context context, List<Serializable> artists, List<MusicFolder> musicFolders, OnItemClickedListener onItemClickedListener, OnMusicFoldersChanged onMusicFoldersChanged) {
 		super(context, artists);
 		this.musicFolders = musicFolders;
 		this.onItemClickedListener = onItemClickedListener;
-		this.onMusicFolderChanged = onMusicFolderChanged;
+		this.onMusicFoldersChanged = onMusicFoldersChanged;
 
 		if(musicFolders != null) {
 			this.singleSectionHeader = true;
@@ -64,51 +67,77 @@ public class ArtistAdapter extends SectionAdapter<Serializable> implements FastS
 		header.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				PopupMenu popup = new PopupMenu(context, header.findViewById(R.id.select_artist_folder_2));
-
-				popup.getMenu().add(R.string.select_artist_all_folders);
-				for (MusicFolder musicFolder : musicFolders) {
-					popup.getMenu().add(musicFolder.getName());
-				}
-
-				popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-					@Override
-					public boolean onMenuItemClick(MenuItem item) {
-						for (MusicFolder musicFolder : musicFolders) {
-							if(item.getTitle().equals(musicFolder.getName())) {
-								if(onMusicFolderChanged != null) {
-									onMusicFolderChanged.onMusicFolderChanged(musicFolder);
-								}
-								return true;
-							}
-						}
-
-						if(onMusicFolderChanged != null) {
-							onMusicFolderChanged.onMusicFolderChanged(null);
-						}
-						return true;
-					}
-				});
-				popup.show();
+				showLibraryFilterDialog(context, musicFolders, onMusicFoldersChanged);
 			}
 		});
 
 		return new UpdateView.UpdateViewHolder(header, false);
 	}
+
+	public static void showLibraryFilterDialog(final Context context, final List<MusicFolder> musicFolders, final OnMusicFoldersChanged callback) {
+		if(musicFolders == null || musicFolders.isEmpty()) {
+			return;
+		}
+
+		final String[] names = new String[musicFolders.size()];
+		final boolean[] checked = new boolean[musicFolders.size()];
+		Set<String> selected = new HashSet<>(Util.getSelectedMusicFolderIds(context));
+		for(int i = 0; i < musicFolders.size(); i++) {
+			names[i] = musicFolders.get(i).getName();
+			checked[i] = selected.contains(musicFolders.get(i).getId());
+		}
+
+		new AlertDialog.Builder(context)
+			.setTitle(R.string.library_filter_dialog_title)
+			.setMultiChoiceItems(names, checked, new DialogInterface.OnMultiChoiceClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+					checked[which] = isChecked;
+				}
+			})
+			.setNeutralButton(R.string.select_artist_all_folders, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if(callback != null) {
+						callback.onMusicFoldersChanged(new ArrayList<MusicFolder>());
+					}
+				}
+			})
+			.setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					List<MusicFolder> result = new ArrayList<>();
+					for(int i = 0; i < musicFolders.size(); i++) {
+						if(checked[i]) result.add(musicFolders.get(i));
+					}
+					if(callback != null) {
+						callback.onMusicFoldersChanged(result);
+					}
+				}
+			})
+			.setNegativeButton(R.string.common_cancel, null)
+			.show();
+	}
+
 	@Override
 	public void onBindHeaderHolder(UpdateView.UpdateViewHolder holder, String header, int sectionIndex) {
 		TextView folderName = (TextView) holder.getView().findViewById(R.id.select_artist_folder_2);
 
-		String musicFolderId = Util.getSelectedMusicFolderId(context);
-		if(musicFolderId != null) {
-			for (MusicFolder musicFolder : musicFolders) {
-				if (musicFolder.getId().equals(musicFolderId)) {
-					folderName.setText(musicFolder.getName());
+		List<String> selectedIds = Util.getSelectedMusicFolderIds(context);
+		if(selectedIds.isEmpty()) {
+			folderName.setText(R.string.select_artist_all_folders);
+		} else if(selectedIds.size() == 1) {
+			String only = selectedIds.get(0);
+			String resolved = only;
+			for(MusicFolder musicFolder : musicFolders) {
+				if(musicFolder.getId().equals(only)) {
+					resolved = musicFolder.getName();
 					break;
 				}
 			}
+			folderName.setText(resolved);
 		} else {
-			folderName.setText(R.string.select_artist_all_folders);
+			folderName.setText(context.getString(R.string.select_artist_n_folders, selectedIds.size()));
 		}
 	}
 
@@ -155,7 +184,7 @@ public class ArtistAdapter extends SectionAdapter<Serializable> implements FastS
 		}
 	}
 
-	public interface OnMusicFolderChanged {
-		void onMusicFolderChanged(MusicFolder musicFolder);
+	public interface OnMusicFoldersChanged {
+		void onMusicFoldersChanged(List<MusicFolder> selectedFolders);
 	}
 }
