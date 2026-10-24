@@ -133,6 +133,7 @@ public class DownloadService extends MediaLibraryService {
 
 	private final IBinder binder = new SimpleServiceBinder<>(this);
 	private Looper mediaPlayerLooper;
+	private Context playbackContext;
 	private LocalPlayback mediaPlayer;
 	private int audioSessionId;
 	private boolean playWhenReady;
@@ -201,7 +202,8 @@ public class DownloadService extends MediaLibraryService {
 		setMediaNotificationProvider(new PlaybackNotificationProvider(this));
 
 		final SharedPreferences prefs = Util.getPreferences(this);
-		mediaPlayer = new LocalPlayback(this, new LocalPlayback.Listener() {
+		playbackContext = Util.createAudioPlaybackContext(this);
+		mediaPlayer = new LocalPlayback(playbackContext, new LocalPlayback.Listener() {
 			@Override public void onState(DownloadFile file, int state, boolean playing) {
 				onLocalState(file, state, playing);
 			}
@@ -1534,7 +1536,7 @@ public class DownloadService extends MediaLibraryService {
 		this.playerState = playerState;
 
 		if(playerState == STARTED) {
-			AudioManager audioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
+			AudioManager audioManager = (AudioManager) playbackContext.getSystemService(Context.AUDIO_SERVICE);
 			Util.requestAudioFocus(this, audioManager);
 		}
 
