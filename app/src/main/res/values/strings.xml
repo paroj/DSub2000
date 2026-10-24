@@ -2,6 +2,8 @@
 <resources>
 
     <string name="common.appname">DSub2000</string>
+	<string name="attribution_audio_playback">Audio playback</string>
+	<string name="attribution_empty" translatable="false"></string>
     <string name="common.ok">OK</string>
     <string name="common.save">Save</string>
     <string name="common.cancel">Cancel</string>

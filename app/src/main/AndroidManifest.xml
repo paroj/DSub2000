@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	android:installLocation="internalOnly">
 
+	<attribution
+		android:tag="audioPlayback"
+		android:label="@string/attribution_audio_playback" />
+	<!-- Media3 passes the application context to the audio stack, which loses the attribution tag
+	     and makes Android 16 report the empty tag. Declare it so the platform's AppOps check passes. -->
+	<attribution
+		android:tag="@string/attribution_empty"
+		android:label="@string/attribution_audio_playback" />
+
     <instrumentation android:name="android.test.InstrumentationTestRunner"
 		android:targetPackage="github.paroj.dsub2000"
 		android:label="Tests" />

@@ -114,6 +114,8 @@ public final class Util {
 	public static final String AVRCP_PLAYSTATE_CHANGED = "com.android.music.playstatechanged";
 	public static final String AVRCP_METADATA_CHANGED = "com.android.music.metachanged";
 
+	private static final String AUDIO_PLAYBACK_ATTRIBUTION = "audioPlayback";
+
 	private static OnAudioFocusChangeListener focusListener;
 	private static AudioFocusRequest audioFocusRequest;
 	private static boolean pauseFocus = false;
@@ -1305,6 +1307,17 @@ public final class Util {
     public static Drawable createDrawableFromBitmap(Context context, Bitmap bitmap) {
         return new BitmapDrawable(context.getResources(), bitmap);
     }
+
+	/**
+	 * Returns a context whose audio playback operations are attributed to the audio playback
+	 * attribution declared in the manifest. Before Android 11 attribution contexts are unsupported.
+	 */
+	public static Context createAudioPlaybackContext(Context context) {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			return context.createAttributionContext(AUDIO_PLAYBACK_ATTRIBUTION);
+		}
+		return context;
+	}
 
 	public static void requestAudioFocus(final Context context, final AudioManager audioManager) {
     	if(Build.VERSION.SDK_INT >= 26) {
