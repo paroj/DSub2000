@@ -169,7 +169,7 @@ public class DSubWidgetProvider extends AppWidgetProvider {
         	// Deserialize from playling list to setup
             try {
                 PlayerQueue state = FileUtil.deserialize(context, DownloadServiceLifecycleSupport.FILENAME_DOWNLOADS_SER, PlayerQueue.class);
-                if (state != null && state.currentPlayingIndex != -1) {
+                if (state != null && state.isRestorable() && state.currentPlayingIndex != -1) {
                     currentPlaying = state.songs.get(state.currentPlayingIndex);
                 }
             } catch(Exception e) {

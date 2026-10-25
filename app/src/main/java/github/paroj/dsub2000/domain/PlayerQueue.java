@@ -27,4 +27,29 @@ public class PlayerQueue implements Serializable {
 	public int currentPlayingPosition;
 	public boolean renameCurrent = false;
 	public Date changed = null;
+
+	/**
+	 * Whether this queue can safely be handed to {@link github.paroj.dsub2000.service.DownloadService#restore}.
+	 * Kryo does not run field initializers, so a stale or corrupt state file can leave fields at their default
+	 * (null) even though they are initialized above.
+	 */
+	public boolean isRestorable() {
+		if(songs == null || toDelete == null) {
+			return false;
+		}
+		if(currentPlayingIndex < -1 || currentPlayingIndex >= songs.size()) {
+			return false;
+		}
+		for(MusicDirectory.Entry song: songs) {
+			if(song == null) {
+				return false;
+			}
+		}
+		for(MusicDirectory.Entry song: toDelete) {
+			if(song == null) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

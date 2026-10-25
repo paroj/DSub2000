@@ -459,7 +459,7 @@ public class DownloadService extends MediaLibraryService {
 		download(songs, save, autoplay, playNext, shuffle, 0, 0);
 	}
 	public void download(List<MusicDirectory.Entry> songs, boolean save, boolean autoplay, boolean playNext, boolean shuffle, int start, int position) {
-		if (songs.isEmpty()) {
+		if (songs == null || songs.isEmpty()) {
 			return;
 		}
 
