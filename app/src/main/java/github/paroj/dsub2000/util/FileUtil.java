@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.UUID;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -903,20 +904,32 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * Serialized objects are written to a temporary file first so that a killed process cannot leave a
+	 * partially written cache file behind.
+	 */
+	private static File createTempFile(Context context, String fileName) {
+		return new File(context.getCacheDir(), fileName + "." + UUID.randomUUID() + ".tmp");
+	}
+
     public static <T extends Serializable> boolean serialize(Context context, T obj, String fileName) {
 		Output out = null;
+		File tmpFile = createTempFile(context, fileName);
 		try {
-			File file = new File(context.getCacheDir(), fileName);
-			out = new Output(new FileOutputStream(file));
+			out = new Output(new FileOutputStream(tmpFile));
 			synchronized (kryo) {
 				kryo.writeObject(out, obj);
 			}
+			out.close();
+			out = null;
+			Util.renameFile(tmpFile, new File(context.getCacheDir(), fileName));
 			return true;
 		} catch (Throwable x) {
 			Log.w(TAG, "Failed to serialize object to " + fileName, x);
 			return false;
 		} finally {
 			Util.close(out);
+			Util.delete(tmpFile);
 		}
     }
 
@@ -960,18 +973,22 @@ public class FileUtil {
 
 	public static <T extends Serializable> boolean serializeCompressed(Context context, T obj, String fileName) {
 		Output out = null;
+		File tmpFile = createTempFile(context, fileName);
 		try {
-			File file = new File(context.getCacheDir(), fileName);
-			out = new Output(new DeflaterOutputStream(new FileOutputStream(file)));
+			out = new Output(new DeflaterOutputStream(new FileOutputStream(tmpFile)));
 			synchronized (kryo) {
 				kryo.writeObject(out, obj);
 			}
+			out.close();
+			out = null;
+			Util.renameFile(tmpFile, new File(context.getCacheDir(), fileName));
 			return true;
 		} catch (Throwable x) {
 			Log.w(TAG, "Failed to serialize compressed object to " + fileName);
 			return false;
 		} finally {
 			Util.close(out);
+			Util.delete(tmpFile);
 		}
 	}
 
