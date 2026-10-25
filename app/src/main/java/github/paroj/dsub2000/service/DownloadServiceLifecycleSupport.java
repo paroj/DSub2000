@@ -121,7 +121,13 @@ public class DownloadServiceLifecycleSupport {
 				// Deserialize queue before starting looper
 				try {
 					lock.lock();
-					deserializeDownloadQueueNow();
+					try {
+						deserializeDownloadQueueNow();
+					} catch (Exception e) {
+						// A broken saved queue must not keep the service from starting.
+						Log.e(TAG, "Failed to restore saved play queue", e);
+						deleteSavedQueue();
+					}
 
 					// Wait until PREPARING is done to mark lifecycle as ready to receive events
 					while(downloadService.getPlayerState() == PREPARING) {
