@@ -20,6 +20,7 @@ package github.paroj.dsub2000.service;
 
 import static android.content.Context.RECEIVER_EXPORTED;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -376,6 +377,12 @@ public class DownloadServiceLifecycleSupport {
 		if (state == null) {
 			return;
 		}
+		if (!state.isRestorable()) {
+			// Do not let a stale or corrupt queue crash the service on every start.
+			Log.w(TAG, "Discarding invalid saved play queue");
+			deleteSavedQueue();
+			return;
+		}
 		Log.i(TAG, "Deserialized currentPlayingIndex: " + state.currentPlayingIndex + ", currentPlayingPosition: " + state.currentPlayingPosition);
 
 		// Rename first thing before anything else starts
@@ -386,9 +393,11 @@ public class DownloadServiceLifecycleSupport {
 
 		downloadService.restore(state.songs, state.toDelete, state.currentPlayingIndex, state.currentPlayingPosition);
 
-		if(state != null) {
-			lastChange = state.changed;
-		}
+		lastChange = state.changed;
+	}
+
+	private void deleteSavedQueue() {
+		Util.delete(new File(downloadService.getCacheDir(), FILENAME_DOWNLOADS_SER));
 	}
 
 	public Date getLastChange() {
