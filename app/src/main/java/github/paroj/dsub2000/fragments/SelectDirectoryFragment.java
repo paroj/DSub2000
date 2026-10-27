@@ -648,7 +648,8 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 			}
 
 			// If artist, we want to load the artist info to use later
-			if(artist && ServerInfo.hasArtistInfo(context)  && !Util.isOffline(context)) {
+			// Folder IDs are not necessarily artist IDs, so only trust them when browsing by tags
+			if(artist && Util.isTagBrowsing(context) && ServerInfo.hasArtistInfo(context)  && !Util.isOffline(context)) {
 				try {
 					String artistId;
 					if(id.indexOf(';') == -1) {
@@ -783,8 +784,9 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 
 		// Show header if not album list type and not root and not artist
 		// For Subsonic 5.1+ display a header for artists with getArtistInfo data if it exists
+		boolean tagBrowsing = Util.isTagBrowsing(context);
 		boolean addedHeader = false;
-		if(albumListType == null && (!artist || artistInfo != null || artistInfoDelayed != null) && (share == null || entries.size() != albums.size())) {
+		if(albumListType == null && (!artist || !tagBrowsing || artistInfo != null || artistInfoDelayed != null) && (share == null || entries.size() != albums.size())) {
 			View header = createHeader();
 
 			if(header != null) {
@@ -799,7 +801,13 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 						@Override
 						protected Void doInBackground() throws Throwable {
 							MusicService musicService = MusicServiceFactory.getMusicService(context);
-							artistInfo = musicService.getArtistInfo(artistInfoDelayed, false, true, context, this);
+							try {
+								artistInfo = musicService.getArtistInfo(artistInfoDelayed, false, true, context, this);
+							} catch(Exception e) {
+								// Fall back to the generic header instead of failing the whole view
+								Log.w(TAG, "Failed to get Artist Info even though it should be supported", e);
+								artistInfo = null;
+							}
 
 							return null;
 						}
