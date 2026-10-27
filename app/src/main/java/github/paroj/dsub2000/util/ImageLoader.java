@@ -230,7 +230,8 @@ public class ImageLoader {
 			// Continue on and load a null bitmap
 		}
 		// If we know this a artist, try to load artist info instead
-		else if(entry != null && !entry.isAlbum() && ServerInfo.checkServerVersion(context, "1.11")  && !Util.isOffline(context)) {
+		// Folder IDs are not necessarily artist IDs, so only trust them when browsing by tags
+		else if(entry != null && Util.isTagBrowsing(context) && !entry.isAlbum() && ServerInfo.checkServerVersion(context, "1.11")  && !Util.isOffline(context)) {
 			SilentBackgroundTask task = new ArtistImageTask(view.getContext(), entry, size, imageSizeLarge, large, view, crossfade);
 			task.execute();
 			return task;
