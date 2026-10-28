@@ -27,12 +27,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.AdapterView;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,15 +48,19 @@ import github.paroj.dsub2000.service.ServerTooOldException;
 import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.LoadingTask;
 import github.paroj.dsub2000.util.Util;
+import github.paroj.dsub2000.view.FormTextInputLayout;
 
 public class EditPlayActionActivity extends SubsonicActivity {
 	private MaterialSwitch shuffleCheckbox;
 	private MaterialSwitch startYearCheckbox;
+	private TextInputLayout startYearLayout;
 	private EditText startYearBox;
 	private MaterialSwitch endYearCheckbox;
+	private TextInputLayout endYearLayout;
 	private EditText endYearBox;
-	private Button genreButton;
-	private Spinner offlineSpinner;
+	private TextInputLayout genreLayout;
+	private TextView genreButton;
+	private int offlineSelection;
 	
 	private String doNothing;
 
@@ -68,36 +74,42 @@ public class EditPlayActionActivity extends SubsonicActivity {
 		doNothing = context.getResources().getString(R.string.tasker_edit_do_nothing);
 
 		shuffleCheckbox = (MaterialSwitch) findViewById(R.id.edit_shuffle_checkbox);
+		shuffleCheckbox.setText(FormTextInputLayout.stripLabel(getString(R.string.tasker_edit_shuffle_mode)));
 		shuffleCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton view, boolean isChecked) {
 				startYearCheckbox.setEnabled(isChecked);
 				endYearCheckbox.setEnabled(isChecked);
-				genreButton.setEnabled(isChecked);
+				genreLayout.setEnabled(isChecked);
 			}
 		});
 
 		startYearCheckbox = (MaterialSwitch) findViewById(R.id.edit_start_year_checkbox);
+		startYearCheckbox.setText(FormTextInputLayout.stripLabel(getString(R.string.tasker_edit_shuffle_start_year)));
+		startYearLayout = (TextInputLayout) findViewById(R.id.edit_start_year_layout);
 		startYearBox = (EditText) findViewById(R.id.edit_start_year);
-		// Disable/enable number box if checked
+		// Disable/enable number box if checked; the layout passes it on to the box
 		startYearCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton view, boolean isChecked) {
-				startYearBox.setEnabled(isChecked);
+				startYearLayout.setEnabled(isChecked);
 			}
 		});
 		
 		endYearCheckbox = (MaterialSwitch) findViewById(R.id.edit_end_year_checkbox);
+		endYearCheckbox.setText(FormTextInputLayout.stripLabel(getString(R.string.tasker_edit_shuffle_end_year)));
+		endYearLayout = (TextInputLayout) findViewById(R.id.edit_end_year_layout);
 		endYearBox = (EditText) findViewById(R.id.edit_end_year);
 		endYearCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton view, boolean isChecked) {
-				endYearBox.setEnabled(isChecked);
+				endYearLayout.setEnabled(isChecked);
 			}
 		});
 
-		genreButton = (Button) findViewById(R.id.edit_genre_spinner);
-		genreButton.setOnClickListener(new View.OnClickListener() {
+		genreLayout = (TextInputLayout) findViewById(R.id.edit_genre_layout);
+		genreButton = (TextView) findViewById(R.id.edit_genre_spinner);
+		View.OnClickListener pickGenre = new View.OnClickListener() {
 			public void onClick(View v) {
 				new LoadingTask<List<Genre>>(context, true) {
 					@Override
@@ -145,13 +157,21 @@ public class EditPlayActionActivity extends SubsonicActivity {
 					}
 				}.execute();
 			}
-		});
+		};
+		genreButton.setOnClickListener(pickGenre);
+		genreLayout.setEndIconOnClickListener(pickGenre);
 		genreButton.setText(doNothing);
 
-		offlineSpinner = (Spinner) findViewById(R.id.edit_offline_spinner);
-		ArrayAdapter<CharSequence> offlineAdapter = ArrayAdapter.createFromResource(this, R.array.editServerOptions, android.R.layout.simple_spinner_item);
-		offlineAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		offlineSpinner.setAdapter(offlineAdapter);
+		final MaterialAutoCompleteTextView offlineBox = (MaterialAutoCompleteTextView) findViewById(R.id.edit_offline_spinner);
+		final String[] offlineOptions = getResources().getStringArray(R.array.editServerOptions);
+		offlineBox.setSimpleItems(offlineOptions);
+		offlineBox.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				offlineSelection = position;
+			}
+		});
+		offlineBox.setText(offlineOptions[0], false);
 		
 		// Setup default for everything
 		Bundle extras = getIntent().getBundleExtra(Constants.TASKER_EXTRA_BUNDLE);
@@ -178,7 +198,8 @@ public class EditPlayActionActivity extends SubsonicActivity {
 			
 			int offline = extras.getInt(Constants.PREFERENCES_KEY_OFFLINE, 0);
 			if(offline != 0) {
-				offlineSpinner.setSelection(offline);
+				offlineSelection = offline;
+				offlineBox.setText(offlineOptions[offline], false);
 			}
 		}
 
@@ -231,7 +252,7 @@ public class EditPlayActionActivity extends SubsonicActivity {
 			}
 		}
 		
-		int offline = offlineSpinner.getSelectedItemPosition();
+		int offline = offlineSelection;
 		if(offline != 0) {
 			data.putInt(Constants.PREFERENCES_KEY_OFFLINE, offline);
 		}

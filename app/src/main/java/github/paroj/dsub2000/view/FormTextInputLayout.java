@@ -46,6 +46,11 @@ public class FormTextInputLayout extends TextInputLayout {
 
 	@Override
 	public void setHint(CharSequence hint) {
-		super.setHint(hint == null ? null : TRAILING_COLON.matcher(hint).replaceFirst(""));
+		super.setHint(hint == null ? null : stripLabel(hint));
+	}
+
+	/** A form label without its trailing colon, for places that show it on its own. */
+	public static String stripLabel(CharSequence label) {
+		return TRAILING_COLON.matcher(label).replaceFirst("");
 	}
 }
