@@ -22,6 +22,7 @@ import android.content.res.Configuration;
 import java.util.Locale;
 
 import github.paroj.dsub2000.R;
+import github.paroj.dsub2000.activity.EditPlayActionActivity;
 import github.paroj.dsub2000.activity.SettingsActivity;
 import github.paroj.dsub2000.activity.SubsonicFragmentActivity;
 
@@ -59,7 +60,7 @@ public final class ThemeUtil {
 		return getThemeRes(context, getTheme(context));
 	}
 	public static int getThemeRes(Context context, String theme) {
-		if(context instanceof SubsonicFragmentActivity || context instanceof SettingsActivity) {
+		if(context instanceof SubsonicFragmentActivity || context instanceof SettingsActivity || context instanceof EditPlayActionActivity) {
 			if(Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR, true)) {
 				if (THEME_DARK.equals(theme)) {
 					return R.style.Theme_DSub2000_Dark_No_Actionbar;

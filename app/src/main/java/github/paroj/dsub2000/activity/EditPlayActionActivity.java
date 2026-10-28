@@ -63,6 +63,7 @@ public class EditPlayActionActivity extends SubsonicActivity {
 		super.onCreate(savedInstanceState);
 		setTitle(R.string.tasker_start_playing_title);
 		setContentView(R.layout.edit_play_action);
+		setUpMainToolbar();
 		final Activity context = this;
 		doNothing = context.getResources().getString(R.string.tasker_edit_do_nothing);
 
