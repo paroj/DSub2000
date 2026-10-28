@@ -635,6 +635,19 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		});
 	}
 
+	/** Uses the main_toolbar of the layout as the action bar, in the custom action bar colour if one is set. */
+	protected void setUpMainToolbar() {
+		Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
+		SharedPreferences prefs = Util.getPreferences(this);
+		if(prefs.getBoolean(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR, true)) {
+			int color = prefs.getInt(Constants.PREFERENCES_KEY_ACTION_BAR_COLOR, -1);
+			if(color != -1) {
+				mainToolbar.setBackgroundColor(color);
+			}
+		}
+		setSupportActionBar(mainToolbar);
+	}
+
 	/** The padding a view has before the window insets are applied to it. */
 	private static Rect paddingOf(View view) {
 		return view == null ? null : new Rect(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());

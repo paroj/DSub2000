@@ -18,13 +18,11 @@
  */
 package github.paroj.dsub2000.activity;
 
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.window.OnBackInvokedCallback;
 import android.window.OnBackInvokedDispatcher;
 
-import androidx.appcompat.widget.Toolbar;
 
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.fragments.PreferenceCompatFragment;
@@ -56,15 +54,7 @@ public class SettingsActivity extends SubsonicActivity {
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, currentFragment, currentFragment.getSupportTag() + "").commit();
 		}
 
-		Toolbar mainToolbar = (Toolbar) findViewById(R.id.main_toolbar);
-        SharedPreferences prefs = Util.getPreferences(this);
-        if (prefs.getBoolean(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR, true)) {
-            int color = prefs.getInt(Constants.PREFERENCES_KEY_ACTION_BAR_COLOR, -1);
-            if (color != -1) {
-                mainToolbar.setBackgroundColor(color);
-            }
-        }
-        setSupportActionBar(mainToolbar);
+		setUpMainToolbar();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             backCallback = new OnBackInvokedCallback() {
