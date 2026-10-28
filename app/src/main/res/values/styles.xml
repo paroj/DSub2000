@@ -12,6 +12,26 @@
 		<item name="android:insetRight">0dp</item>
 	</style>
 
+	<!-- Root of a custom dialog view; Material 3 dialogs inset their content by 24 dp. -->
+	<style name="DSub2000.DialogContent" parent="">
+		<item name="android:paddingLeft">24dp</item>
+		<item name="android:paddingRight">24dp</item>
+		<item name="android:paddingBottom">8dp</item>
+	</style>
+
+	<!-- Full width form field with the label as its floating hint, see FormTextInputLayout. -->
+	<style name="Widget.DSub2000.TextField" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginTop">8dp</item>
+	</style>
+	<!-- Read only picker field; tapping it opens a selection dialog. -->
+	<style name="Widget.DSub2000.TextField.Dropdown" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:layout_marginTop">8dp</item>
+	</style>
+
 	<!-- Material 3 header for the platform preference framework; applied through
 	     android:preferenceCategoryStyle in themes.xml. The framework's
 	     Preference.Material.Category style is private, so the layout item is repeated. -->
