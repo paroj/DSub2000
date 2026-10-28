@@ -1,8 +1,15 @@
 package github.paroj.dsub2000.util;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.view.View;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import github.paroj.dsub2000.R;
 
 import github.paroj.dsub2000.activity.SubsonicActivity;
 
@@ -13,7 +20,8 @@ import github.paroj.dsub2000.activity.SubsonicActivity;
 public abstract class LoadingTask<T> extends BackgroundTask<T> {
 
     private final Activity tabActivity;
-	private ProgressDialog loading;
+	private AlertDialog loading;
+	private TextView loadingMessage;
 	private final boolean cancellable;
 
 	public LoadingTask(Activity activity) {
@@ -29,11 +37,17 @@ public abstract class LoadingTask<T> extends BackgroundTask<T> {
 
     @Override
     public void execute() {
-        loading = ProgressDialog.show(tabActivity, "", "Loading. Please Wait...", true, cancellable, new DialogInterface.OnCancelListener() {
-			public void onCancel(DialogInterface dialog) {
-				cancel();
-			}
-		});
+		View view = tabActivity.getLayoutInflater().inflate(R.layout.dialog_loading, null);
+		loadingMessage = (TextView) view.findViewById(R.id.loading_message);
+		loading = new MaterialAlertDialogBuilder(tabActivity)
+				.setView(view)
+				.setCancelable(cancellable)
+				.setOnCancelListener(new DialogInterface.OnCancelListener() {
+					public void onCancel(DialogInterface dialog) {
+						cancel();
+					}
+				})
+				.show();
 
 		queue.offer(task = new Task() {
 			@Override
@@ -65,7 +79,7 @@ public abstract class LoadingTask<T> extends BackgroundTask<T> {
 			getHandler().post(new Runnable() {
 				@Override
 				public void run() {
-						loading.setMessage(message);
+						loadingMessage.setText(message);
 				}
 			});
 		}
