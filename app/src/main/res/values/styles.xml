@@ -5,11 +5,11 @@
 		<item name="tickVisible">false</item>
 	</style>
 
-	<!-- Narrow text button, so several fit in one row on small screens. -->
-	<style name="Widget.DSub2000.Button.Compact" parent="Widget.Material3.Button.TextButton">
+	<!-- Tonal button without a minimum width or side padding, so several share one row on small screens. -->
+	<style name="Widget.DSub2000.Button.Compact" parent="Widget.Material3.Button.TonalButton">
 		<item name="android:minWidth">0dp</item>
-		<item name="android:insetLeft">0dp</item>
-		<item name="android:insetRight">0dp</item>
+		<item name="android:paddingLeft">0dp</item>
+		<item name="android:paddingRight">0dp</item>
 	</style>
 
 	<!-- Root of a custom dialog view; Material 3 dialogs inset their content by 24 dp. -->
