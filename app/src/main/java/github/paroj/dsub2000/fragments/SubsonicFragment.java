@@ -54,6 +54,7 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import com.google.android.material.materialswitch.MaterialSwitch;
+import com.google.android.material.textfield.TextInputLayout;
 import android.widget.EditText;
 import android.widget.TextView;
 import github.paroj.dsub2000.R;
@@ -782,7 +783,8 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 		final EditText startYearBox = (EditText)dialogView.findViewById(R.id.start_year);
 		final EditText endYearBox = (EditText)dialogView.findViewById(R.id.end_year);
 		final EditText genreBox = (EditText)dialogView.findViewById(R.id.genre);
-		final Button genreCombo = (Button)dialogView.findViewById(R.id.genre_combo);
+		final TextView genreCombo = (TextView)dialogView.findViewById(R.id.genre_combo);
+		final TextInputLayout genreComboLayout = (TextInputLayout)dialogView.findViewById(R.id.genre_combo_layout);
 
 		final SharedPreferences prefs = Util.getPreferences(context);
 		final String oldStartYear = prefs.getString(Constants.PREFERENCES_KEY_SHUFFLE_START_YEAR, "");
@@ -791,8 +793,8 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 		boolean _useCombo = false;
 		if(ServerInfo.checkServerVersion(context, "1.9.0")) {
-			genreBox.setVisibility(View.GONE);
-			genreCombo.setOnClickListener(new View.OnClickListener() {
+			dialogView.findViewById(R.id.genre_layout).setVisibility(View.GONE);
+			View.OnClickListener pickGenre = new View.OnClickListener() {
 				public void onClick(View v) {
 					new LoadingTask<List<Genre>>(context, true) {
 						@Override
@@ -839,10 +841,12 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 						}
 					}.execute();
 				}
-			});
+			};
+			genreCombo.setOnClickListener(pickGenre);
+			genreComboLayout.setEndIconOnClickListener(pickGenre);
 			_useCombo = true;
 		} else {
-			genreCombo.setVisibility(View.GONE);
+			genreComboLayout.setVisibility(View.GONE);
 		}
 		final boolean useCombo = _useCombo;
 
