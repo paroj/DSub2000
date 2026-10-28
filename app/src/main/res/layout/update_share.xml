@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	style="@style/DSub2000.DialogContent"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
@@ -16,27 +17,21 @@
 			android:inputType="text"/>
 	</github.paroj.dsub2000.view.FormTextInputLayout>
 
-	<LinearLayout
-		android:orientation="horizontal"
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content">
+	<github.paroj.dsub2000.view.FormTextInputLayout
+		android:id="@+id/get_share_expire_layout"
+		style="@style/Widget.DSub2000.TextField"
+		android:hint="@string/share.expiration"
+		app:endIconMode="custom"
+		app:endIconDrawable="@drawable/ic_action_calendar">
 
-		<TextView
-			android:id="@+id/get_share_expire_label"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="4dp"
-			android:textSize="20dp"
-			android:text="@string/share.expiration"
-			android:textColor="?android:textColorPrimary"/>
-		<DatePicker
+		<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/get_share_expire"
-			android:layout_width="fill_parent"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:layout_marginLeft="4dp"
-			android:calendarViewShown="false"/>
-	</LinearLayout>
+			android:inputType="none"
+			android:focusable="false"
+			android:cursorVisible="false"/>
+	</github.paroj.dsub2000.view.FormTextInputLayout>
 
 	<com.google.android.material.materialswitch.MaterialSwitch
 		android:id="@+id/get_share_no_expire"

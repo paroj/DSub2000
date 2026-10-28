@@ -25,12 +25,19 @@ import android.view.MenuItem;
 import android.view.View;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
+import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.adapter.SectionAdapter;
@@ -139,25 +146,55 @@ public class SelectShareFragment extends SelectRecyclerFragment<Share> {
 	private void updateShareInfo(final Share share) {
 		View dialogView = context.getLayoutInflater().inflate(R.layout.update_share, null);
 		final EditText nameBox = (EditText)dialogView.findViewById(R.id.get_share_name);
-		final DatePicker expireBox = (DatePicker)dialogView.findViewById(R.id.get_share_expire);
+		final TextView expireBox = (TextView)dialogView.findViewById(R.id.get_share_expire);
+		final TextInputLayout expireLayout = (TextInputLayout)dialogView.findViewById(R.id.get_share_expire_layout);
 		final MaterialSwitch noExpiresBox = (MaterialSwitch)dialogView.findViewById(R.id.get_share_no_expire);
 
 		nameBox.setText(share.getDescription());
+		// Local date the share expires on, today if it does not expire yet
+		final Calendar expireDate = Calendar.getInstance();
 		Date expires = share.getExpires();
 		if(expires != null) {
-			expireBox.updateDate(expires.getYear() + 1900, expires.getMonth(), expires.getDate());
+			expireDate.setTime(expires);
 		}
+		final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+		expireBox.setText(dateFormat.format(expireDate.getTime()));
+
+		View.OnClickListener pickDate = new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// The picker works with midnight UTC of the selected day
+				final Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+				utc.clear();
+				utc.set(expireDate.get(Calendar.YEAR), expireDate.get(Calendar.MONTH), expireDate.get(Calendar.DAY_OF_MONTH));
+				MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker()
+						.setTitleText(expireLayout.getHint())
+						.setSelection(utc.getTimeInMillis())
+						.build();
+				picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+					@Override
+					public void onPositiveButtonClick(Long selection) {
+						utc.setTimeInMillis(selection);
+						expireDate.set(utc.get(Calendar.YEAR), utc.get(Calendar.MONTH), utc.get(Calendar.DAY_OF_MONTH));
+						expireBox.setText(dateFormat.format(expireDate.getTime()));
+					}
+				});
+				picker.show(context.getSupportFragmentManager(), "share_expire");
+			}
+		};
+		expireBox.setOnClickListener(pickDate);
+		expireLayout.setEndIconOnClickListener(pickDate);
 
 		boolean noExpires = share.getExpires() == null;
 		if(noExpires) {
-			expireBox.setEnabled(false);
+			expireLayout.setEnabled(false);
 			noExpiresBox.setChecked(true);
 		}
 
 		noExpiresBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				expireBox.setEnabled(!isChecked);
+				expireLayout.setEnabled(!isChecked);
 			}
 		});
 
@@ -173,7 +210,7 @@ public class SelectShareFragment extends SelectRecyclerFragment<Share> {
 							protected Void doInBackground() throws Throwable {
 								Long expiresIn = 0L;
 								if (!noExpiresBox.isChecked()) {
-									Date expires = new Date(expireBox.getYear() - 1900, expireBox.getMonth(), expireBox.getDayOfMonth());
+									Date expires = new Date(expireDate.get(Calendar.YEAR) - 1900, expireDate.get(Calendar.MONTH), expireDate.get(Calendar.DAY_OF_MONTH));
 									expiresIn = expires.getTime();
 								}
 
