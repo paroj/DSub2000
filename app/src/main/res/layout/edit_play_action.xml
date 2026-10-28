@@ -14,127 +14,92 @@
 		android:theme="?attr/actionbarThemeStyle"
 		app:popupTheme="?attr/actionbarPopupStyle"/>
 
-	<LinearLayout
-		android:orientation="vertical"
+	<ScrollView
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="0dp"
+		android:layout_weight="1">
 
+		<!-- The switch labels are set in EditPlayActionActivity, without their trailing colon -->
 		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
+			android:orientation="vertical"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:padding="16dp">
 
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="4dp"
-				android:textSize="20dp"
-				android:text="@string/tasker.edit_shuffle_mode"
-				android:textColor="?android:textColorPrimary"/>
 			<com.google.android.material.materialswitch.MaterialSwitch
 				android:id="@+id/edit_shuffle_checkbox"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:longClickable="true"
-				/>
-		</LinearLayout>
-
-		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="4dp"
-				android:textSize="20dp"
-				android:text="@string/tasker.edit_shuffle_start_year"
-				android:textColor="?android:textColorPrimary"/>
+				android:longClickable="true"/>
 
 			<com.google.android.material.materialswitch.MaterialSwitch
 				android:id="@+id/edit_start_year_checkbox"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginTop="8dp"
 				android:longClickable="true"
 				android:enabled="false"/>
 
-			<EditText
-				android:id="@+id/edit_start_year"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:inputType="number"
+			<github.paroj.dsub2000.view.FormTextInputLayout
+				android:id="@+id/edit_start_year_layout"
+				style="@style/Widget.DSub2000.TextField"
 				android:hint="@string/shuffle.startYear"
-				android:enabled="false"/>
-		</LinearLayout>
+				android:enabled="false">
 
-		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="4dp"
-				android:textSize="20dp"
-				android:text="@string/tasker.edit_shuffle_end_year"
-				android:textColor="?android:textColorPrimary"/>
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/edit_start_year"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="number"/>
+			</github.paroj.dsub2000.view.FormTextInputLayout>
 
 			<com.google.android.material.materialswitch.MaterialSwitch
 				android:id="@+id/edit_end_year_checkbox"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
+				android:layout_marginTop="16dp"
 				android:longClickable="true"
 				android:enabled="false"/>
 
-			<EditText
-				android:id="@+id/edit_end_year"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:inputType="number"
+			<github.paroj.dsub2000.view.FormTextInputLayout
+				android:id="@+id/edit_end_year_layout"
+				style="@style/Widget.DSub2000.TextField"
 				android:hint="@string/shuffle.endYear"
-				android:enabled="false"/>
+				android:enabled="false">
+
+				<com.google.android.material.textfield.TextInputEditText
+					android:id="@+id/edit_end_year"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="number"/>
+			</github.paroj.dsub2000.view.FormTextInputLayout>
+
+			<github.paroj.dsub2000.view.FormTextInputLayout
+				android:id="@+id/edit_genre_layout"
+				style="@style/Widget.DSub2000.TextField.Dropdown"
+				android:layout_marginTop="24dp"
+				android:hint="@string/tasker.edit_shuffle_genre"
+				android:enabled="false">
+
+				<com.google.android.material.textfield.MaterialAutoCompleteTextView
+					android:id="@+id/edit_genre_spinner"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="none"
+					android:focusable="false"/>
+			</github.paroj.dsub2000.view.FormTextInputLayout>
+
+			<github.paroj.dsub2000.view.FormTextInputLayout
+				style="@style/Widget.DSub2000.TextField.Dropdown"
+				android:layout_marginTop="16dp"
+				android:hint="@string/tasker.edit_server_offline">
+
+				<com.google.android.material.textfield.MaterialAutoCompleteTextView
+					android:id="@+id/edit_offline_spinner"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:inputType="none"/>
+			</github.paroj.dsub2000.view.FormTextInputLayout>
 		</LinearLayout>
-
-		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="4dp"
-				android:textSize="20dp"
-				android:text="@string/tasker.edit_shuffle_genre"
-				android:textColor="?android:textColorPrimary"/>
-
-			<Button
-				android:id="@+id/edit_genre_spinner"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				style="?android:attr/spinnerStyle"
-				android:enabled="false"/>
-		</LinearLayout>
-
-		<LinearLayout
-			android:orientation="horizontal"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content">
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="4dp"
-				android:textSize="20dp"
-				android:text="@string/tasker.edit_server_offline"
-				android:textColor="?android:textColorPrimary"/>
-
-			<Spinner
-				android:id="@+id/edit_offline_spinner"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-		</LinearLayout>
-	</LinearLayout>
+	</ScrollView>
 </LinearLayout>
