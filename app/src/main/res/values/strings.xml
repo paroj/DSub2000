@@ -511,8 +511,6 @@
 	<string name="settings.shuffle_by_album.false">Shuffle all songs together</string>
 	<string name="settings.casting_stream_original">Stream original</string>
 	<string name="settings.casting_stream_original_summary">Stream original files where supported by cast device</string>
-	<string name="settings.heads_up_notification">Heads Up Notifications (5.0+)</string>
-	<string name="settings.heads_up_notification_summary">Show playing notifications as Heads Up notifications (Android Lollipop+ only)</string>
 	<string name="settings.casting_cache">Cache While Casting</string>
 	<string name="settings.casting_cache_summary">Cache currently playing songs while casting</string>
 	<string name="settings.casting.dlna_casting_enabled">DLNA Enabled</string>

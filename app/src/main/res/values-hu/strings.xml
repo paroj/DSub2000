@@ -487,8 +487,6 @@
 	<string name="settings.shuffle_by_album.false">Dalsorrend keverése az összes dalt együtt kezelve.</string>
 	<string name="settings.casting_stream_original">Eredeti stream</string>
 	<string name="settings.casting_stream_original_summary">Az eredeti fájl streamelése, ha a Cast-kompatibilis eszköz támogatja a fájltípust.</string>
-	<string name="settings.heads_up_notification">Felugró értesítések (5.0+)</string>
-	<string name="settings.heads_up_notification_summary">Lejátszási értesítések megjelenítése felugró értesítésekként (Android Lollipop+).</string>
 	<string name="settings.casting_cache">Casting közbeni gyorsítótárazás</string>
 	<string name="settings.casting_cache_summary">Az éppen lejátszott dal gyorsítótárazása a tartalomátküldés (Casting) alatt.</string>
 	<string name="settings.casting.dlna_casting_enabled">DLNA engedélyezve</string>
