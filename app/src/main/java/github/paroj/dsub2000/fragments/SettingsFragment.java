@@ -43,6 +43,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.io.File;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -66,6 +68,7 @@ import github.paroj.dsub2000.view.CacheLocationPreference;
 import github.paroj.dsub2000.view.ColorPickerPreference;
 import github.paroj.dsub2000.view.ErrorDialog;
 import github.paroj.dsub2000.view.EditPasswordPreference;
+import github.paroj.dsub2000.view.MaterialEditTextPreference;
 import github.paroj.dsub2000.view.MaterialSwitchPreference;
 
 public class SettingsFragment extends PreferenceCompatFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -551,7 +554,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 		screen.setTitle(R.string.settings_server_unused);
 		screen.setKey(Constants.PREFERENCES_KEY_SERVER_KEY + instance);
 
-		final EditTextPreference serverNamePreference = new EditTextPreference(context);
+		final EditTextPreference serverNamePreference = new MaterialEditTextPreference(context);
 		serverNamePreference.setKey(Constants.PREFERENCES_KEY_SERVER_NAME + instance);
 		serverNamePreference.setDefaultValue(getResources().getString(R.string.settings_server_unused));
 		serverNamePreference.setTitle(R.string.settings_server_name);
@@ -563,7 +566,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 
 		serverNamePreference.setSummary(serverNamePreference.getText());
 
-		final EditTextPreference serverUrlPreference = new EditTextPreference(context);
+		final EditTextPreference serverUrlPreference = new MaterialEditTextPreference(context);
 		serverUrlPreference.setKey(Constants.PREFERENCES_KEY_SERVER_URL + instance);
 		serverUrlPreference.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_URI);
 		serverUrlPreference.setDefaultValue("http://yourhost");
@@ -577,7 +580,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 		serverUrlPreference.setSummary(serverUrlPreference.getText());
 		screen.setSummary(serverUrlPreference.getText());
 
-		final EditTextPreference serverLocalNetworkSSIDPreference = new EditTextPreference(context) {
+		final EditTextPreference serverLocalNetworkSSIDPreference = new MaterialEditTextPreference(context) {
 			@Override
 			protected void onAddEditTextToDialogView(View dialogView, final EditText editText) {
 				super.onAddEditTextToDialogView(dialogView, editText);
@@ -587,7 +590,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 					ActivityCompat.requestPermissions(context, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, SubsonicActivity.PERMISSIONS_REQUEST_LOCATION);
 				}
 
-				Button defaultButton = new Button(getContext());
+				Button defaultButton = new MaterialButton(getContext(), null, com.google.android.material.R.attr.materialButtonOutlinedStyle);
 				defaultButton.setText(internalSSIDDisplay);
 				defaultButton.setOnClickListener(new View.OnClickListener() {
 					@Override
@@ -602,7 +605,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 		serverLocalNetworkSSIDPreference.setTitle(R.string.settings_server_local_network_ssid);
 		serverLocalNetworkSSIDPreference.setDialogTitle(R.string.settings_server_local_network_ssid);
 
-		final EditTextPreference serverInternalUrlPreference = new EditTextPreference(context);
+		final EditTextPreference serverInternalUrlPreference = new MaterialEditTextPreference(context);
 		serverInternalUrlPreference.setKey(Constants.PREFERENCES_KEY_SERVER_INTERNAL_URL + instance);
 		serverInternalUrlPreference.getEditText().setInputType(InputType.TYPE_TEXT_VARIATION_URI);
 		serverInternalUrlPreference.setDefaultValue("");
@@ -610,7 +613,7 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 		serverInternalUrlPreference.setDialogTitle(R.string.settings_server_internal_address);
 		serverInternalUrlPreference.setSummary(serverInternalUrlPreference.getText());
 
-		final EditTextPreference serverUsernamePreference = new EditTextPreference(context);
+		final EditTextPreference serverUsernamePreference = new MaterialEditTextPreference(context);
 		serverUsernamePreference.setKey(Constants.PREFERENCES_KEY_USERNAME + instance);
 		serverUsernamePreference.setTitle(R.string.settings_server_username);
 		serverUsernamePreference.setDialogTitle(R.string.settings_server_username);

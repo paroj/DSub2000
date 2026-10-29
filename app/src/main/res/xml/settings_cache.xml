@@ -57,7 +57,7 @@
 	<PreferenceCategory
 		android:title="@string/settings.cache_title">
 
-		<EditTextPreference
+		<github.paroj.dsub2000.view.MaterialEditTextPreference
 			android:title="@string/settings.cache_size"
 			android:key="cacheSize"
 			android:defaultValue="2000"

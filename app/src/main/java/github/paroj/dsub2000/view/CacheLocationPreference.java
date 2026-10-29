@@ -17,7 +17,6 @@ package github.paroj.dsub2000.view;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
-import android.preference.EditTextPreference;
 import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,7 +31,7 @@ import java.io.File;
 
 import github.paroj.dsub2000.R;
 
-public class CacheLocationPreference extends EditTextPreference {
+public class CacheLocationPreference extends MaterialEditTextPreference {
 	private static final String TAG = CacheLocationPreference.class.getSimpleName();
 	private Context context;
 
@@ -55,8 +54,8 @@ public class CacheLocationPreference extends EditTextPreference {
 
 		view.setLayoutParams(new ViewGroup.LayoutParams(android.view.ViewGroup.LayoutParams.WRAP_CONTENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT));
 
-		final EditText editText = (EditText) view.findViewById(android.R.id.edit);
-		ViewGroup vg = (ViewGroup) editText.getParent();
+		// Below the text field, which wraps the EditText
+		ViewGroup vg = (ViewGroup) getFieldLayout().getParent();
 
 		LinearLayout cacheButtonsWrapper = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.cache_location_buttons, vg, true);
 		Button internalLocation = (Button) cacheButtonsWrapper.findViewById(R.id.location_internal);
