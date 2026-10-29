@@ -32,6 +32,17 @@
 		<item name="android:layout_marginTop">8dp</item>
 	</style>
 
+	<!-- Theme of the framework AlertDialogs built by the platform preferences. The Material 3
+	     framework overlays are full platform dialog themes (the default one is the dark
+	     Theme.Material.Dialog.Alert), and they keep the square platform window, which is
+	     replaced with the Material 3 shape and surface colour. -->
+	<style name="ThemeOverlay.DSub2000.Dialog.Framework" parent="ThemeOverlay.Material3.Dialog.Alert.Framework">
+		<item name="android:windowBackground">@drawable/dialog_background_m3</item>
+	</style>
+	<style name="ThemeOverlay.DSub2000.Dialog.Framework.Light" parent="ThemeOverlay.Material3.Light.Dialog.Alert.Framework">
+		<item name="android:windowBackground">@drawable/dialog_background_m3</item>
+	</style>
+
 	<!-- Material 3 header for the platform preference framework; applied through
 	     android:preferenceCategoryStyle in themes.xml. The framework's
 	     Preference.Material.Category style is private, so the layout item is repeated. -->
