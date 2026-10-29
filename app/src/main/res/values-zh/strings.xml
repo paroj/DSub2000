@@ -601,6 +601,4 @@
     <string name="widget.sdcard_busy">SD卡不可用</string>
     <string name="widget.sdcard_missing">没有SD卡</string>
     <string name="settings.menu_options.play_now_summary">立即播放选择曲目</string>
-    <string name="settings.heads_up_notification">浮动通知</string>
-    <string name="settings.heads_up_notification_summary">媒体通知使用浮动通知（Android 5.0+）</string>
 </resources>

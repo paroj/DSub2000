@@ -41,7 +41,6 @@ import github.paroj.dsub2000.domain.PlayerState;
 import github.paroj.dsub2000.provider.DSubWidgetProvider;
 import github.paroj.dsub2000.service.DownloadFile;
 import github.paroj.dsub2000.service.DownloadService;
-import github.paroj.dsub2000.view.UpdateView;
 
 public final class Notifications {
 	private static final String TAG = Notifications.class.getSimpleName();
@@ -153,10 +152,6 @@ public final class Notifications {
 			notification.bigContentView = expandedContentView;
 			notification.priority = Notification.PRIORITY_HIGH;
 			notification.visibility = Notification.VISIBILITY_PUBLIC;
-
-			if(Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_HEADS_UP_NOTIFICATION, false) && !UpdateView.hasActiveActivity()) {
-				notification.vibrate = new long[0];
-			}
 
 			RemoteViews smallContentView = new RemoteViews(context.getPackageName(), R.layout.notification);
 			setupViews(smallContentView, context, song, false, playing, remote, isSingle, shouldFastForward);

@@ -484,8 +484,6 @@
 	<string name="settings.shuffle_by_album.false">Aleatorizar todas as músicas juntas</string>
 	<string name="settings.casting_stream_original">Transmitir original</string>
 	<string name="settings.casting_stream_original_summary">Transmitir os ficheiros originais se suportado pelo dispositivo de transmissão</string>
-	<string name="settings.heads_up_notification">Notificações Heads Up (5.0+)</string>
-	<string name="settings.heads_up_notification_summary">Mostrar notificações de reprodução como notificações \"Heads Up\" (Android Lollipop+ apenas)</string>
 	<string name="settings.casting_cache">Cache durante a transmissão</string>
 	<string name="settings.casting_cache_summary">Adicionar à cache as músicas a reproduzir no momento da transmissão</string>
 	<string name="settings.casting.dlna_casting_enabled">Ativar DLNA</string>
