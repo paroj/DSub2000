@@ -153,11 +153,5 @@
 			android:summary="@string/settings.gapless_playback_summary"
 			android:key="gaplessPlayback"
 			android:defaultValue="true"/>
-
-		<github.paroj.dsub2000.view.MaterialSwitchPreference
-			android:title="@string/settings.usb_dac_exclusive_title"
-			android:summary="@string/settings.usb_dac_exclusive_summary"
-			android:key="usbDacExclusiveMode"
-			android:defaultValue="false"/>
 	</PreferenceCategory>
 </PreferenceScreen>

@@ -1,7 +1,6 @@
 package github.paroj.dsub2000.service;
 
 import android.content.Context;
-import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
@@ -128,7 +127,6 @@ final class LocalPlayback {
         execute(() -> { player.seekTo(position); updateSnapshot(); });
     }
     void setSpeed(float speed) { execute(() -> { player.setPlaybackSpeed(speed); updateSnapshot(); }); }
-    void setPreferredDevice(AudioDeviceInfo device) { execute(() -> player.setPreferredAudioDevice(device)); }
     int getAudioSessionId() { return audioSessionId; }
     int getDuration() { return snapshot.duration; }
     int getCurrentPosition() { return snapshot.position(); }

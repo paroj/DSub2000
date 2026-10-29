@@ -5,7 +5,6 @@
 		<change>Improve battery life by releasing Wi-Fi and UPnP locks when idle and stopping unnecessary background polling</change>
 		<change>Add synced lyrics via OpenSubsonic, with an option for lyrics to follow the queue</change>
 		<change>Add entire-library caching</change>
-		<change>Add optional USB DAC routing for high-res playback</change>
 		<change>Add reverse sort for podcast episode lists</change>
 		<change>New ExoPlayer-based playback core, replacing MediaPlayer 1</change>
 		<change>Fade audio smoothly on focus loss/gain instead of ducking abruptly</change>
