@@ -13,9 +13,7 @@ import androidx.media3.session.MediaSession;
 import com.google.common.collect.ImmutableList;
 
 import github.paroj.dsub2000.R;
-import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.Notifications;
-import github.paroj.dsub2000.util.Util;
 
 /** Supplies the app's existing now-playing notification to the Media3 notification manager. */
 @OptIn(markerClass = UnstableApi.class)
@@ -36,9 +34,7 @@ final class PlaybackNotificationProvider implements MediaNotification.Provider {
             notification = new NotificationCompat.Builder(service, "now-playing-channel")
                     .setSmallIcon(R.drawable.stat_notify_playing).build();
         } else {
-            boolean mediaStyle = Util.getPreferences(service)
-                    .getBoolean(Constants.PREFERENCES_KEY_MEDIA_STYLE_NOTIFICATION, true);
-            notification = Notifications.buildPlayingNotification(service, service, session, current.getSong(), mediaStyle);
+            notification = Notifications.buildPlayingNotification(service, service, session, current.getSong());
         }
         return new MediaNotification(Notifications.NOTIFICATION_ID_PLAYING, notification);
     }
