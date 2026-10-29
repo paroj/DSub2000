@@ -30,8 +30,6 @@ import androidx.core.app.NotificationCompat;
 
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.RemoteViews;
 
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.activity.SubsonicActivity;
@@ -63,100 +61,72 @@ public final class Notifications {
 	private final static Pair<Integer, Integer> NOTIFICATION_TEXT_COLORS = new Pair<Integer, Integer>();
 
 	@androidx.annotation.OptIn(markerClass = androidx.media3.common.util.UnstableApi.class)
-	public static Notification buildPlayingNotification(final Context context, final DownloadService downloadService, androidx.media3.session.MediaSession session, MusicDirectory.Entry song, boolean usingMediaStyleNotification) {
+	public static Notification buildPlayingNotification(final Context context, final DownloadService downloadService, androidx.media3.session.MediaSession session, MusicDirectory.Entry song) {
 		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			getPlayingNotificationChannel(context);
 		}
 
-		final Notification notification;
-
 		final boolean playing = downloadService.getPlayerState() == PlayerState.STARTED;
-
-		boolean remote = downloadService.isRemoteEnabled();
 		boolean isSingle = downloadService.isCurrentPlayingSingle();
-		boolean shouldFastForward = downloadService.shouldFastForward();
 
-		if (usingMediaStyleNotification) {
-			androidx.media3.session.MediaStyleNotificationHelper.MediaStyle mediaStyle =
-					new androidx.media3.session.MediaStyleNotificationHelper.MediaStyle(session);
+		androidx.media3.session.MediaStyleNotificationHelper.MediaStyle mediaStyle =
+				new androidx.media3.session.MediaStyleNotificationHelper.MediaStyle(session);
 
-			if (isSingle) {
-				mediaStyle.setShowActionsInCompactView(1);
-			} else {
-				mediaStyle.setShowActionsInCompactView(0, 2, 4);
-			}
-
-			String title = song.getTitle();
-			String artist = song.getArtist();
-			String album = song.getAlbum();
-
-			NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, "now-playing-channel")
-				.setSmallIcon(R.drawable.stat_notify_playing)
-				.setContentTitle(title)
-				.setContentText(artist + " - " + album)
-				.setVisibility(Notification.VISIBILITY_PUBLIC)
-				.setStyle(mediaStyle);
-
-			// Set the album art.
-			try {
-				ImageLoader imageLoader = SubsonicActivity.getStaticImageLoader(context);
-				if(imageLoader != null) {
-					Bitmap bitmap = imageLoader.getCachedImage(context, song, false);
-
-					if(bitmap != null) {
-						notificationBuilder.setLargeIcon(bitmap);
-					}
-				}
-			} catch (Exception x) {
-				Log.w(TAG, "Failed to get notification cover art", x);
-			}
-
-			PendingIntent prevIntent = null;
-			PendingIntent nextIntent = null;
-			if (!isSingle) {
-				prevIntent = getMediaPendingIntent("KEYCODE_MEDIA_PREVIOUS", context);
-				nextIntent = getMediaPendingIntent("KEYCODE_MEDIA_NEXT", context);
-			}
-
-			PendingIntent rewindIntent = getMediaPendingIntent("KEYCODE_MEDIA_REWIND", context);
-			PendingIntent playIntent = getMediaPendingIntent(playing ? "KEYCODE_MEDIA_PLAY_PAUSE" : "KEYCODE_MEDIA_START", context);
-			PendingIntent forwardIntent = getMediaPendingIntent("KEYCODE_MEDIA_FAST_FORWARD", context);
-
-			if (!isSingle) {
-				notificationBuilder.addAction(R.drawable.ic_baseline_skip_previous_32, "Previous", prevIntent);
-			}
-
-			notificationBuilder.addAction(R.drawable.ic_baseline_fast_rewind_32, "Rewind", rewindIntent);
-			notificationBuilder.addAction(playing ? R.drawable.ic_baseline_pause_48 : R.drawable.ic_baseline_play_arrow_48, playing ? "Pause" : "Play", playIntent);
-			notificationBuilder.addAction(R.drawable.ic_baseline_fast_forward_32, "Forward", forwardIntent);
-
-			if (!isSingle) {
-				notificationBuilder.addAction(R.drawable.ic_baseline_skip_next_32, "Next", nextIntent);
-			}
-
-			notification = notificationBuilder.build();
+		if (isSingle) {
+			mediaStyle.setShowActionsInCompactView(1);
 		} else {
-			// Set the icon, scrolling text and timestamp
-			notification = new NotificationCompat.Builder(context, "now-playing-channel")
-					.setSmallIcon(R.drawable.stat_notify_playing)
-					.setTicker(song.getTitle())
-					.setWhen(System.currentTimeMillis())
-					.build();
-
-			if(playing) {
-				notification.flags |= Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-			}
-
-			RemoteViews expandedContentView = new RemoteViews(context.getPackageName(), R.layout.notification_expanded);
-			setupViews(expandedContentView, context, song, true, playing, remote, isSingle, shouldFastForward);
-			notification.bigContentView = expandedContentView;
-			notification.priority = Notification.PRIORITY_HIGH;
-			notification.visibility = Notification.VISIBILITY_PUBLIC;
-
-			RemoteViews smallContentView = new RemoteViews(context.getPackageName(), R.layout.notification);
-			setupViews(smallContentView, context, song, false, playing, remote, isSingle, shouldFastForward);
-			notification.contentView = smallContentView;
+			mediaStyle.setShowActionsInCompactView(0, 2, 4);
 		}
+
+		String title = song.getTitle();
+		String artist = song.getArtist();
+		String album = song.getAlbum();
+
+		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, "now-playing-channel")
+			.setSmallIcon(R.drawable.stat_notify_playing)
+			.setContentTitle(title)
+			.setContentText(artist + " - " + album)
+			.setVisibility(Notification.VISIBILITY_PUBLIC)
+			.setStyle(mediaStyle);
+
+		// Set the album art.
+		try {
+			ImageLoader imageLoader = SubsonicActivity.getStaticImageLoader(context);
+			if(imageLoader != null) {
+				Bitmap bitmap = imageLoader.getCachedImage(context, song, false);
+
+				if(bitmap != null) {
+					notificationBuilder.setLargeIcon(bitmap);
+				}
+			}
+		} catch (Exception x) {
+			Log.w(TAG, "Failed to get notification cover art", x);
+		}
+
+		PendingIntent prevIntent = null;
+		PendingIntent nextIntent = null;
+		if (!isSingle) {
+			prevIntent = getMediaPendingIntent("KEYCODE_MEDIA_PREVIOUS", context);
+			nextIntent = getMediaPendingIntent("KEYCODE_MEDIA_NEXT", context);
+		}
+
+		PendingIntent rewindIntent = getMediaPendingIntent("KEYCODE_MEDIA_REWIND", context);
+		PendingIntent playIntent = getMediaPendingIntent(playing ? "KEYCODE_MEDIA_PLAY_PAUSE" : "KEYCODE_MEDIA_START", context);
+		PendingIntent forwardIntent = getMediaPendingIntent("KEYCODE_MEDIA_FAST_FORWARD", context);
+
+		if (!isSingle) {
+			notificationBuilder.addAction(R.drawable.ic_baseline_skip_previous_32, "Previous", prevIntent);
+		}
+
+		notificationBuilder.addAction(R.drawable.ic_baseline_fast_rewind_32, "Rewind", rewindIntent);
+		notificationBuilder.addAction(playing ? R.drawable.ic_baseline_pause_48 : R.drawable.ic_baseline_play_arrow_48, playing ? "Pause" : "Play", playIntent);
+		notificationBuilder.addAction(R.drawable.ic_baseline_fast_forward_32, "Forward", forwardIntent);
+
+		if (!isSingle) {
+			notificationBuilder.addAction(R.drawable.ic_baseline_skip_next_32, "Next", nextIntent);
+		}
+
+		Notification notification = notificationBuilder.build();
 
 		Intent notificationIntent = new Intent(context, SubsonicFragmentActivity.class);
 		notificationIntent.putExtra(Constants.INTENT_EXTRA_NAME_DOWNLOAD, true);
@@ -218,158 +188,6 @@ public final class Notifications {
 		}
 
 		return PendingIntent.getService(context, 0, intent, /* flags */ PendingIntent.FLAG_IMMUTABLE);
-	}
-
-	private static void setupViews(RemoteViews rv, Context context, MusicDirectory.Entry song, boolean expanded, boolean playing, boolean remote, boolean isSingleFile, boolean shouldFastForward) {
-		// Use the same text for the ticker and the expanded notification
-		String title = song.getTitle();
-		String artist = song.getArtist();
-		String album = song.getAlbum();
-
-		// Set the album art.
-		try {
-			ImageLoader imageLoader = SubsonicActivity.getStaticImageLoader(context);
-			Bitmap bitmap = null;
-			if(imageLoader != null) {
-				bitmap = imageLoader.getCachedImage(context, song, false);
-			}
-			if (bitmap == null) {
-				// set default album art
-				rv.setImageViewResource(R.id.notification_image, R.drawable.unknown_album);
-			} else {
-				imageLoader.setNowPlayingSmall(bitmap);
-				rv.setImageViewBitmap(R.id.notification_image, bitmap);
-			}
-		} catch (Exception x) {
-			Log.w(TAG, "Failed to get notification cover art", x);
-			rv.setImageViewResource(R.id.notification_image, R.drawable.unknown_album);
-		}
-
-		// set the text for the notifications
-		rv.setTextViewText(R.id.notification_title, title);
-		rv.setTextViewText(R.id.notification_artist, artist);
-		rv.setTextViewText(R.id.notification_album, album);
-
-		boolean persistent = Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_PERSISTENT_NOTIFICATION, true);
-		if(persistent) {
-			if(expanded) {
-				rv.setImageViewResource(R.id.control_pause, playing ? R.drawable.notification_media_pause : R.drawable.notification_media_start);
-
-				if(shouldFastForward) {
-					rv.setImageViewResource(R.id.control_previous, R.drawable.notification_media_rewind);
-					rv.setImageViewResource(R.id.control_next, R.drawable.notification_media_fastforward);
-				} else {
-					rv.setImageViewResource(R.id.control_previous, R.drawable.notification_media_backward);
-					rv.setImageViewResource(R.id.control_next, R.drawable.notification_media_forward);
-				}
-			} else {
-				rv.setImageViewResource(R.id.control_previous, playing ? R.drawable.notification_media_pause : R.drawable.notification_media_start);
-				if(shouldFastForward) {
-					rv.setImageViewResource(R.id.control_pause, R.drawable.notification_media_fastforward);
-				} else {
-					rv.setImageViewResource(R.id.control_pause, R.drawable.notification_media_forward);
-				}
-				rv.setImageViewResource(R.id.control_next, R.drawable.notification_close);
-			}
-		} else if(shouldFastForward) {
-			rv.setImageViewResource(R.id.control_previous, R.drawable.notification_media_rewind);
-			rv.setImageViewResource(R.id.control_next, R.drawable.notification_media_fastforward);
-		} else {
-			// Necessary for switching back since it appears to re-use the same layout
-			rv.setImageViewResource(R.id.control_previous, R.drawable.notification_media_backward);
-			rv.setImageViewResource(R.id.control_next, R.drawable.notification_media_forward);
-		}
-
-		// Create actions for media buttons
-		int previous = 0, pause = 0, next = 0, close = 0, rewind = 0, fastForward = 0;
-		if (expanded) {
-			pause = R.id.control_pause;
-
-			if (shouldFastForward) {
-				rewind = R.id.control_previous;
-				fastForward = R.id.control_next;
-			} else {
-				previous = R.id.control_previous;
-				next = R.id.control_next;
-			}
-
-			if (remote || persistent) {
-				close = R.id.notification_close;
-				rv.setViewVisibility(close, View.VISIBLE);
-			}
-		} else {
-			if (persistent) {
-				pause = R.id.control_previous;
-				if(shouldFastForward) {
-					fastForward = R.id.control_pause;
-				} else {
-					next = R.id.control_pause;
-				}
-				close = R.id.control_next;
-			} else {
-				if (shouldFastForward) {
-					rewind = R.id.control_previous;
-					fastForward = R.id.control_next;
-				} else {
-					previous = R.id.control_previous;
-					next = R.id.control_next;
-				}
-
-				pause = R.id.control_pause;
-			}
-		}
-
-		if(isSingleFile) {
-			if(previous > 0) {
-				rv.setViewVisibility(previous, View.GONE);
-				previous = 0;
-			}
-			if(rewind > 0) {
-				rv.setViewVisibility(rewind, View.GONE);
-				rewind = 0;
-			}
-
-			if(next > 0) {
-				rv.setViewVisibility(next, View.GONE);
-				next = 0;
-			}
-
-			if(fastForward > 0) {
-				rv.setViewVisibility(fastForward, View.GONE);
-				fastForward = 0;
-			}
-		}
-
-		PendingIntent pendingIntent;
-		if(previous > 0) {
-			pendingIntent = getMediaPendingIntent("KEYCODE_MEDIA_PREVIOUS", context);
-			rv.setOnClickPendingIntent(previous, pendingIntent);
-		}
-		if(rewind > 0) {
-			pendingIntent = getMediaPendingIntent("KEYCODE_MEDIA_REWIND", context);
-			rv.setOnClickPendingIntent(rewind, pendingIntent);
-		}
-		if(pause > 0) {
-			if(playing) {
-				pendingIntent = getMediaPendingIntent("KEYCODE_MEDIA_PLAY_PAUSE", context);
-				rv.setOnClickPendingIntent(pause, pendingIntent);
-			} else {
-				pendingIntent = getMediaPendingIntent("KEYCODE_MEDIA_START", context);
-				rv.setOnClickPendingIntent(pause, pendingIntent);
-			}
-		}
-		if(next > 0) {
-			pendingIntent = getMediaPendingIntent("KEYCODE_MEDIA_NEXT", context);
-			rv.setOnClickPendingIntent(next, pendingIntent);
-		}
-		if(fastForward > 0) {
-			pendingIntent = getMediaPendingIntent("KEYCODE_MEDIA_FAST_FORWARD", context);
-			rv.setOnClickPendingIntent(fastForward, pendingIntent);
-		}
-		if(close > 0) {
-			pendingIntent = getMediaPendingIntent("KEYCODE_MEDIA_STOP", context);
-			rv.setOnClickPendingIntent(close, pendingIntent);
-		}
 	}
 
 	public static void hidePlayingNotification(final Context context, final DownloadService downloadService, Handler handler) {
