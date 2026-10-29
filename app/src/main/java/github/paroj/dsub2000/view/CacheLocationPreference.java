@@ -111,6 +111,10 @@ public class CacheLocationPreference extends MaterialEditTextPreference {
 		final File finalExternalDir = new File(externalDir, "music");
 
 		final EditText editTextBox = (EditText)view.findViewById(android.R.id.edit);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			// Only the app's own folders can be written to, so the path is picked with the buttons
+			editTextBox.setKeyListener(null);
+		}
 		if(finalInternalDir != null && (finalInternalDir.exists() || finalInternalDir.mkdirs())) {
 			internalLocation.setOnClickListener(new View.OnClickListener() {
 				@Override

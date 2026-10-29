@@ -33,6 +33,7 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -134,6 +135,27 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 
 		SharedPreferences prefs = Util.getPreferences(context);
 		prefs.unregisterOnSharedPreferenceChangeListener(this);
+	}
+
+	/** Removes a preference from the group holding it, as Preference.getParent() needs Android 8. */
+	private void removePreference(String key) {
+		Preference preference = findPreference(key);
+		PreferenceScreen screen = getPreferenceScreen();
+		if(preference != null && screen != null) {
+			removeFromGroup(screen, preference);
+		}
+	}
+	private static boolean removeFromGroup(PreferenceGroup group, Preference preference) {
+		if(group.removePreference(preference)) {
+			return true;
+		}
+		for(int i = 0; i < group.getPreferenceCount(); i++) {
+			Preference child = group.getPreference(i);
+			if(child instanceof PreferenceGroup && removeFromGroup((PreferenceGroup) child, preference)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -280,6 +302,12 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
         colorActionBar = (MaterialSwitchPreference) this.findPreference(Constants.PREFERENCES_KEY_COLOR_ACTION_BAR);
         actionBarColor = (ColorPickerPreference) this.findPreference(Constants.PREFERENCES_KEY_ACTION_BAR_COLOR);
         actionBarColorNowPlaying = (ColorPickerPreference) this.findPreference(Constants.PREFERENCES_KEY_ACTION_BAR_NOW_PLAYING_COLOR);
+
+		// Settings that do not apply to every supported Android version
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+			// The cache lives in the app's own folder, which the media store does not index
+			removePreference(Constants.PREFERENCES_KEY_HIDE_MEDIA);
+		}
 
 		settings = Util.getPreferences(context);
 		serverCount = settings.getInt(Constants.PREFERENCES_KEY_SERVER_COUNT, 1);
