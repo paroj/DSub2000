@@ -2,14 +2,13 @@ package github.paroj.dsub2000.view;
 
 import android.content.Context;
 import android.os.Build;
-import android.preference.EditTextPreference;
 import android.preference.Preference;
 
 import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.KeyStoreUtil;
 import github.paroj.dsub2000.util.Util;
 
-public class EditPasswordPreference extends EditTextPreference {
+public class EditPasswordPreference extends MaterialEditTextPreference {
     final private String TAG = EditPasswordPreference.class.getSimpleName();
 
     private int instance;
