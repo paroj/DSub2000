@@ -179,7 +179,6 @@ public final class Constants {
 	public static final String PREFERENCES_KEY_DISABLE_EXIT_PROMPT = "disableExitPrompt";
 	public static final String PREFERENCES_KEY_RENAME_DUPLICATES = "renameDuplicates";
 	public static final String PREFERENCES_KEY_FIRST_LEVEL_ARTIST = "firstLevelArtist";
-	public static final String PREFERENCES_KEY_START_ON_HEADPHONES = "startOnHeadphones";
 	public static final String PREFERENCES_KEY_COLOR_ACTION_BAR = "colorActionBar";
     public static final String PREFERENCES_KEY_ACTION_BAR_COLOR = "actionBarColor";
     public static final String PREFERENCES_KEY_ACTION_BAR_NOW_PLAYING_COLOR = "actionBarColorNowPlaying";

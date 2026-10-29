@@ -501,8 +501,6 @@
     <string name="settings.song_press_play_last">添加到最后播放</string>
     <string name="settings.song_press_play_next">添加到下首播放</string>
     <string name="settings.song_press_play_single">播放点击歌曲</string>
-    <string name="settings.start_on_headphones">耳机插入时播放</string>
-    <string name="settings.start_on_headphones_summary">当耳机插入时开始播放。这会启用一个后台服务来检查耳机插入事件。</string>
     <string name="settings.sync_enabled">同步已启用</string>
     <string name="settings.sync_enabled_summary">是否定期检查播放列表或播客的更改</string>
     <string name="settings.sync_interval">同步间隔</string>

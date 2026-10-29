@@ -448,8 +448,6 @@
 	<string name="settings.casting_proxy_summary">Stream alles via het apparaat als een proxy. Dit omzeilt problemen zoals zelf toegekende certificaten.</string>
 	<string name="settings.rename_duplicates">Hernoem dubbele nummers</string>
 	<string name="settings.rename_duplicates_summary">Hernoem dubbele nummers naar de originele bestandsnaam om ze te kunnen onderscheiden.</string>
-	<string name="settings.start_on_headphones">Start met koptelefoon</string>
-	<string name="settings.start_on_headphones_summary">Start als een koptelefoon gekoppeld wordt. Dit vereist het gebruik van een service bij het opstarten van de telefoon om de de koptelefoonplugin te monitoren, zelfs als Dsub niet gebruikt wordt.</string>
 	<string name="settings.color_action_bar">Kleur actiebalk</string>
 	<string name="settings.color_action_bar.summary">Kleur de actiebalk en statusbalk, of laat ze ongemoeid.</string>
 	<string name="settings.shuffle_by_album">Shuffle op basis van albums</string>

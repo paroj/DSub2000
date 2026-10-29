@@ -161,12 +161,6 @@
 			android:defaultValue="true"/>
 
 		<github.paroj.dsub2000.view.MaterialSwitchPreference
-			android:title="@string/settings.start_on_headphones"
-			android:summary="@string/settings.start_on_headphones_summary"
-			android:key="startOnHeadphones"
-			android:defaultValue="false"/>
-
-		<github.paroj.dsub2000.view.MaterialSwitchPreference
 			android:title="@string/settings.usb_dac_exclusive_title"
 			android:summary="@string/settings.usb_dac_exclusive_summary"
 			android:key="usbDacExclusiveMode"
