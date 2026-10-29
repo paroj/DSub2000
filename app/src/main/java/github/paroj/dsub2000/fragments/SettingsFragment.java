@@ -119,12 +119,6 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 
-		MaterialSwitchPreference mediaButtons = (MaterialSwitchPreference) findPreference("mediaButtons");
-		if (mediaButtons != null) {
-			PreferenceCategory otherCategory = (PreferenceCategory) findPreference("otherSettings");
-			otherCategory.removePreference(mediaButtons);
-		}
-
 		int instance = this.getArguments().getInt(Constants.PREFERENCES_KEY_SERVER_INSTANCE, -1);
 		if (instance != -1) {
 			PreferenceScreen preferenceScreen = expandServer(instance);

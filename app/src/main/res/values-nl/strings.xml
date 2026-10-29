@@ -348,8 +348,6 @@
     <string name="settings.hide_media_title">Verberg voor andere</string>
     <string name="settings.hide_media_summary">Verberg muziek voor andere apps.</string>
     <string name="settings.hide_media_toast">Is actief wanneer Android de volgende keer je telefoon scant voor nieuwe muziek.</string>
-    <string name="settings.media_button_title">Mediaknoppen</string>
-    <string name="settings.media_button_summary">Reageer op telefoon, koptelefoon en bluetooth mediaknoppen</string>
     <string name="settings.screen_lit_title">Houd scherm aan</string>
     <string name="settings.screen_lit_summary">Houdt scherm aan tijdens het downloaden verbetert de download snelheid.</string>
 	<string name="settings.playlist_title">Afspelen</string>

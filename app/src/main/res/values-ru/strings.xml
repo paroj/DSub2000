@@ -199,8 +199,6 @@
     <string name="settings.hide_media_title">Прятать от других</string>
     <string name="settings.hide_media_summary">Прятать музыкальные файлы от других приложений</string>
     <string name="settings.hide_media_toast">Изменения вступят в силу при следующем поиске музыки на Вашем устройстве.</string>
-    <string name="settings.media_button_title">Кнопки управления</string>
-    <string name="settings.media_button_summary">Разрешить управление кнопками мультимедиа на устройстве и гарнитуре</string>
     <string name="settings.screen_lit_title">Держать экран включенным</string>
     <string name="settings.screen_lit_summary">Оставить экран включенным для повышения скорости при скачивании.</string>
 	<string name="settings.playlist_title">Списки воспроизведения</string>

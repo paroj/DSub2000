@@ -371,8 +371,6 @@
     <string name="settings.hide_media_title">Elrejtés</string>
     <string name="settings.hide_media_summary">Zenefájlok elrejtése egyéb alkalmazások elől.</string>
     <string name="settings.hide_media_toast">A következő alkalomtól lép életbe, amikor az Android zenefájlokat keres az eszközön.</string>
-    <string name="settings.media_button_title">Média vezérlőgombok</string>
-    <string name="settings.media_button_summary">A lejátszó irányítása a bluetooth eszköz vagy a fülhallgató vezérlőgombjaival.</string>
     <string name="settings.screen_lit_title">Képernyő ébrentartása</string>
     <string name="settings.screen_lit_summary">Képernyő ébrentartása a letöltés alatt a magasabb letöltési sebesség érdekében.</string>
 	<string name="settings.playlist_title">Lejátszási listák</string>

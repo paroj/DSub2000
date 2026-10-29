@@ -386,8 +386,6 @@
     <string name="settings.hide_media_title">Hide from other</string>
     <string name="settings.hide_media_summary">Hide music files from other apps.</string>
     <string name="settings.hide_media_toast">Takes effect next time Android scans your phone for music.</string>
-    <string name="settings.media_button_title">Media buttons</string>
-    <string name="settings.media_button_summary">Respond to phone, headset and Bluetooth media buttons</string>
     <string name="settings.screen_lit_title">Keep screen on</string>
     <string name="settings.screen_lit_summary">Keeping the screen on while downloading improves download speed.</string>
 	<string name="settings.playlist_title">Play</string>
