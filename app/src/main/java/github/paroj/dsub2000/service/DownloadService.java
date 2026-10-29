@@ -1203,7 +1203,7 @@ public class DownloadService extends MediaLibraryService {
 
 	/** Plays or resumes the playback, depending on the current player state. */
 	public synchronized void togglePlayPause() {
-		if (playerState == PAUSED || playerState == COMPLETED || playerState == STOPPED) {
+		if (playerState == PAUSED || playerState == PAUSED_TEMP || playerState == COMPLETED || playerState == STOPPED) {
 			start();
 		} else if (playerState == STOPPED || playerState == IDLE) {
 			autoPlayStart = true;

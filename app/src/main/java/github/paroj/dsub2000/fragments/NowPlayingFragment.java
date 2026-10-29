@@ -1080,7 +1080,7 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 	private void start() {
 		DownloadService service = getDownloadService();
 		PlayerState state = service.getPlayerState();
-		if (state == PAUSED || state == COMPLETED || state == STOPPED) {
+		if (state == PAUSED || state == PAUSED_TEMP || state == COMPLETED || state == STOPPED) {
 			service.start();
 		} else if (state == STOPPED || state == IDLE) {
 			warnIfStorageUnavailable();
