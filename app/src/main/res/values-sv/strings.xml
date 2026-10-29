@@ -447,8 +447,6 @@
 	<string name="settings.casting_proxy_summary">Streama allting genom enheten som en proxy.  Det här kommer runt problem med självsignerade certifikat.</string>
 	<string name="settings.rename_duplicates">Döp om tvillingspår</string>
 	<string name="settings.rename_duplicates_summary">Döp om tvillingspår till originalnamnet så att jag kan se skillnad på dem.</string>
-	<string name="settings.start_on_headphones">Starta när hörlurar sätts in</string>
-	<string name="settings.start_on_headphones_summary">Starta när hörlurar sätts in.  Det här kräver en service som startat när telefonen bootar upp så den kan kolla om hörlurarna är i även när Dsub inte körs.</string>
 	<string name="settings.color_action_bar">Färgad action bar</string>
 	<string name="settings.color_action_bar.summary">Om action baren ska färgas eller inte</string>
 	<string name="settings.shuffle_by_album">Slumba per Album</string>

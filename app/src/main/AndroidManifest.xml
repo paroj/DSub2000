@@ -27,7 +27,6 @@
 	<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 	<uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -191,17 +190,6 @@
 					   android:resource="@xml/library_syncadapter" />
 		</service>
 
-		<service android:name="github.paroj.dsub2000.service.HeadphoneListenerService"
-			android:foregroundServiceType="mediaPlayback"
-			android:label="DSub Headphone Listener"/>
-		<receiver
-			android:name="github.paroj.dsub2000.receiver.BootReceiver"
-			android:exported="true">
-			<intent-filter>
-				<action
-					android:name="android.intent.action.BOOT_COMPLETED" />
-			</intent-filter>
-		</receiver>
 
         <receiver android:name="github.paroj.dsub2000.receiver.MediaButtonIntentReceiver"
 			android:exported="true">

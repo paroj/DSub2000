@@ -54,7 +54,6 @@ import java.util.Map;
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.activity.SubsonicActivity;
 import github.paroj.dsub2000.service.DownloadService;
-import github.paroj.dsub2000.service.HeadphoneListenerService;
 import github.paroj.dsub2000.service.MusicService;
 import github.paroj.dsub2000.service.MusicServiceFactory;
 import github.paroj.dsub2000.util.Constants;
@@ -191,15 +190,6 @@ public class SettingsFragment extends PreferenceCompatFragment implements Shared
 			DownloadService downloadService = DownloadService.getInstance();
 			if(downloadService != null) {
 				downloadService.reapplyVolume();
-			}
-		} else if(Constants.PREFERENCES_KEY_START_ON_HEADPHONES.equals(key)) {
-			Intent serviceIntent = new Intent();
-			serviceIntent.setClassName(context.getPackageName(), HeadphoneListenerService.class.getName());
-
-			if(sharedPreferences.getBoolean(key, false)) {
-				context.startService(serviceIntent);
-			} else {
-				context.stopService(serviceIntent);
 			}
 		} else if(Constants.PREFERENCES_KEY_THEME.equals(key)) {
 			String value = sharedPreferences.getString(key, null);

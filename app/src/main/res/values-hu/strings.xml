@@ -478,8 +478,6 @@
 	<string name="settings.casting_proxy_summary">Streamelés az eszközön (mint egy proxyn) keresztül. Ez megoldást jelenthet néhány esetben, pl. saját aláírású tanúsítvány használatakor.</string>
 	<string name="settings.rename_duplicates">Duplikált dalok átnevezése</string>
 	<string name="settings.rename_duplicates_summary">Duplikált dalok átnevezése az eredeti fájlnévre, így megkülönböztethetővé válnak.</string>
-	<string name="settings.start_on_headphones">Lejátszó elindítása</string>
-	<string name="settings.start_on_headphones_summary">Lejátszó elindítása fülhallgató csatlakoztatásakor. Ez a funkció olyan szolgáltatás használatát igényli, ami a Dsub elindítása nélkül tudja kontrollálni a fülhallgató csatlakoztatási eseményeket.</string>
 	<string name="settings.color_action_bar">Színes sávok</string>
 	<string name="settings.color_action_bar.summary">Színes kezelő- és értesítési sáv használata.</string>
 	<string name="settings.shuffle_by_album">Keverés albumok szerint</string>

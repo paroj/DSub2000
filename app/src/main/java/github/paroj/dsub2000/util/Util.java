@@ -666,11 +666,6 @@ public final class Util {
 		return Util.getPreferences(context).getBoolean(Constants.PREFERENCES_KEY_CAST_CACHE, false);
 	}
 
-	public static boolean shouldStartOnHeadphones(Context context) {
-		SharedPreferences prefs = getPreferences(context);
-		return prefs.getBoolean(Constants.PREFERENCES_KEY_START_ON_HEADPHONES, false);
-	}
-
 	public static String getSongPressAction(Context context) {
 		return getPreferences(context).getString(Constants.PREFERENCES_KEY_SONG_PRESS_ACTION, "all");
 	}

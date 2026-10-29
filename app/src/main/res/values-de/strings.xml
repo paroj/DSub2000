@@ -417,8 +417,6 @@
 	<string name="settings.casting_proxy_summary">Sende alles über dieses Gerät als Proxy.  Dies umgeht Probleme mit selbstsignierten Zertifikaten.</string>
 	<string name="settings.rename_duplicates">Doppelte Medien umbenennen</string>
 	<string name="settings.rename_duplicates_summary">Für doppelte Medien den originalen Dateinamen verwenden, um diese auseinanderhalten zu können.</string>
-	<string name="settings.start_on_headphones">Starte bei Kopfhörer</string>
-	<string name="settings.start_on_headphones_summary">Starte automatisch, wenn ein Kopfhörer angeschlossen wird.</string>
 
 	<string name="shuffle.title">Mischen von</string>
 	<string name="shuffle.startYear">Startjahr:</string>

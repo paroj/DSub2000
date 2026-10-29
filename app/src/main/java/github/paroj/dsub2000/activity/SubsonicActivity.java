@@ -87,7 +87,6 @@ import github.paroj.dsub2000.fragments.AdminFragment;
 import github.paroj.dsub2000.fragments.SubsonicFragment;
 import github.paroj.dsub2000.fragments.UserFragment;
 import github.paroj.dsub2000.service.DownloadService;
-import github.paroj.dsub2000.service.HeadphoneListenerService;
 import github.paroj.dsub2000.service.MusicService;
 import github.paroj.dsub2000.service.MusicServiceFactory;
 import github.paroj.dsub2000.util.Constants;
@@ -296,12 +295,6 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		// Sync the toggle state after onRestoreInstanceState has occurred.
 		if(drawerToggle != null) {
 			drawerToggle.syncState();
-		}
-
-		if(Util.shouldStartOnHeadphones(this)) {
-			Intent serviceIntent = new Intent();
-			serviceIntent.setClassName(this.getPackageName(), HeadphoneListenerService.class.getName());
-			this.startService(serviceIntent);
 		}
 	}
 
