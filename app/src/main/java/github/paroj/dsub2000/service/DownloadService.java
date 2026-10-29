@@ -77,7 +77,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.media.AudioDeviceInfo;
 import android.media.AudioManager;
 import android.media.audiofx.AudioEffect;
 import android.net.wifi.WifiManager;
@@ -1929,32 +1928,6 @@ public class DownloadService extends MediaLibraryService {
 				} else if (proxy != null) {
 					proxy.close();
 					proxy = null;
-				}
-			}
-
-			// Optional USB DAC routing (issue #141). Apply before prepareAsync so
-			// the player picks up the device on the upcoming prepare. Hot-plug
-			// mid-track is not handled here; the next track will pick up the new
-			// device. TODO: register AudioDeviceCallback to re-route mid-track.
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-				AudioDeviceInfo usbDevice = UsbDacHelper.findUsbAudioDevice(this);
-				mediaPlayer.setPreferredDevice(usbDevice);
-				if (usbDevice != null) {
-					if (!downloadFile.isStream()) {
-						// Sample-rate probe is diagnostic only; run it off the
-						// service monitor so MediaExtractor I/O does not delay
-						// every play start.
-						final String probePath = dataSource;
-						new Thread(new Runnable() {
-							@Override
-							public void run() {
-								Integer rate = UsbDacHelper.readSampleRate(probePath);
-								if (rate != null) {
-									Log.i(TAG, "USB DAC routing enabled; source sample rate " + rate + " Hz");
-								}
-							}
-						}, "UsbDacSampleRateProbe").start();
-					}
 				}
 			}
 
