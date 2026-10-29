@@ -347,8 +347,6 @@
     <string name="settings.hide_media_title">Dölj för andra</string>
     <string name="settings.hide_media_summary">Dölj spår för andra appar.</string>
     <string name="settings.hide_media_toast">Börjar gälla nästa gång Android skannar din telefon efter musikfiler.</string>
-    <string name="settings.media_button_title">Media knappar</string>
-    <string name="settings.media_button_summary">Reagera på telefonen, headset och bluetooths media knappar</string>
     <string name="settings.screen_lit_title">Håll skärmen igång</string>
     <string name="settings.screen_lit_summary">Att hålla skärmen igång när man laddar ner ökar nerladdningshastigheten.</string>
 	<string name="settings.playlist_title">Spela</string>

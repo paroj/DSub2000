@@ -327,8 +327,6 @@
     <string name="settings.hide_media_title">Verstecke vor anderen</string>
     <string name="settings.hide_media_summary">Musikdateien vor anderen Apps verstecken.</string>
     <string name="settings.hide_media_toast">Wird aktiv bei der nächsten Mediensuche durch Android.</string>
-    <string name="settings.media_button_title">Medientasten</string>
-    <string name="settings.media_button_summary">Verwende Medientasten des Telefon, Freisprecheinrichtung und Bluetooth</string>
     <string name="settings.screen_lit_title">Bildschirm aktiv halten</string>
     <string name="settings.screen_lit_summary">Ein aktiver Bildschirm verbessert die Downloadgeschwindigkeit.</string>
 	<string name="settings.playlist_title">Wiedergeben</string>

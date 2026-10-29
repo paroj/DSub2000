@@ -312,8 +312,6 @@
     <string name="settings.hide_media_title">Ocultar del resto</string>
     <string name="settings.hide_media_summary">Ocultar archivos de música de otras aplicaciones.</string>
     <string name="settings.hide_media_toast">Se aplicará la próxima vez que Android escanee la música de su teléfono.</string>
-    <string name="settings.media_button_title">Botones multimedia</string>
-    <string name="settings.media_button_summary">Responder a los botones Bluetooth, teléfono y manos libres</string>
     <string name="settings.screen_lit_title">Mantener pantalla encendida</string>
     <string name="settings.screen_lit_summary">Mantener la pantalla encendida durantes las descargas mejora la velocidad de descarga.</string>
 	<string name="settings.playlist_title">Listas de reproducción</string>

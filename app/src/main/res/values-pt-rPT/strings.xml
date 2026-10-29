@@ -368,8 +368,6 @@
     <string name="settings.hide_media_title">Ocultar do resto</string>
     <string name="settings.hide_media_summary">Ocultar ficheiros de música das outras aplicações</string>
     <string name="settings.hide_media_toast">As mudanças terão efeito na próxima vez que o Android procure músicas no seu dispositivo.</string>
-    <string name="settings.media_button_title">Botões multimédia</string>
-    <string name="settings.media_button_summary">Responder aos botões multimédia do dispositivo, mãos livres e Bluetooth</string>
     <string name="settings.screen_lit_title">Manter ecrã ligado</string>
     <string name="settings.screen_lit_summary">Manter o ecrã ligado durante as transferências melhora a velocidade de transferência</string>
 	<string name="settings.playlist_title">Listas de reprodução</string>

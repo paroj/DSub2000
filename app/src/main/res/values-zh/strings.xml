@@ -415,8 +415,6 @@
     <string name="settings.max_bitrate_wifi">最大音频比特率-Wi-Fi</string>
     <string name="settings.max_video_bitrate_mobile">最大视频比特率-移动网络</string>
     <string name="settings.max_video_bitrate_wifi">最大视频比特率-Wi-Fi</string>
-    <string name="settings.media_button_summary">响应电话、耳机和蓝牙媒体按钮</string>
-    <string name="settings.media_button_title">媒体按钮</string>
     <string name="settings.media_style_notification">系统通知栏样式</string>
     <string name="settings.media_style_notification_summary">使用系统媒体通知样式（Android 5.0+）</string>
     <string name="settings.menu_options.delete_summary">删除缓存文件</string>

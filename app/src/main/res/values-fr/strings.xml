@@ -325,8 +325,6 @@
     <string name="settings.hide_media_title">Invisible pour les autres</string>
     <string name="settings.hide_media_summary">Rendre les fichiers de musique indisponibles pour les autres applications.</string>
     <string name="settings.hide_media_toast">Prendra effet au prochain scan de musique d\'Android.</string>
-    <string name="settings.media_button_title">Boutons physiques</string>
-    <string name="settings.media_button_summary">Répondre aux boutons du mobile, du casque filaire ou bluetooth</string>
     <string name="settings.screen_lit_title">Garder l\'écran allumé</string>
     <string name="settings.screen_lit_summary">Garder l\'écran allumé augmente la vitesse de téléchargement.</string>
 	<string name="settings.playlist_title">Lecture</string>
