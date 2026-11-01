@@ -31,12 +31,6 @@ android {
 			proguardFiles 'proguard.cfg'
 			zipAlignEnabled true
 		}
-		fix {
-			minifyEnabled true
-			shrinkResources true
-			proguardFiles 'proguard.cfg'
-			zipAlignEnabled true
-		}
 	}
 	flavorDimensions "version"
 	productFlavors {
