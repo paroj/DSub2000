@@ -23,7 +23,6 @@ import android.accounts.AccountManager;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.TypedArray;
@@ -34,8 +33,6 @@ import android.provider.MediaStore;
 import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AlertDialog;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -886,65 +883,19 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			@Override
 			protected void done(Void arg) {
 				if(!context.isDestroyedCompat() && playerQueue != null) {
-					promptRestoreFromRemoteQueue(playerQueue);
+					new SilentBackgroundTask<Void>(context) {
+						@Override
+						protected Void doInBackground() throws Throwable {
+							DownloadService downloadService = getDownloadService();
+							downloadService.clear();
+							downloadService.download(playerQueue.songs, false, false, false, false, playerQueue.currentPlayingIndex, playerQueue.currentPlayingPosition);
+							return null;
+						}
+					}.execute();
 				}
 			}
 		}.execute();
 	}
-	private void promptRestoreFromRemoteQueue(final PlayerQueue remoteState) {
-		AlertDialog.Builder builder = new MaterialAlertDialogBuilder(this);
-		String message = getResources().getString(R.string.common_confirm_message, getResources().getString(R.string.download_restore_play_queue).toLowerCase(), Util.formatDate(remoteState.changed));
-		builder.setIcon(android.R.drawable.ic_dialog_alert)
-				.setTitle(R.string.common_confirm)
-				.setMessage(message)
-				.setPositiveButton(R.string.common_ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						new SilentBackgroundTask<Void>(SubsonicFragmentActivity.this) {
-							@Override
-							protected Void doInBackground() throws Throwable {
-								DownloadService downloadService = getDownloadService();
-								downloadService.clear();
-								downloadService.download(remoteState.songs, false, false, false, false, remoteState.currentPlayingIndex, remoteState.currentPlayingPosition);
-								return null;
-							}
-						}.execute();
-					}
-				})
-				.setNeutralButton(R.string.common_cancel, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						new SilentBackgroundTask<Void>(SubsonicFragmentActivity.this) {
-							@Override
-							protected Void doInBackground() throws Throwable {
-								DownloadService downloadService = getDownloadService();
-								downloadService.serializeQueue(false);
-								return null;
-							}
-						}.execute();
-					}
-				})
-				.setNegativeButton(R.string.common_never, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						new SilentBackgroundTask<Void>(SubsonicFragmentActivity.this) {
-							@Override
-							protected Void doInBackground() throws Throwable {
-								DownloadService downloadService = getDownloadService();
-								downloadService.serializeQueue(false);
-
-								SharedPreferences.Editor editor = Util.getPreferences(SubsonicFragmentActivity.this).edit();
-								editor.putBoolean(Constants.PREFERENCES_KEY_RESUME_PLAY_QUEUE_NEVER, true);
-								editor.commit();
-								return null;
-							}
-						}.execute();
-					}
-				});
-
-		builder.create().show();
-	}
-
 	private void createAccount() {
 		final Context context = this;
 
