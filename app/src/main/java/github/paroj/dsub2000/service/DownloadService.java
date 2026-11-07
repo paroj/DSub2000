@@ -2089,9 +2089,7 @@ public class DownloadService extends MediaLibraryService {
 		serializeQueue(true);
 	}
 	public synchronized void serializeQueue(boolean serializeRemote) {
-		if(playerState == PlayerState.PAUSED) {
-			lifecycleSupport.serializeDownloadQueue(serializeRemote);
-		}
+		lifecycleSupport.serializeDownloadQueue(serializeRemote);
 	}
 
 	synchronized void handleError(Exception x) {
