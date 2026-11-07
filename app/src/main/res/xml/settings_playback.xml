@@ -42,6 +42,12 @@
 			android:key="persistentNotification"
 			android:defaultValue="true"/>
 
+		<github.paroj.dsub2000.view.MaterialSwitchPreference
+			android:title="@string/settings.never_resume_play_queue.title"
+			android:summary="@string/settings.never_resume_play_queue.summary"
+			android:key="neverResumePlayQueue"
+			android:defaultValue="false"/>
+
 		<ListPreference
 			android:title="@string/settings.song_press_action"
 			android:key="songPressAction"

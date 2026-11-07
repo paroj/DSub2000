@@ -30,7 +30,6 @@
 	<string name="common.close">Close</string>
 	<string name="common.false">No</string>
 	<string name="common.true">Yes</string>
-	<string name="common.never">Never</string>
     <string name="common.reset">Reset</string>
 
     <string name="button_bar.home">Home</string>
@@ -224,10 +223,11 @@
 	<string name="download.downloading_summary_expanded">Current: %1$s
 		\nEstimated Size: %2$s</string>
 	<string name="download.failed_to_load">Failed to load</string>
-	<string name="download.restore_play_queue">continue from where you left off on another device at</string>
 	<string name="download.thumbs_up">Thumbs Up</string>
 	<string name="download.thumbs_down">Thumbs Down</string>
 	<string name="download.batch_mode">Batch Mode</string>
+	<string name="settings.never_resume_play_queue.title">Never restore play queue at startup</string>
+	<string name="settings.never_resume_play_queue.summary">Don\'t fetch and overwrite the play queue from the server when the app starts</string>
 	<string name="download.playback_speed_half">0.5x</string>
 	<string name="download.playback_speed_normal">1x</string>
 	<string name="download.playback_speed_one_half">1.5x</string>
