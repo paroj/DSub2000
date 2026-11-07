@@ -263,7 +263,9 @@ public class DownloadServiceLifecycleSupport {
 
 	public void onDestroy() {
 		serializeDownloadQueue();
-		eventLooper.quit();
+		// quitSafely lets the queued serialization above run; quit() would drop it and
+		// leave the saved queue (and its changed timestamp) stale.
+		eventLooper.quitSafely();
 		downloadService.unregisterReceiver(ejectEventReceiver);
 		downloadService.unregisterReceiver(intentReceiver);
 	}
