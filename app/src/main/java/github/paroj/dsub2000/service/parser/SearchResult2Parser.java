@@ -53,7 +53,7 @@ public class SearchResult2Parser extends MusicDirectoryEntryParser {
                 if (handleNestedArtist(name)) {
                     continue;
                 }
-                if ("artist".equals(name) && !isInside("artists") && !isInside("contributors")) {
+                if ("artist".equals(name) && !isInside("artists") && !isInside("albumArtists") && !isInside("contributors")) {
                     Artist artist = new Artist();
                     artist.setId(get("id"));
                     artist.setName(get("name"));
