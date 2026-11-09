@@ -20,6 +20,7 @@ package github.paroj.dsub2000.service;
 
 import java.net.HttpURLConnection;
 import java.util.List;
+import java.util.Set;
 
 
 import android.content.Context;
@@ -51,6 +52,12 @@ import github.paroj.dsub2000.util.ProgressListener;
 public interface MusicService {
 
     void ping(Context context, ProgressListener progressListener) throws Exception;
+
+    /**
+     * Returns the OpenSubsonic extensions advertised by the server.
+     * An empty set means that the server responded but supports no extensions.
+     */
+    Set<String> getOpenSubsonicExtensions(Context context, ProgressListener progressListener) throws Exception;
 
     boolean isLicenseValid(Context context, ProgressListener progressListener) throws Exception;
 

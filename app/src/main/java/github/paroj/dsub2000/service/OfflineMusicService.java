@@ -80,6 +80,11 @@ public class OfflineMusicService implements MusicService {
 	}
 
 	@Override
+	public Set<String> getOpenSubsonicExtensions(Context context, ProgressListener progressListener) throws Exception {
+		return Collections.emptySet();
+	}
+
+	@Override
     public boolean isLicenseValid(Context context, ProgressListener progressListener) throws Exception {
         return true;
     }

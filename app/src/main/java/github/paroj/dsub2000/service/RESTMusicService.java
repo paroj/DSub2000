@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -60,6 +61,7 @@ import github.paroj.dsub2000.service.parser.LyricsListParser;
 import github.paroj.dsub2000.service.parser.LyricsParser;
 import github.paroj.dsub2000.service.parser.MusicDirectoryParser;
 import github.paroj.dsub2000.service.parser.MusicFoldersParser;
+import github.paroj.dsub2000.service.parser.OpenSubsonicExtensionsParser;
 import github.paroj.dsub2000.service.parser.PlayQueueParser;
 import github.paroj.dsub2000.service.parser.PlaylistParser;
 import github.paroj.dsub2000.service.parser.PlaylistsParser;
@@ -71,6 +73,7 @@ import github.paroj.dsub2000.service.parser.SearchResult2Parser;
 import github.paroj.dsub2000.service.parser.SearchResultParser;
 import github.paroj.dsub2000.service.parser.ShareParser;
 import github.paroj.dsub2000.service.parser.StarredListParser;
+import github.paroj.dsub2000.service.parser.SubsonicRESTException;
 import github.paroj.dsub2000.service.parser.TopSongsParser;
 import github.paroj.dsub2000.service.parser.UserParser;
 import github.paroj.dsub2000.service.parser.VideosParser;
@@ -257,6 +260,41 @@ public class RESTMusicService implements MusicService {
         } finally {
             Util.close(reader);
         }
+    }
+
+    @Override
+    public Set<String> getOpenSubsonicExtensions(Context context, ProgressListener progressListener) throws Exception {
+        int instance = getInstance(context);
+        ServerInfo serverInfo = ServerInfo.getServerInfo(context, instance);
+        if (serverInfo != null && serverInfo.getOpenSubsonicExtensions() != null) {
+            return serverInfo.getOpenSubsonicExtensions();
+        }
+
+        Reader reader = getReader(context, progressListener, "getOpenSubsonicExtensions");
+        try {
+            Set<String> extensions = new OpenSubsonicExtensionsParser(context, instance).parse(reader);
+            saveOpenSubsonicExtensions(context, instance, extensions);
+            return extensions;
+        } catch (SubsonicRESTException e) {
+            if (e.getCode() != 0) {
+                throw e;
+            }
+            // The server answered but does not implement the endpoint. Cache the
+            // empty result so that we don't keep asking on every refresh.
+            saveOpenSubsonicExtensions(context, instance, Collections.<String>emptySet());
+            return Collections.emptySet();
+        } finally {
+            Util.close(reader);
+        }
+    }
+
+    private void saveOpenSubsonicExtensions(Context context, int instance, Set<String> extensions) {
+        ServerInfo serverInfo = ServerInfo.getServerInfo(context, instance);
+        if (serverInfo == null) {
+            serverInfo = new ServerInfo();
+        }
+        serverInfo.setOpenSubsonicExtensions(extensions);
+        serverInfo.saveServerInfo(context, instance, true);
     }
 
     @Override

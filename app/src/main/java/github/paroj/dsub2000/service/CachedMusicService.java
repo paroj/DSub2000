@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
@@ -92,6 +93,12 @@ public class CachedMusicService implements MusicService {
     public void ping(Context context, ProgressListener progressListener) throws Exception {
         checkSettingsChanged(context);
         musicService.ping(context, progressListener);
+    }
+
+    @Override
+    public Set<String> getOpenSubsonicExtensions(Context context, ProgressListener progressListener) throws Exception {
+        checkSettingsChanged(context);
+        return musicService.getOpenSubsonicExtensions(context, progressListener);
     }
 
     @Override

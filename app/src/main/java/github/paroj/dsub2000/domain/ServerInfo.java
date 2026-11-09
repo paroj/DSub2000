@@ -22,6 +22,8 @@ import android.content.Context;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import github.paroj.dsub2000.util.FileUtil;
@@ -41,6 +43,11 @@ public class ServerInfo implements Serializable {
 	private boolean isLicenseValid;
 	private Version restVersion;
 	private int type;
+	/**
+	 * OpenSubsonic extensions advertised by the server. A {@code null} value
+	 * means that the extensions have not been queried yet.
+	 */
+	private Set<String> openSubsonicExtensions;
 	
 	public ServerInfo() {
 		type = TYPE_SUBSONIC;
@@ -68,6 +75,13 @@ public class ServerInfo implements Serializable {
 	public void setRestType(int type) {
 		this.type = type;
 	}
+
+	public Set<String> getOpenSubsonicExtensions() {
+		return openSubsonicExtensions;
+	}
+	public void setOpenSubsonicExtensions(Set<String> extensions) {
+		this.openSubsonicExtensions = extensions;
+	}
 	
 	public boolean isStockSubsonic() {
 		return type == TYPE_SUBSONIC;
@@ -92,7 +106,8 @@ public class ServerInfo implements Serializable {
 			// Should never be null unless just starting up
 			return false;
 		} else {
-			return this.restVersion.equals(info.restVersion);
+			return this.restVersion.equals(info.restVersion)
+					&& Objects.equals(this.openSubsonicExtensions, info.openSubsonicExtensions);
 		}
 	}
 
@@ -101,8 +116,11 @@ public class ServerInfo implements Serializable {
 
 	}
 	public void saveServerInfo(Context context, int instance) {
+		saveServerInfo(context, instance, false);
+	}
+	public void saveServerInfo(Context context, int instance, boolean force) {
 		ServerInfo current = SERVERS.get(instance);
-		if(!this.equals(current)) {
+		if(force || !this.equals(current)) {
 			SERVERS.put(instance, this);
 			FileUtil.serialize(context, this, getCacheName(context, instance));
 		}
@@ -196,6 +214,27 @@ public class ServerInfo implements Serializable {
 	}
 	public static boolean isAmpache(Context context, int instance) {
 		return getServerType(context, instance) == TYPE_AMPACHE;
+	}
+
+	/**
+	 * Returns whether the advertised OpenSubsonic extensions are already known.
+	 */
+	public static boolean hasOpenSubsonicExtensionsInfo(Context context) {
+		return hasOpenSubsonicExtensionsInfo(context, Util.getActiveServer(context));
+	}
+	public static boolean hasOpenSubsonicExtensionsInfo(Context context, int instance) {
+		ServerInfo server = getServerInfo(context, instance);
+		return server != null && server.getOpenSubsonicExtensions() != null;
+	}
+
+	public static boolean hasOpenSubsonicExtension(Context context, String extension) {
+		return hasOpenSubsonicExtension(context, extension, Util.getActiveServer(context));
+	}
+	public static boolean hasOpenSubsonicExtension(Context context, String extension, int instance) {
+		ServerInfo server = getServerInfo(context, instance);
+		return server != null
+				&& server.getOpenSubsonicExtensions() != null
+				&& server.getOpenSubsonicExtensions().contains(extension);
 	}
 	
 	private static String getCacheName(Context context, int instance) {
