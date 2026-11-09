@@ -33,11 +33,14 @@ public final class Constants {
     // Note: Keep it as low as possible to maintain compatibility with older servers.
     public static final String REST_PROTOCOL_VERSION_SUBSONIC = "1.2.0";
 	public static final String REST_PROTOCOL_VERSION_MADSONIC = "2.0.0";
-    public static final String REST_CLIENT_ID = "DSub";
+    // The legacy-client lists on servers still match the old "DSub" name, so
+    // older installations keep receiving the compatibility response while this
+    // build opts into the full OpenSubsonic response.
+    public static final String REST_CLIENT_ID = "DSub2000";
+    public static final String CHROMECAST_CLIENT_ID = "DSub2000CC";
 
 	// OpenSubsonic extension used for the track-level song lists
 	public static final String OPENSUBSONIC_EXTENSION_SONG_LISTS = "songListsNCM";
-    public static final String CHROMECAST_CLIENT_ID = "DSubCC";
 	public static final String LAST_VERSION = "subsonic.version";
 
     // Names for intent extras.
