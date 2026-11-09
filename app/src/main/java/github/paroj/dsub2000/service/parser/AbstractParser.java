@@ -157,8 +157,15 @@ public abstract class AbstractParser {
             rootElementFound = true;
             String version = get("version");
             if (version != null) {
+            	Version restVersion = new Version(version);
             	ServerInfo server = new ServerInfo();
-            	server.setRestVersion(new Version(version));
+            	server.setRestVersion(restVersion);
+
+            	// Preserve the discovered extensions unless the server version changed
+            	ServerInfo previous = ServerInfo.getServerInfo(context, instance);
+            	if (previous != null && restVersion.equals(previous.getRestVersion())) {
+            		server.setOpenSubsonicExtensions(previous.getOpenSubsonicExtensions());
+            	}
 
             	if(MADSONIC.equals(get("type")) || MADSONIC_RESPONSE.equals(name)) {
 					server.setRestType(ServerInfo.TYPE_MADSONIC);

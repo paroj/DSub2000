@@ -34,6 +34,9 @@ public final class Constants {
     public static final String REST_PROTOCOL_VERSION_SUBSONIC = "1.2.0";
 	public static final String REST_PROTOCOL_VERSION_MADSONIC = "2.0.0";
     public static final String REST_CLIENT_ID = "DSub";
+
+	// OpenSubsonic extension used for the track-level song lists
+	public static final String OPENSUBSONIC_EXTENSION_SONG_LISTS = "songListsNCM";
     public static final String CHROMECAST_CLIENT_ID = "DSubCC";
 	public static final String LAST_VERSION = "subsonic.version";
 

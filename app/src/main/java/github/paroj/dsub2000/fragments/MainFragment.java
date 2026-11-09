@@ -10,9 +10,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StatFs;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.adapter.MainAdapter;
@@ -22,6 +25,7 @@ import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.FileUtil;
 import github.paroj.dsub2000.util.LoadingTask;
 import github.paroj.dsub2000.util.ProgressListener;
+import github.paroj.dsub2000.util.SilentBackgroundTask;
 import github.paroj.dsub2000.util.UserUtil;
 import github.paroj.dsub2000.util.Util;
 import github.paroj.dsub2000.service.MusicService;
@@ -50,6 +54,46 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 		serialize = false;
 		backgroundUpdate = false;
 		alwaysFullscreen = true;
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
+		View view = super.onCreateView(inflater, container, bundle);
+		detectOpenSubsonicExtensions();
+		return view;
+	}
+
+	/**
+	 * The supported OpenSubsonic extensions are needed to decide which song
+	 * lists to show. Query them once per server and rebuild the adapter when
+	 * the result becomes available.
+	 */
+	private void detectOpenSubsonicExtensions() {
+		if (Util.isOffline(context)
+				|| ServerInfo.isMadsonic(context)
+				|| ServerInfo.hasOpenSubsonicExtensionsInfo(context)) {
+			return;
+		}
+
+		new SilentBackgroundTask<Void>(context) {
+			@Override
+			protected Void doInBackground() throws Throwable {
+				MusicServiceFactory.getMusicService(context).getOpenSubsonicExtensions(context, this);
+				return null;
+			}
+
+			@Override
+			protected void done(Void result) {
+				if (recyclerView != null && objects != null) {
+					recyclerView.setAdapter(adapter = getAdapter(objects));
+				}
+			}
+
+			@Override
+			protected void error(Throwable error) {
+				Log.d(TAG, "Failed to query OpenSubsonic extensions", error);
+			}
+		}.execute();
 	}
 
 	@Override
