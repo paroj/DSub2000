@@ -54,12 +54,18 @@ public class MusicDirectoryEntryParser extends AbstractParser {
      * @return true if the element was consumed as a nested artist
      */
     protected boolean handleNestedArtist(String name) {
-        if (currentEntry != null && currentEntryDepth > 0 && getDepth() > currentEntryDepth
-                && "artist".equals(name) && isInside("artists")) {
+        if (currentEntry == null || currentEntryDepth <= 0 || getDepth() <= currentEntryDepth
+                || !"artist".equals(name)) {
+            return false;
+        }
+        if (isInside("artists")) {
             currentEntry.addArtist(new Artist(get("id"), get("name")));
             return true;
         }
-        return false;
+        // albumArtists and contributors also contain artist elements, but they
+        // are not this entry's display artists and must not be read as
+        // structural tags by the owning parser.
+        return isInside("albumArtists") || isInside("contributors");
     }
 
     protected MusicDirectory.Entry parseEntry(String artist) {

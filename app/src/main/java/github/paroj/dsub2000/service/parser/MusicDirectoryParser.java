@@ -85,7 +85,7 @@ public class MusicDirectoryParser extends MusicDirectoryEntryParser {
 					}
 
                     dir.addChild(entry);
-                } else if ("directory".equals(name) || ("artist".equals(name) && !isInside("artists") && !isInside("contributors")) || ("album".equals(name) && !isArtist)) {
+                } else if ("directory".equals(name) || ("artist".equals(name) && !isInside("artists") && !isInside("albumArtists") && !isInside("contributors")) || ("album".equals(name) && !isArtist)) {
                     dir.setName(get("name"));
 					dir.setId(get("id"));
 					if(Util.isTagBrowsing(context, instance)) {

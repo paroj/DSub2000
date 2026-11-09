@@ -53,7 +53,7 @@ public class StarredListParser extends MusicDirectoryEntryParser {
 						entry.setDirectory(true);
 					}
                     dir.addChild(entry);
-                } else if("artist".equals(name) && !isInside("artists") && !isInside("contributors")) {
+                } else if("artist".equals(name) && !isInside("artists") && !isInside("albumArtists") && !isInside("contributors")) {
 					MusicDirectory.Entry entry = parseArtist();
 					entry.setDirectory(true);
 					entry.setArtist(null);

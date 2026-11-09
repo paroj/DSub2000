@@ -75,7 +75,7 @@ public class IndexesParser extends MusicDirectoryEntryParser {
                 } else if ("index".equals(name)) {
                     index = get("name");
 
-                } else if ("artist".equals(name)) {
+                } else if ("artist".equals(name) && !isInside("albumArtists") && !isInside("contributors")) {
                     Artist artist = new Artist();
                     artist.setId(get("id"));
                     artist.setName(get("name"));
