@@ -59,6 +59,9 @@ public class BookmarkParser extends MusicDirectoryEntryParser {
             
             if (eventType == XmlPullParser.START_TAG) {
                 String name = getElementName();
+                if (handleNestedArtist(name)) {
+                    continue;
+                }
                 
                 if ("bookmark".equals(name)) {
                 	bookmark = new Bookmark();

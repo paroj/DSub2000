@@ -44,6 +44,9 @@ public class RandomSongsParser extends MusicDirectoryEntryParser {
             eventType = nextParseEvent();
             if (eventType == XmlPullParser.START_TAG) {
                 String name = getElementName();
+                if (handleNestedArtist(name)) {
+                    continue;
+                }
                 if ("song".equals(name)) {
                     dir.addChild(parseEntry(""));
                 } else if ("error".equals(name)) {

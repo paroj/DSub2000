@@ -92,6 +92,9 @@ public class PlayQueueParser extends MusicDirectoryEntryParser {
 			eventType = nextParseEvent();
 			if (eventType == XmlPullParser.START_TAG) {
 				String name = getElementName();
+				if (handleNestedArtist(name)) {
+					continue;
+				}
 				if("playQueue".equals(name)) {
 					currentId = get("current");
 					Integer position = getInteger("position");

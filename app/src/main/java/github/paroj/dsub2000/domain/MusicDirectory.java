@@ -156,6 +156,8 @@ public class MusicDirectory implements Serializable {
 				entry.setTitle(refreshed.getTitle());
 				entry.setAlbum(refreshed.getAlbum());
 				entry.setArtist(refreshed.getArtist());
+				entry.displayArtist = refreshed.displayArtist;
+				entry.artists = refreshed.artists;
 				entry.setTrack(refreshed.getTrack());
 				entry.setYear(refreshed.getYear());
 				entry.setGenre(refreshed.getGenre());
@@ -176,6 +178,8 @@ public class MusicDirectory implements Serializable {
 						found.setTitle(refreshed.getTitle());
 						found.setAlbum(refreshed.getAlbum());
 						found.setArtist(refreshed.getArtist());
+						found.displayArtist = refreshed.displayArtist;
+						found.artists = refreshed.artists;
 						found.setTrack(refreshed.getTrack());
 						found.setYear(refreshed.getYear());
 						found.setGenre(refreshed.getGenre());
@@ -239,6 +243,8 @@ public class MusicDirectory implements Serializable {
 		private String title;
 		private String album;
 		private String artist;
+		private String displayArtist;
+		private List<Artist> artists;
 		private Integer track;
 		private Integer customOrder;
 		private Integer year;
@@ -455,6 +461,54 @@ public class MusicDirectory implements Serializable {
         public void setArtist(String artist) {
             this.artist = artist;
         }
+
+		/**
+		 * Returns the artist string the server asked us to display. OpenSubsonic
+		 * servers may provide a displayArtist or a list of artists instead of the
+		 * legacy single artist string.
+		 */
+		public String getDisplayArtist() {
+			if (displayArtist != null && !displayArtist.isEmpty()) {
+				return displayArtist;
+			}
+			if (artists != null && !artists.isEmpty()) {
+				StringBuilder joined = new StringBuilder();
+				for (Artist artist : artists) {
+					if (artist.getName() == null) {
+						continue;
+					}
+					if (joined.length() > 0) {
+						joined.append(", ");
+					}
+					joined.append(artist.getName());
+				}
+				if (joined.length() > 0) {
+					return joined.toString();
+				}
+			}
+			return artist;
+		}
+
+		public void setDisplayArtist(String displayArtist) {
+			this.displayArtist = displayArtist;
+		}
+
+		public List<Artist> getArtists() {
+			return artists;
+		}
+
+		public void setArtists(List<Artist> artists) {
+			this.artists = artists;
+		}
+
+		public void addArtist(Artist artist) {
+			if (artist != null) {
+				if (artists == null) {
+					artists = new ArrayList<Artist>();
+				}
+				artists.add(artist);
+			}
+		}
 
         public Integer getTrack() {
             return track;

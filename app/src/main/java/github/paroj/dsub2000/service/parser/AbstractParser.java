@@ -20,6 +20,8 @@ package github.paroj.dsub2000.service.parser;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -47,6 +49,7 @@ public abstract class AbstractParser {
 	protected final int instance;
     private XmlPullParser parser;
     private boolean rootElementFound;
+    private final Deque<String> openElements = new ArrayDeque<String>();
 
     public AbstractParser(Context context, int instance) {
         this.context = context;
@@ -140,7 +143,13 @@ public abstract class AbstractParser {
 
     protected int nextParseEvent() throws Exception {
 		try {
-			return parser.next();
+			int eventType = parser.next();
+			if (eventType == XmlPullParser.START_TAG) {
+				openElements.push(parser.getName());
+			} else if (eventType == XmlPullParser.END_TAG && !openElements.isEmpty()) {
+				openElements.pop();
+			}
+			return eventType;
 		} catch(Exception e) {
 			if(ServerInfo.isMadsonic6(context, instance)) {
 				ServerInfo overrideInfo = new ServerInfo();
@@ -150,6 +159,14 @@ public abstract class AbstractParser {
 			throw e;
 		}
     }
+
+	protected boolean isInside(String element) {
+		return openElements.contains(element);
+	}
+
+	protected int getDepth() {
+		return parser.getDepth();
+	}
 
     protected String getElementName() {
         String name = parser.getName();

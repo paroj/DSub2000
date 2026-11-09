@@ -44,13 +44,16 @@ public class StarredListParser extends MusicDirectoryEntryParser {
             eventType = nextParseEvent();
             if (eventType == XmlPullParser.START_TAG) {
                 String name = getElementName();
+                if (handleNestedArtist(name)) {
+                    continue;
+                }
                 if ("album".equals(name) || "song".equals(name)) {
 					MusicDirectory.Entry entry = parseEntry("");
 					if("album".equals(name)) {
 						entry.setDirectory(true);
 					}
                     dir.addChild(entry);
-                } else if("artist".equals(name)) {
+                } else if("artist".equals(name) && !isInside("artists") && !isInside("contributors")) {
 					MusicDirectory.Entry entry = parseArtist();
 					entry.setDirectory(true);
 					entry.setArtist(null);

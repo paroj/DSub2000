@@ -56,6 +56,9 @@ public class MusicDirectoryParser extends MusicDirectoryEntryParser {
             eventType = nextParseEvent();
             if (eventType == XmlPullParser.START_TAG) {
                 String name = getElementName();
+                if (handleNestedArtist(name)) {
+                    continue;
+                }
                 if ("child".equals(name) || "song".equals(name) || "video".equals(name)) {
 					Entry entry = parseEntry(artist);
 					entry.setGrandParent(dir.getParent());
@@ -82,7 +85,7 @@ public class MusicDirectoryParser extends MusicDirectoryEntryParser {
 					}
 
                     dir.addChild(entry);
-                } else if ("directory".equals(name) || "artist".equals(name) || ("album".equals(name) && !isArtist)) {
+                } else if ("directory".equals(name) || ("artist".equals(name) && !isInside("artists") && !isInside("contributors")) || ("album".equals(name) && !isArtist)) {
                     dir.setName(get("name"));
 					dir.setId(get("id"));
 					if(Util.isTagBrowsing(context, instance)) {

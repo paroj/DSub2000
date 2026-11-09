@@ -44,6 +44,9 @@ public class EntryListParser extends MusicDirectoryEntryParser {
             eventType = nextParseEvent();
             if (eventType == XmlPullParser.START_TAG) {
                 String name = getElementName();
+                if (handleNestedArtist(name)) {
+                    continue;
+                }
                 if ("album".equals(name)) {
 					MusicDirectory.Entry entry = parseEntry("");
 					if(get("isDir") == null) {
