@@ -279,9 +279,7 @@ public class RESTMusicService implements MusicService {
             if (e.getCode() != 0) {
                 throw e;
             }
-            // The server answered but does not implement the endpoint. Cache the
-            // empty result so that we don't keep asking on every refresh.
-            saveOpenSubsonicExtensions(context, instance, Collections.<String>emptySet());
+            // The server answered but does not implement the endpoint.
             return Collections.emptySet();
         } finally {
             Util.close(reader);
@@ -289,6 +287,12 @@ public class RESTMusicService implements MusicService {
     }
 
     private void saveOpenSubsonicExtensions(Context context, int instance, Set<String> extensions) {
+        if (extensions.isEmpty()) {
+            // Don't cache a negative result: a server update may add the
+            // extension without changing the Subsonic API version.
+            return;
+        }
+
         ServerInfo serverInfo = ServerInfo.getServerInfo(context, instance);
         if (serverInfo == null) {
             serverInfo = new ServerInfo();
