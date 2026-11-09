@@ -1364,9 +1364,9 @@ public class SubsonicFragment extends Fragment implements SwipeRefreshLayout.OnR
 			headers.add(R.string.details_status);
 			details.add(((PodcastEpisode)song).getStatus());
 		} else if(!song.isVideo()) {
-			if(song.getArtist() != null && !"".equals(song.getArtist())) {
+			if(song.getDisplayArtist() != null && !"".equals(song.getDisplayArtist())) {
 				headers.add(R.string.details_artist);
-				details.add(song.getArtist());
+				details.add(song.getDisplayArtist());
 			}
 			if(song.getAlbum() != null && !"".equals(song.getAlbum())) {
 				headers.add(R.string.details_album);

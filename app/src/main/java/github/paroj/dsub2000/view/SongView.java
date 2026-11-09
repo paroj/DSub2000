@@ -117,11 +117,11 @@ public class SongView extends UpdateView2<MusicDirectory.Entry, Boolean> {
 					artist.append(Util.formatDate(context, date, false));
 				}
 			}
-			else if(song.getArtist() != null) {
+			else if(song.getDisplayArtist() != null) {
 				if(showAlbum) {
 					artist.append(song.getAlbum());
 				} else {
-					artist.append(song.getArtist());
+					artist.append(song.getDisplayArtist());
 				}
 			}
 

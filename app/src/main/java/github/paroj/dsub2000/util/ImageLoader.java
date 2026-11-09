@@ -144,14 +144,14 @@ public class ImageLoader {
 			String hash;
 			if(entry.getAlbum() != null) {
 				hash = entry.getAlbum();
-			} else if(entry.getArtist() != null) {
-				hash = entry.getArtist();
+			} else if(entry.getDisplayArtist() != null) {
+				hash = entry.getDisplayArtist();
 			} else {
 				hash = entry.getId();
 			}
 			color = COLORS[Math.abs(hash.hashCode()) % COLORS.length];
 
-			return getUnknownImage(key, size, color, entry.getAlbum(), entry.getArtist());
+			return getUnknownImage(key, size, color, entry.getAlbum(), entry.getDisplayArtist());
 		}
 	}
 	private Bitmap getUnknownImage(String key, int size, int color, String topText, String bottomText) {

@@ -180,7 +180,7 @@ public class DSubWidgetProvider extends AppWidgetProvider {
         }
         
         String title = currentPlaying == null ? null : currentPlaying.getTitle();
-        CharSequence artist = currentPlaying == null ? null : currentPlaying.getArtist();
+        CharSequence artist = currentPlaying == null ? null : currentPlaying.getDisplayArtist();
 		CharSequence album = currentPlaying == null ? null : currentPlaying.getAlbum();
         CharSequence errorState = null;
 
