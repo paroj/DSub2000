@@ -20,6 +20,9 @@ package github.paroj.dsub2000.service.parser;
 
 import android.content.Context;
 
+import org.xmlpull.v1.XmlPullParser;
+
+import github.paroj.dsub2000.domain.Artist;
 import github.paroj.dsub2000.domain.Bookmark;
 import github.paroj.dsub2000.domain.MusicDirectory;
 
@@ -27,8 +30,36 @@ import github.paroj.dsub2000.domain.MusicDirectory;
  * @author Sindre Mehus
  */
 public class MusicDirectoryEntryParser extends AbstractParser {
+    private MusicDirectory.Entry currentEntry;
+    private int currentEntryDepth = -1;
+
     public MusicDirectoryEntryParser(Context context, int instance) {
         super(context, instance);
+    }
+
+    @Override
+    protected int nextParseEvent() throws Exception {
+        int eventType = super.nextParseEvent();
+        if (eventType == XmlPullParser.END_TAG && currentEntry != null && getDepth() == currentEntryDepth) {
+            currentEntry = null;
+            currentEntryDepth = -1;
+        }
+        return eventType;
+    }
+
+    /**
+     * Collects an artist nested in an entry's artists container. Such elements
+     * must not be mistaken for top-level artists by the owning parser.
+     *
+     * @return true if the element was consumed as a nested artist
+     */
+    protected boolean handleNestedArtist(String name) {
+        if (currentEntry != null && currentEntryDepth > 0 && getDepth() > currentEntryDepth
+                && "artist".equals(name) && isInside("artists")) {
+            currentEntry.addArtist(new Artist(get("id"), get("name")));
+            return true;
+        }
+        return false;
     }
 
     protected MusicDirectory.Entry parseEntry(String artist) {
@@ -48,6 +79,7 @@ public class MusicDirectoryEntryParser extends AbstractParser {
         entry.setGenre(get("genre"));
 		entry.setAlbum(get("album"));
 		entry.setRating(getInteger("userRating"));
+		entry.setDisplayArtist(get("displayArtist"));
 
         if (!entry.isDirectory()) {
 			entry.setAlbumId(get("albumId"));
@@ -77,6 +109,8 @@ public class MusicDirectoryEntryParser extends AbstractParser {
         } else if(!"".equals(artist)) {
 			entry.setPath(artist + "/" + entry.getTitle());
 		}
+		currentEntry = entry;
+		currentEntryDepth = getDepth();
         return entry;
     }
 	

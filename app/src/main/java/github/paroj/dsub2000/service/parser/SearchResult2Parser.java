@@ -50,7 +50,10 @@ public class SearchResult2Parser extends MusicDirectoryEntryParser {
             eventType = nextParseEvent();
             if (eventType == XmlPullParser.START_TAG) {
                 String name = getElementName();
-                if ("artist".equals(name)) {
+                if (handleNestedArtist(name)) {
+                    continue;
+                }
+                if ("artist".equals(name) && !isInside("artists") && !isInside("contributors")) {
                     Artist artist = new Artist();
                     artist.setId(get("id"));
                     artist.setName(get("name"));

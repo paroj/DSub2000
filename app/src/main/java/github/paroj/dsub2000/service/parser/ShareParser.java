@@ -72,6 +72,9 @@ public class ShareParser extends MusicDirectoryEntryParser {
             
             if (eventType == XmlPullParser.START_TAG) {
                 String name = getElementName();
+                if (handleNestedArtist(name)) {
+                    continue;
+                }
                 
                 if ("share".equals(name)) {
                 	share = new Share();

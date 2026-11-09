@@ -39,6 +39,9 @@ public class TopSongsParser extends MusicDirectoryEntryParser {
 			eventType = nextParseEvent();
 			if (eventType == XmlPullParser.START_TAG) {
 				String name = getElementName();
+				if (handleNestedArtist(name)) {
+					continue;
+				}
 				if ("song".equals(name)) {
 					MusicDirectory.Entry entry = parseEntry("");
 					entry.setCustomOrder(customOrder);

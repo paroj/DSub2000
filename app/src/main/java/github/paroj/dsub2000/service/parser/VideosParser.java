@@ -38,6 +38,9 @@ public class VideosParser extends MusicDirectoryEntryParser {
 			eventType = nextParseEvent();
 			if (eventType == XmlPullParser.START_TAG) {
 				String name = getElementName();
+				if (handleNestedArtist(name)) {
+					continue;
+				}
 				if ("video".equals(name)) {
 					MusicDirectory.Entry entry = parseEntry("");
 					dir.addChild(entry);
