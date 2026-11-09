@@ -179,6 +179,12 @@ public class MainFragment extends SelectRecyclerFragment<Integer> {
 				songs.add(R.string.main_songs_frequent);
 			}
 
+		} else if(ServerInfo.hasOpenSubsonicExtension(context, Constants.OPENSUBSONIC_EXTENSION_SONG_LISTS)) {
+
+			songs.add(R.string.main_songs_newest);
+			songs.add(R.string.main_songs_recent);
+			songs.add(R.string.main_songs_frequent);
+
 		}
 
 		if(ServerInfo.checkServerVersion(context, "1.2.0")) {

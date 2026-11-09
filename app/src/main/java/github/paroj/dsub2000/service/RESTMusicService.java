@@ -812,27 +812,51 @@ public class RESTMusicService implements MusicService {
         List<Object> values = new ArrayList<Object>();
 
         names.add("size");
-        values.add(size);
+        values.add(Math.min(size, 500));
         names.add("offset");
         values.add(offset);
 
+        int instance = getInstance(context);
         String method;
-        switch(type) {
-			case MainFragment.SONGS_NEWEST:
-				method = "getNewaddedSongs";
-				break;
-			case MainFragment.SONGS_TOP_PLAYED:
-				method = "getTopplayedSongs";
-				break;
-			case MainFragment.SONGS_RECENT:
-				method = "getLastplayedSongs";
-				break;
-			case MainFragment.SONGS_FREQUENT:
-				method = "getMostplayedSongs";
-				break;
-			default:
-				method = "getNewaddedSongs";
-		}
+        if(ServerInfo.hasOpenSubsonicExtension(context, Constants.OPENSUBSONIC_EXTENSION_SONG_LISTS, instance)) {
+            String apiType;
+            switch(type) {
+                case MainFragment.SONGS_NEWEST:
+                    apiType = "newest";
+                    break;
+                case MainFragment.SONGS_RECENT:
+                    apiType = "recent";
+                    break;
+                case MainFragment.SONGS_FREQUENT:
+                    apiType = "frequent";
+                    break;
+                default:
+                    throw new Exception("Song list type '" + type + "' is not supported by this server");
+            }
+
+            method = "getSongList";
+            names.add("type");
+            values.add(apiType);
+        } else if(ServerInfo.isMadsonic6(context, instance)) {
+            switch(type) {
+                case MainFragment.SONGS_NEWEST:
+                    method = "getNewaddedSongs";
+                    break;
+                case MainFragment.SONGS_TOP_PLAYED:
+                    method = "getTopplayedSongs";
+                    break;
+                case MainFragment.SONGS_RECENT:
+                    method = "getLastplayedSongs";
+                    break;
+                case MainFragment.SONGS_FREQUENT:
+                    method = "getMostplayedSongs";
+                    break;
+                default:
+                    method = "getNewaddedSongs";
+            }
+        } else {
+            throw new Exception("Song lists are not supported by this server");
+        }
 
         Reader reader = getReader(context, progressListener, method, names, values, true);
         try {
