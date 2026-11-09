@@ -121,9 +121,9 @@ public class SelectBookmarkFragment extends SelectRecyclerFragment<MusicDirector
 		headers.add(R.string.details_song);
 		details.add(entry.getTitle());
 
-		if(entry.getArtist() != null) {
+		if(entry.getDisplayArtist() != null) {
 			headers.add(R.string.details_artist);
-			details.add(entry.getArtist());
+			details.add(entry.getDisplayArtist());
 		}
 		if(entry.getAlbum() != null) {
 			headers.add(R.string.details_album);

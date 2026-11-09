@@ -1471,8 +1471,8 @@ public class NowPlayingFragment extends SubsonicFragment implements OnGestureLis
 					Entry entry = currentPlaying.getSong();
 					if(entry.getAlbum() != null) {
 						String artist = "";
-						if (entry.getArtist() != null) {
-							artist = currentPlaying.getSong().getArtist() + " - ";
+						if (entry.getDisplayArtist() != null) {
+							artist = currentPlaying.getSong().getDisplayArtist() + " - ";
 						}
 						statusTextView.setText(artist + entry.getAlbum());
 					} else {

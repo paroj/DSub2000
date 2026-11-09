@@ -72,7 +72,7 @@ public class AlbumView extends UpdateView2<MusicDirectory.Entry, ImageLoader> {
 		titleView.setText(album.getAlbumDisplay());
 		String artist = "";
 		if(showArtist) {
-			artist = album.getArtist();
+			artist = album.getDisplayArtist();
 			if (artist == null) {
 				artist = "";
 			}
@@ -82,7 +82,7 @@ public class AlbumView extends UpdateView2<MusicDirectory.Entry, ImageLoader> {
 		} else if(album.getYear() != null) {
 			artist += album.getYear();
 		}
-		artistView.setText(album.getArtist() == null ? "" : artist);
+		artistView.setText(album.getDisplayArtist() == null ? "" : artist);
 		onUpdateImageView();
 		file = null;
 	}

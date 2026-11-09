@@ -79,7 +79,7 @@ public final class Notifications {
 		}
 
 		String title = song.getTitle();
-		String artist = song.getArtist();
+		String artist = song.getDisplayArtist();
 		String album = song.getAlbum();
 
 		NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, "now-playing-channel")

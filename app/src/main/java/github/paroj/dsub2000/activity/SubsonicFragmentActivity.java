@@ -1004,9 +1004,9 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 			song = currentPlaying.getSong();
 			trackView.setText(song.getTitle());
 
-			if(song.getArtist() != null) {
+			if(song.getDisplayArtist() != null) {
 				artistView.setVisibility(View.VISIBLE);
-				artistView.setText(song.getArtist());
+				artistView.setText(song.getDisplayArtist());
 			} else {
 				artistView.setVisibility(View.GONE);
 			}

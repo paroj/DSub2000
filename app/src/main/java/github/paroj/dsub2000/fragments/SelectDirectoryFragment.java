@@ -1233,8 +1233,8 @@ public class SelectDirectoryFragment extends SubsonicFragment implements Section
 		for (Entry entry : entries) {
 			if (!entry.isDirectory()) {
 				songCount++;
-				if (entry.getArtist() != null) {
-					artists.add(entry.getArtist());
+				if (entry.getDisplayArtist() != null) {
+					artists.add(entry.getDisplayArtist());
 				}
 				if(entry.getYear() != null) {
 					years.add(entry.getYear());
