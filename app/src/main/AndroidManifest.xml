@@ -2,13 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	android:installLocation="internalOnly">
 
+	<!-- Media3 passes the application context to the audio stack, which loses the attribution tag
+	     and makes Android 16 log "attributionTag not declared in manifest" for the empty tag. The
+	     platform parser rejects manifest entries with an empty android:tag, so the warning cannot be
+	     silenced this way; the tag is only a log message and playback continues with a null tag. -->
 	<attribution
 		android:tag="audioPlayback"
-		android:label="@string/attribution_audio_playback" />
-	<!-- Media3 passes the application context to the audio stack, which loses the attribution tag
-	     and makes Android 16 report the empty tag. Declare it so the platform's AppOps check passes. -->
-	<attribution
-		android:tag="@string/attribution_empty"
 		android:label="@string/attribution_audio_playback" />
 
     <instrumentation android:name="android.test.InstrumentationTestRunner"
