@@ -47,6 +47,7 @@ public class MediaRouteManager extends MediaRouter.Callback {
 	private List<MediaRouteProvider> providers = new ArrayList<MediaRouteProvider>();
 	private List<MediaRouteProvider> onlineProviders = new ArrayList<MediaRouteProvider>();
 	private DLNARouteProvider dlnaProvider;
+	private boolean scanning;
 	private final Handler handler = new Handler(Looper.getMainLooper());
 	private final Runnable releaseIdleDlnaProvider = new Runnable() {
 		@Override
@@ -68,7 +69,7 @@ public class MediaRouteManager extends MediaRouter.Callback {
 	}
 
 	public void destroy() {
-		stopScan();
+		router.removeCallback(this);
 		handler.removeCallbacks(releaseIdleDlnaProvider);
 		for(MediaRouteProvider provider: providers) {
 			router.removeProvider(provider);
@@ -114,11 +115,21 @@ public class MediaRouteManager extends MediaRouter.Callback {
 
 	public void startScan() {
 		ensureDlnaProvider();
-		router.addCallback(selector, this, MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN);
+		scanning = true;
+		registerCallback();
 	}
 	public void stopScan() {
-		router.removeCallback(this);
+		scanning = false;
+		registerCallback();
 		scheduleDlnaProviderRelease();
+	}
+
+	/**
+	 * Stays registered for the manager's lifetime: route selections made in the
+	 * cast dialog only reach onRouteSelected through this callback.
+	 */
+	private void registerCallback() {
+		router.addCallback(selector, this, scanning ? MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN : 0);
 	}
 
 	public MediaRouteSelector getSelector() {
@@ -178,6 +189,7 @@ public class MediaRouteManager extends MediaRouter.Callback {
 		}
 		builder.addControlCategory(DLNARouteProvider.CATEGORY_DLNA);
 		selector = builder.build();
+		registerCallback();
 	}
 
 	public void ensureDlnaProvider() {
