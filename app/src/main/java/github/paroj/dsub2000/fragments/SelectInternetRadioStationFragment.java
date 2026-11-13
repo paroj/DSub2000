@@ -51,7 +51,7 @@ public class SelectInternetRadioStationFragment extends SelectRecyclerFragment<I
 
 	@Override
 	public SectionAdapter<InternetRadioStation> getAdapter(List<InternetRadioStation> objs) {
-		return new InternetRadioStationAdapter(context, objs, this);
+		return new InternetRadioStationAdapter(context, objs, getImageLoader(), this);
 	}
 
 	@Override

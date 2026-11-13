@@ -21,19 +21,42 @@ import android.widget.TextView;
 
 import github.paroj.dsub2000.R;
 import github.paroj.dsub2000.domain.InternetRadioStation;
+import github.paroj.dsub2000.util.ImageLoader;
 
 public class InternetRadioStationView extends UpdateView<InternetRadioStation> {
 	private TextView titleView;
+	private ImageLoader imageLoader;
 
 	public InternetRadioStationView(Context context) {
+		this(context, null);
+	}
+
+	public InternetRadioStationView(Context context, ImageLoader imageLoader) {
 		super(context);
-		LayoutInflater.from(context).inflate(R.layout.basic_list_item, this, true);
+
+		this.imageLoader = imageLoader;
+		if(imageLoader != null) {
+			LayoutInflater.from(context).inflate(R.layout.basic_art_item, this, true);
+		} else {
+			LayoutInflater.from(context).inflate(R.layout.basic_list_item, this, true);
+		}
 
 		titleView = (TextView) findViewById(R.id.item_name);
 		moreButton = (ImageView) findViewById(R.id.item_more);
+		coverArtView = findViewById(R.id.item_art);
 	}
 
 	protected void setObjectImpl(InternetRadioStation station) {
 		titleView.setText(station.getTitle());
+
+		if(imageLoader != null) {
+			imageTask = imageLoader.loadImage(coverArtView, station, false, true);
+		}
+	}
+
+	public void onUpdateImageView() {
+		if(imageLoader != null) {
+			imageTask = imageLoader.loadImage(coverArtView, item, false, true);
+		}
 	}
 }

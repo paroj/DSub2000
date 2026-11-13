@@ -220,7 +220,7 @@ public class ImageLoader {
 	}
 	public SilentBackgroundTask loadImage(View view, MusicDirectory.Entry entry, boolean large, int size, boolean crossfade) {
 		if(entry != null && entry instanceof InternetRadioStation) {
-			// Continue on and load a null bitmap
+			// Radio stations may have their own cover art, but are never artists
 		}
 		// If we know this a artist, try to load artist info instead
 		// Folder IDs are not necessarily artist IDs, so only trust them when browsing by tags
