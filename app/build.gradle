@@ -79,7 +79,7 @@ dependencies {
 	implementation 'androidx.mediarouter:mediarouter:1.8.1'
 	implementation 'androidx.recyclerview:recyclerview:1.4.0'
 	implementation 'androidx.activity:activity:1.10.1'
-	implementation 'com.google.android.material:material:1.13.0'
+	implementation 'com.google.android.material:material:1.14.0'
 	googleImplementation 'com.google.android.gms:play-services-cast-framework:22.1.0'
 	googleImplementation "androidx.media3:media3-cast:$media3Version"
 	implementation 'com.sothree.slidinguppanel:library:3.4.0'
