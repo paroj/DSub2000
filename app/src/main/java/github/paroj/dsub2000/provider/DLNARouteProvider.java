@@ -85,9 +85,6 @@ public class DLNARouteProvider extends MediaRouteProvider {
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				dlnaService = (AndroidUpnpService) service;
-				// cling to jupnp migration workaround:
-				// https://github.com/jupnp/jupnp/issues/153#issuecomment-1917832580
-				dlnaService.get().startup();
 				dlnaService.getRegistry().addListener(registryListener = new RegistryListener() {
 					@Override
 					public void remoteDeviceDiscoveryStarted(Registry registry, RemoteDevice remoteDevice) {
