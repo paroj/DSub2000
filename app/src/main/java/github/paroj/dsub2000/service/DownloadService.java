@@ -2174,10 +2174,18 @@ public class DownloadService extends MediaLibraryService {
 		// #136): the previous unconditional full-list scan stat'd every
 		// file on every checkDownloads() call.
 		if (!Util.isAllowedToDownload(this)) {
-			boolean skipNetworkCheck = allLocallyAvailable(downloadList)
+			boolean playbackCached = allLocallyAvailable(downloadList);
+			// Only warn when the device unexpectedly lost its usable network.
+			// Checking backgroundDownloadList here as well used to make this fire
+			// on every track change while listening to cached music, because an
+			// unfinished pin/sync job stays queued. Offline mode is a deliberate
+			// user choice, not a missing network, so it must not warn either.
+			if (!playbackCached && !Util.isOffline(this) && !Util.isNetworkConnected(this)) {
+				Util.toast(this, R.string.select_album_no_network);
+			}
+			boolean skipNetworkCheck = playbackCached
 					&& allLocallyAvailable(backgroundDownloadList);
 			if (!skipNetworkCheck) {
-				Util.toast(this, R.string.select_album_no_network);
 				return;
 			}
 		}
