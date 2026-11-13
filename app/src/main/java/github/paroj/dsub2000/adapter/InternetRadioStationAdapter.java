@@ -20,21 +20,30 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import github.paroj.dsub2000.domain.InternetRadioStation;
+import github.paroj.dsub2000.util.ImageLoader;
 import github.paroj.dsub2000.view.FastScroller;
 import github.paroj.dsub2000.view.InternetRadioStationView;
 import github.paroj.dsub2000.view.UpdateView;
 
 public class InternetRadioStationAdapter extends SectionAdapter<InternetRadioStation> implements FastScroller.BubbleTextGetter {
 	public static int VIEW_TYPE_INTERNET_RADIO_STATION = 1;
+	public static int VIEW_TYPE_INTERNET_RADIO_STATION_ART = 2;
 
-	public InternetRadioStationAdapter(Context context, List<InternetRadioStation> stations, OnItemClickedListener listener) {
+	private ImageLoader imageLoader;
+
+	public InternetRadioStationAdapter(Context context, List<InternetRadioStation> stations, ImageLoader imageLoader, OnItemClickedListener listener) {
 		super(context, stations);
+		this.imageLoader = imageLoader;
 		this.onItemClickedListener = listener;
 	}
 
 	@Override
 	public UpdateView.UpdateViewHolder onCreateSectionViewHolder(ViewGroup parent, int viewType) {
-		return new UpdateView.UpdateViewHolder(new InternetRadioStationView(context));
+		if(viewType == VIEW_TYPE_INTERNET_RADIO_STATION_ART) {
+			return new UpdateView.UpdateViewHolder(new InternetRadioStationView(context, imageLoader));
+		} else {
+			return new UpdateView.UpdateViewHolder(new InternetRadioStationView(context));
+		}
 	}
 
 	@Override
@@ -45,7 +54,11 @@ public class InternetRadioStationAdapter extends SectionAdapter<InternetRadioSta
 
 	@Override
 	public int getItemViewType(InternetRadioStation station) {
-		return VIEW_TYPE_INTERNET_RADIO_STATION;
+		if(imageLoader != null && station.getCoverArt() != null) {
+			return VIEW_TYPE_INTERNET_RADIO_STATION_ART;
+		} else {
+			return VIEW_TYPE_INTERNET_RADIO_STATION;
+		}
 	}
 
 	@Override
