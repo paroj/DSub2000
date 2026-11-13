@@ -129,6 +129,10 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	Spinner actionBarSpinner;
 	ArrayAdapter<CharSequence> spinnerAdapter;
 	ViewGroup rootView;
+	/** How far the now playing panel is expanded, from 0 when collapsed to 1 when expanded. */
+	private float nowPlayingExpansion;
+	/** Applies the system bar insets to the now playing swipe target for the current expansion. */
+	private Runnable swipeTargetInsetUpdater;
 	DrawerLayout drawer;
 	ActionBarDrawerToggle drawerToggle;
 	NavigationView drawerList;
@@ -602,12 +606,19 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 				}
 			}
 			if(swipeTarget != null) {
-				// The bar itself stays coloured below and beside the buttons, so only its content is lifted.
-				swipeTarget.setPadding(swipeTargetPadding.left + bars.left, swipeTargetPadding.top, swipeTargetPadding.right + bars.right, swipeTargetPadding.bottom + bars.bottom);
-				// The collapsed bar is swapped for the taller now playing toolbar, which also paints the
-				// status bar, once the panel is expanded. Keep room for it in both states so that the
-				// content below the bar does not have to be re-laid out at the end of the slide.
-				swipeTarget.setMinimumHeight(nowPlayingToolbarHeight + bars.top + bars.bottom);
+				swipeTargetInsetUpdater = () -> {
+					// The collapsed bar sits above the navigation bar and stays coloured below the buttons,
+					// so its content is lifted by the bottom inset. The expanded toolbar sits at the top of
+					// the screen, where that room would only push the now playing content down. Give it up
+					// along the slide, so that the content follows the panel instead of jumping at the end.
+					int bottom = Math.round(bars.bottom * (1f - nowPlayingExpansion));
+					swipeTarget.setPadding(swipeTargetPadding.left + bars.left, swipeTargetPadding.top, swipeTargetPadding.right + bars.right, swipeTargetPadding.bottom + bottom);
+					// The collapsed bar is swapped for the taller now playing toolbar, which also paints the
+					// status bar, once the panel is expanded. Keep room for it in both states so that the
+					// content below the bar does not have to be re-laid out at the end of the slide.
+					swipeTarget.setMinimumHeight(nowPlayingToolbarHeight + bars.top + bottom);
+				};
+				swipeTargetInsetUpdater.run();
 				if(panel instanceof SlidingUpPanelLayout) {
 					((SlidingUpPanelLayout) panel).setPanelHeight(panelHeight + bars.bottom);
 				}
@@ -631,6 +642,17 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 
 			return windowInsets;
 		});
+	}
+
+	/**
+	 * Tells how far the now playing panel is expanded, from 0 when collapsed to 1 when expanded, so that
+	 * the room kept for the navigation bar below the collapsed bar can follow the slide.
+	 */
+	protected void setNowPlayingExpansion(float expansion) {
+		nowPlayingExpansion = expansion;
+		if(swipeTargetInsetUpdater != null) {
+			swipeTargetInsetUpdater.run();
+		}
 	}
 
 	/** Uses the main_toolbar of the layout as the action bar, in the custom action bar colour if one is set. */

@@ -664,6 +664,7 @@ public class SubsonicFragmentActivity extends SubsonicActivity implements Downlo
 		bottomBar.setVisibility(barAlpha > 0f ? View.VISIBLE : View.INVISIBLE);
 		nowPlayingToolbar.setAlpha(toolbarAlpha);
 		nowPlayingToolbar.setVisibility(toolbarAlpha > 0f ? View.VISIBLE : View.INVISIBLE);
+		setNowPlayingExpansion(slideOffset);
 	}
 
 	private void showNowPlayingToolbar() {
