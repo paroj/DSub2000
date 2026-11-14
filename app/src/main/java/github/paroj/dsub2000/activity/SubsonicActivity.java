@@ -76,6 +76,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -791,7 +793,11 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	}
 
 	private void populateTabs() {
-		drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+		updateDrawerMenu(this::populateTabsMenu);
+
+		showingTabs = true;
+	}
+	private void populateTabsMenu() {
 		drawerList.getMenu().clear();
 		drawerList.inflateMenu(R.menu.drawer_navigation);
 
@@ -848,12 +854,13 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 			}
 		}
 		drawerHeaderToggle.setImageResource(R.drawable.main_select_server);
-		drawerList.post(() -> drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO));
-
-		showingTabs = true;
 	}
 	private void populateServers() {
-		drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+		updateDrawerMenu(this::populateServersMenu);
+
+		showingTabs = false;
+	}
+	private void populateServersMenu() {
 		drawerList.getMenu().clear();
 
 		int serverCount = Util.getServerCount(this);
@@ -866,9 +873,42 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 		}
 		drawerList.getMenu().setGroupCheckable(MENU_GROUP_SERVER, true, true);
 		drawerHeaderToggle.setImageResource(R.drawable.main_select_tabs);
-		drawerList.post(() -> drawerList.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_AUTO));
+	}
 
-		showingTabs = false;
+	/**
+	 * Applies a change to the drawer menu after dropping the adapter positions that
+	 * NavigationMenuPresenter stored in the menu item views' accessibility delegates.
+	 *
+	 * The presenter binds the position into the delegate of every item it binds.  When the menu
+	 * shrinks, views that have not been rebound yet still report their old position, so an
+	 * accessibility prefetch of the drawer throws IndexOutOfBoundsException from
+	 * getItemViewType().  Clearing the delegates makes those views harmless until the adapter
+	 * binds them again with their new position.
+	 */
+	private void updateDrawerMenu(Runnable update) {
+		RecyclerView menuList = findMenuList(drawerList);
+		if(menuList != null) {
+			for(int i = 0; i < menuList.getChildCount(); i++) {
+				ViewCompat.setAccessibilityDelegate(menuList.getChildAt(i), null);
+			}
+		}
+
+		update.run();
+	}
+	private static RecyclerView findMenuList(ViewGroup view) {
+		for(int i = 0; i < view.getChildCount(); i++) {
+			View child = view.getChildAt(i);
+			if(child instanceof RecyclerView) {
+				return (RecyclerView) child;
+			}
+			if(child instanceof ViewGroup) {
+				RecyclerView found = findMenuList((ViewGroup) child);
+				if(found != null) {
+					return found;
+				}
+			}
+		}
+		return null;
 	}
 	private void setDrawerItemVisible(int id, boolean visible) {
 		MenuItem item = drawerList.getMenu().findItem(id);
