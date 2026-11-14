@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import github.paroj.dsub2000.domain.MusicDirectory;
+import github.paroj.dsub2000.util.Constants;
 import github.paroj.dsub2000.util.FileUtil;
 import github.paroj.dsub2000.util.Util;
 
@@ -130,6 +132,46 @@ public class DownloadFileTest {
 		} finally {
 			Util.setOffline(context, wasOffline);
 			assertTrue(original.delete());
+		}
+	}
+
+	/**
+	 * The bit rate is looked up when it is first needed instead of while the
+	 * queue is built. A resumed partial download must still get a real one
+	 * rather than the fallback for an unknown bit rate.
+	 */
+	@Test
+	public void resumedPartialDownloadLooksUpBitRate() throws Exception {
+		Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+		SharedPreferences prefs = Util.getPreferences(context);
+		String wifi = prefs.getString(Constants.PREFERENCES_KEY_MAX_BITRATE_WIFI, null);
+		String mobile = prefs.getString(Constants.PREFERENCES_KEY_MAX_BITRATE_MOBILE, null);
+
+		String folder = "bitrate-" + System.nanoTime();
+		MusicDirectory.Entry song = song(folder);
+		DownloadFile downloadFile = new DownloadFile(context, song, false);
+		File partial = downloadFile.getPartialFile();
+		assertTrue(partial.getParentFile().mkdirs());
+		assertTrue(partial.createNewFile());
+		try {
+			// Unlimited: an mp3 stream of unknown bit rate is requested at 320 kbps,
+			// while the fallback for an unknown bit rate would be 160 kbps.
+			prefs.edit()
+					.putString(Constants.PREFERENCES_KEY_MAX_BITRATE_WIFI, "0")
+					.putString(Constants.PREFERENCES_KEY_MAX_BITRATE_MOBILE, "0")
+					.commit();
+
+			assertEquals(320, downloadFile.getBitRate());
+		} finally {
+			SharedPreferences.Editor editor = prefs.edit();
+			if (wifi == null) editor.remove(Constants.PREFERENCES_KEY_MAX_BITRATE_WIFI);
+			else editor.putString(Constants.PREFERENCES_KEY_MAX_BITRATE_WIFI, wifi);
+			if (mobile == null) editor.remove(Constants.PREFERENCES_KEY_MAX_BITRATE_MOBILE);
+			else editor.putString(Constants.PREFERENCES_KEY_MAX_BITRATE_MOBILE, mobile);
+			editor.commit();
+			assertTrue(partial.delete());
+			assertTrue(partial.getParentFile().delete());
+			assertTrue(partial.getParentFile().getParentFile().delete());
 		}
 	}
 }
