@@ -55,7 +55,10 @@ public class DownloadFile implements BufferFile {
     private boolean save;
 	private boolean failedDownload = false;
     private int failed = 0;
-    private int bitRate;
+    // Looking up the maximum bit rate asks the system for the active network, which is
+    // too slow to repeat for every song while a large playlist is queued (issue #135).
+    private static final int UNKNOWN_BITRATE = -1;
+    private int bitRate = UNKNOWN_BITRATE;
 	private boolean isPlaying = false;
 	private boolean saveWhenDone = false;
 	private boolean completeWhenDone = false;
@@ -72,7 +75,6 @@ public class DownloadFile implements BufferFile {
         this.song = song;
         this.save = save;
         saveFile = files.save();
-        bitRate = getActualBitrate();
         partialFile = files.partial();
         completeFile = files.complete();
         mediaStoreService = new MediaStoreService(context);
@@ -93,7 +95,7 @@ public class DownloadFile implements BufferFile {
      * Returns the effective bit rate.
      */
     public int getBitRate() {
-		if(!partialFile.exists()) {
+		if(bitRate == UNKNOWN_BITRATE || !partialFile.exists()) {
 			bitRate = getActualBitrate();
 		}
         if (bitRate > 0) {
@@ -188,7 +190,7 @@ public class DownloadFile implements BufferFile {
 		// song to db so we can use their serverId for offline scrobbling
     	FileUtil.createDirectoryForParent(saveFile);
         failedDownload = false;
-		if(!partialFile.exists()) {
+		if(bitRate == UNKNOWN_BITRATE || !partialFile.exists()) {
 			bitRate = getActualBitrate();
 		}
 		downloadTask = new DownloadTask(context, highPerformanceWifi);
