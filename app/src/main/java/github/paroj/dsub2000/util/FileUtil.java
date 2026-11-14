@@ -114,40 +114,46 @@ public class FileUtil {
 		if(entry.isDirectory()) {
 			return getAlbumDirectory(context, entry);
 		} else {
-			return getSongFile(context, entry);
+			return getSongFiles(context, entry).save();
 		}
 	}
 
-    public static File getSongFile(Context context, MusicDirectory.Entry song) {
-        return getSongFile(context, song, null);
+    /**
+     * Resolves the save, partial and complete files for a song.
+     */
+    public static SongFiles getSongFiles(Context context, MusicDirectory.Entry song) {
+        File musicDirectory = getMusicDirectory(context);
+        File albumDirectory = getAlbumDirectory(context, song, musicDirectory);
+        return new SongFiles(
+                getSaveFile(context, song, musicDirectory, albumDirectory),
+                buildSongFile(context, song, "partial", albumDirectory),
+                buildSongFile(context, song, "complete", albumDirectory));
     }
-    public static File getSongFile(Context context, MusicDirectory.Entry song, String stage) {
-		// Offline entries store their original absolute filesystem path as their ID.
-		// Prefer that path instead of reconstructing a filename from metadata.
-		if (Util.isOffline(context)
-				&& stage == null
-				&& song.getId() != null) {
 
-			File original = new File(song.getId());
-			File musicRoot = getMusicDirectory(context);
+    private static File getSaveFile(Context context, MusicDirectory.Entry song, File musicDirectory, File albumDirectory) {
+        // Offline entries store their original absolute filesystem path as their ID.
+        // Prefer that path instead of reconstructing a filename from metadata.
+        if (Util.isOffline(context) && song.getId() != null) {
+            File original = new File(song.getId());
+            if (original.isFile()
+                    && original.toPath().normalize()
+                        .startsWith(musicDirectory.toPath().normalize())) {
+                return original;
+            }
+        }
+        return buildSongFile(context, song, null, albumDirectory);
+    }
 
-			if (original.isFile()
-					&& original.toPath().normalize()
-						.startsWith(musicRoot.toPath().normalize())) {
-				return original;
-			}
-		}
-
-        File dir = getAlbumDirectory(context, song);
-
+    private static File buildSongFile(Context context, MusicDirectory.Entry song, String stage, File albumDirectory) {
         Integer trackNumber = song.getTrack();
         String title = fileSystemSafe(song.getTitle());
         String extension = getSongFileNameExtension(context, song);
 
         String fileNameV1 = getSongFileNameV1(trackNumber, title);
         fileNameV1 = getSongFileNameFull(fileNameV1, stage, extension);
-        if (new File(dir, fileNameV1).exists()) {
-            return new File(dir, fileNameV1);
+        File fileV1 = new File(albumDirectory, fileNameV1);
+        if (fileV1.exists()) {
+            return fileV1;
         }
 
         Integer discNumber = song.getDiscNumber();
@@ -156,8 +162,10 @@ public class FileUtil {
         }
         String fileNameV2 = getSongFileNameV2(trackNumber, discNumber, title);
         fileNameV2 = getSongFileNameFull(fileNameV2, stage, extension);
-        return new File(dir, fileNameV2);
+        return new File(albumDirectory, fileNameV2);
     }
+
+    public record SongFiles(File save, File partial, File complete) {}
 
     private static String getSongFileNameV1(Integer trackNumber, String title) {
         String fileName = trackNumber == null ? title : String.format(Locale.ROOT, "%02d-%s", trackNumber, title);
@@ -285,7 +293,7 @@ public class FileUtil {
 		try {
 			fw.write("#EXTM3U\n");
 			for (MusicDirectory.Entry e : playlist.getChildren()) {
-				String filePath = FileUtil.getSongFile(context, e).getAbsolutePath();
+				String filePath = FileUtil.getSongFiles(context, e).save().getAbsolutePath();
 				if(! new File(filePath).exists()){
 					String ext = FileUtil.getExtension(filePath);
 					String base = FileUtil.getBaseName(filePath);
@@ -450,10 +458,14 @@ public class FileUtil {
 	}
 
     public static File getAlbumDirectory(Context context, MusicDirectory.Entry entry) {
+        return getAlbumDirectory(context, entry, getMusicDirectory(context));
+    }
+
+    private static File getAlbumDirectory(Context context, MusicDirectory.Entry entry, File musicDirectory) {
         File dir = null;
         if (entry.getPath() != null) {
             File f = new File(fileSystemSafeDir(entry.getPath()));
-			String folder = getMusicDirectory(context).getPath();
+			String folder = musicDirectory.getPath();
 			if(entry.isDirectory()) {
 				folder += "/" + f.getPath();
 			} else if(f.getParent() != null) {
@@ -465,7 +477,7 @@ public class FileUtil {
 			if(!Util.isOffline(context)) {
 				firstSong = lookupChild(context, entry, false);
 				if(firstSong != null) {
-					File songFile = FileUtil.getSongFile(context, firstSong);
+					File songFile = getSongFiles(context, firstSong).save();
 					dir = songFile.getParentFile();
 				}
 			}
@@ -476,7 +488,7 @@ public class FileUtil {
 				if("unnamed".equals(album)) {
 					album = fileSystemSafe(entry.getTitle());
 				}
-				dir = new File(getMusicDirectory(context).getPath() + "/" + artist + "/" + album);
+				dir = new File(musicDirectory.getPath() + "/" + artist + "/" + album);
 			}
         }
         return dir;

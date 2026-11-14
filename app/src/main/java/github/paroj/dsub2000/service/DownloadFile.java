@@ -67,10 +67,11 @@ public class DownloadFile implements BufferFile {
         this.context = context;
         this.song = song;
         this.save = save;
-        saveFile = FileUtil.getSongFile(context, song);
+        FileUtil.SongFiles files = FileUtil.getSongFiles(context, song);
+        saveFile = files.save();
         bitRate = getActualBitrate();
-        partialFile = FileUtil.getSongFile(context, song, "partial");
-        completeFile = FileUtil.getSongFile(context, song, "complete");
+        partialFile = files.partial();
+        completeFile = files.complete();
         mediaStoreService = new MediaStoreService(context);
     }
 
