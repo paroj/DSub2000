@@ -28,7 +28,12 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.Locale;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -122,15 +127,18 @@ public class FileUtil {
      * Resolves the save, partial and complete files for a song.
      */
     public static SongFiles getSongFiles(Context context, MusicDirectory.Entry song) {
-        File musicDirectory = getMusicDirectory(context);
-        File albumDirectory = getAlbumDirectory(context, song, musicDirectory);
-        return new SongFiles(
-                getSaveFile(context, song, musicDirectory, albumDirectory),
-                buildSongFile(context, song, "partial", albumDirectory),
-                buildSongFile(context, song, "complete", albumDirectory));
+        return getSongFiles(context, song, getMusicDirectory(context), File::exists);
     }
 
-    private static File getSaveFile(Context context, MusicDirectory.Entry song, File musicDirectory, File albumDirectory) {
+    private static SongFiles getSongFiles(Context context, MusicDirectory.Entry song, File musicDirectory, Predicate<File> exists) {
+        File albumDirectory = getAlbumDirectory(context, song, musicDirectory);
+        return new SongFiles(
+                getSaveFile(context, song, musicDirectory, albumDirectory, exists),
+                buildSongFile(context, song, "partial", albumDirectory, exists),
+                buildSongFile(context, song, "complete", albumDirectory, exists));
+    }
+
+    private static File getSaveFile(Context context, MusicDirectory.Entry song, File musicDirectory, File albumDirectory, Predicate<File> exists) {
         // Offline entries store their original absolute filesystem path as their ID.
         // Prefer that path instead of reconstructing a filename from metadata.
         if (Util.isOffline(context) && song.getId() != null) {
@@ -141,10 +149,10 @@ public class FileUtil {
                 return original;
             }
         }
-        return buildSongFile(context, song, null, albumDirectory);
+        return buildSongFile(context, song, null, albumDirectory, exists);
     }
 
-    private static File buildSongFile(Context context, MusicDirectory.Entry song, String stage, File albumDirectory) {
+    private static File buildSongFile(Context context, MusicDirectory.Entry song, String stage, File albumDirectory, Predicate<File> exists) {
         Integer trackNumber = song.getTrack();
         String title = fileSystemSafe(song.getTitle());
         String extension = getSongFileNameExtension(context, song);
@@ -152,7 +160,7 @@ public class FileUtil {
         String fileNameV1 = getSongFileNameV1(trackNumber, title);
         fileNameV1 = getSongFileNameFull(fileNameV1, stage, extension);
         File fileV1 = new File(albumDirectory, fileNameV1);
-        if (fileV1.exists()) {
+        if (exists.test(fileV1)) {
             return fileV1;
         }
 
@@ -163,6 +171,39 @@ public class FileUtil {
         String fileNameV2 = getSongFileNameV2(trackNumber, discNumber, title);
         fileNameV2 = getSongFileNameFull(fileNameV2, stage, extension);
         return new File(albumDirectory, fileNameV2);
+    }
+
+    /**
+     * Resolves the files of many songs, for example while a playlist is queued.
+     *
+     * Checking whether each song still uses a legacy file name costs a filesystem
+     * call per path, which made queueing large playlists slow on external storage
+     * (issue #135). The batch validates the music directory once and lists each
+     * album directory once instead. The listings are not refreshed, so a batch is
+     * meant to be used for one operation and then dropped.
+     */
+    public static final class SongFileBatch {
+        private final Context context;
+        private final File musicDirectory;
+        private final Map<File, Set<String>> listings = new HashMap<>();
+
+        public SongFileBatch(Context context) {
+            this.context = context;
+            this.musicDirectory = getMusicDirectory(context);
+        }
+
+        public SongFiles get(MusicDirectory.Entry song) {
+            return getSongFiles(context, song, musicDirectory, this::isListed);
+        }
+
+        private boolean isListed(File file) {
+            return listings.computeIfAbsent(file.getParentFile(), SongFileBatch::list).contains(file.getName());
+        }
+
+        private static Set<String> list(File directory) {
+            String[] names = directory == null ? null : directory.list();
+            return names == null ? Collections.emptySet() : new HashSet<>(Arrays.asList(names));
+        }
     }
 
     public record SongFiles(File save, File partial, File complete) {}

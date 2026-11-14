@@ -44,6 +44,7 @@ import github.paroj.dsub2000.domain.ServerInfo;
 import github.paroj.dsub2000.receiver.AudioNoisyReceiver;
 import github.paroj.dsub2000.receiver.MediaButtonIntentReceiver;
 import github.paroj.dsub2000.util.ArtistRadioBuffer;
+import github.paroj.dsub2000.util.FileUtil;
 import github.paroj.dsub2000.util.ImageLoader;
 import github.paroj.dsub2000.util.Notifications;
 import github.paroj.dsub2000.util.SilentBackgroundTask;
@@ -465,9 +466,10 @@ public class DownloadService extends MediaLibraryService {
 		boolean noNetwork = !Util.isOffline(this) && !Util.isNetworkConnected(this);
 		boolean warnNetwork = false;
 		List<DownloadFile> downloadFiles = new ArrayList<>();
+		FileUtil.SongFileBatch songFiles = new FileUtil.SongFileBatch(this);
 		for (MusicDirectory.Entry song : songs) {
 			if (song != null) {
-				DownloadFile downloadFile = new DownloadFile(this, song, save);
+				DownloadFile downloadFile = createDownloadFile(song, save, songFiles);
 				downloadFiles.add(downloadFile);
 				if (noNetwork && !warnNetwork) {
 					if (!downloadFile.isCompleteFileAvailable()) {
@@ -544,9 +546,14 @@ public class DownloadService extends MediaLibraryService {
 		}
 	}
 
+	private DownloadFile createDownloadFile(MusicDirectory.Entry song, boolean save, FileUtil.SongFileBatch songFiles) {
+		return new DownloadFile(this, song, save, songFiles.get(song));
+	}
+
 	synchronized void insertSessionQueue(int index, List<MusicDirectory.Entry> entries) {
+		FileUtil.SongFileBatch songFiles = new FileUtil.SongFileBatch(this);
 		for (MusicDirectory.Entry entry : entries) {
-			downloadList.add(index++, new DownloadFile(this, entry, false));
+			downloadList.add(index++, createDownloadFile(entry, false, songFiles));
 		}
 		if (currentPlaying == null && !downloadList.isEmpty()) {
 			setCurrentPlaying(0, false);
@@ -574,8 +581,9 @@ public class DownloadService extends MediaLibraryService {
 		List<DownloadFile> toAdd = new ArrayList<>();
 		List<DownloadFile> toUnpin = new ArrayList<>();
 
+		FileUtil.SongFileBatch songFiles = new FileUtil.SongFileBatch(this);
 		for (MusicDirectory.Entry song : songs) {
-			DownloadFile downloadFile = new DownloadFile(this, song, save);
+			DownloadFile downloadFile = createDownloadFile(song, save, songFiles);
 			if (!downloadFile.isWorkDone() || (downloadFile.shouldSave() && !downloadFile.isSaved())) {
 				// Only add to list if there is work to be done
 				toAdd.add(downloadFile);

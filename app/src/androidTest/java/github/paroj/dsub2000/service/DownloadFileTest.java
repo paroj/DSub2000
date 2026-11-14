@@ -66,6 +66,48 @@ public class DownloadFileTest {
 		}
 	}
 
+	/**
+	 * Queue construction answers the legacy file name checks from one listing per
+	 * album directory, which must give the same files as checking each path.
+	 */
+	@Test
+	public void batchMatchesSingleSongLookup() throws Exception {
+		Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+		String legacyFolder = "batch-legacy-" + System.nanoTime();
+		File albumDirectory = new File(FileUtil.getMusicDirectory(context), legacyFolder + "/Album");
+		File legacy = new File(albumDirectory, "01-Track.mp3");
+		File legacyPartial = new File(albumDirectory, "01-Track.partial.mp3");
+		assertTrue(albumDirectory.mkdirs());
+		assertTrue(legacy.createNewFile());
+		assertTrue(legacyPartial.createNewFile());
+		try {
+			MusicDirectory.Entry legacySong = song(legacyFolder);
+			MusicDirectory.Entry otherTrack = song(legacyFolder);
+			otherTrack.setTrack(2);
+			otherTrack.setPath(legacyFolder + "/Album/02-Track.mp3");
+			MusicDirectory.Entry missingAlbum = song("batch-missing-" + System.nanoTime());
+
+			FileUtil.SongFileBatch batch = new FileUtil.SongFileBatch(context);
+			for (MusicDirectory.Entry song : new MusicDirectory.Entry[] {legacySong, otherTrack, missingAlbum}) {
+				FileUtil.SongFiles expected = FileUtil.getSongFiles(context, song);
+				FileUtil.SongFiles actual = batch.get(song);
+				assertEquals(expected.save(), actual.save());
+				assertEquals(expected.partial(), actual.partial());
+				assertEquals(expected.complete(), actual.complete());
+			}
+
+			FileUtil.SongFiles legacyFiles = batch.get(legacySong);
+			assertEquals(legacy, legacyFiles.save());
+			assertEquals(legacyPartial, legacyFiles.partial());
+			assertEquals(new File(albumDirectory, "01-001-Track.complete.mp3"), legacyFiles.complete());
+		} finally {
+			assertTrue(legacy.delete());
+			assertTrue(legacyPartial.delete());
+			assertTrue(albumDirectory.delete());
+			assertTrue(albumDirectory.getParentFile().delete());
+		}
+	}
+
 	@Test
 	public void offlineEntriesKeepOriginalPath() throws Exception {
 		Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
