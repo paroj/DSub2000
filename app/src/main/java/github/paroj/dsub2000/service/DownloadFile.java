@@ -64,10 +64,13 @@ public class DownloadFile implements BufferFile {
 	private boolean rateLimit = false;
 
     public DownloadFile(Context context, MusicDirectory.Entry song, boolean save) {
+        this(context, song, save, FileUtil.getSongFiles(context, song));
+    }
+
+    DownloadFile(Context context, MusicDirectory.Entry song, boolean save, FileUtil.SongFiles files) {
         this.context = context;
         this.song = song;
         this.save = save;
-        FileUtil.SongFiles files = FileUtil.getSongFiles(context, song);
         saveFile = files.save();
         bitRate = getActualBitrate();
         partialFile = files.partial();
