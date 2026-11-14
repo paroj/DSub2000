@@ -912,8 +912,9 @@ public class SubsonicActivity extends AppCompatActivity implements OnItemSelecte
 	}
 	private void setDrawerItemVisible(int id, boolean visible) {
 		MenuItem item = drawerList.getMenu().findItem(id);
-		if(item != null) {
-			item.setVisible(visible);
+		if(item != null && item.isVisible() != visible) {
+			// Hiding an item removes it from the adapter, so update it like a menu rebuild
+			updateDrawerMenu(() -> item.setVisible(visible));
 		}
 	}
 
